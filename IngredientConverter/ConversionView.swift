@@ -206,6 +206,11 @@ struct ConversionView: View {
             to: toUnit,
             for: ingredient
         )
+        
+        // Update last used date
+        if conversionResult != nil {
+            ingredient.lastUsedDate = Date()
+        }
     }
     
     private func swapUnits() {

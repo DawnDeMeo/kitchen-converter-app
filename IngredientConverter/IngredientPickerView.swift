@@ -31,7 +31,7 @@ struct IngredientPickerView: View {
             }
         }
         
-        return filtered.sorted { $0.name < $1.name }
+        return filtered.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
     }
     
     var body: some View {
@@ -45,8 +45,22 @@ struct IngredientPickerView: View {
                         } label: {
                             HStack {
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text(ingredient.name)
-                                        .foregroundColor(.primary)
+                                    HStack {
+                                        Text(ingredient.name)
+                                            .foregroundColor(.primary)
+                                        
+                                        if ingredient.isFavorite {
+                                            Image(systemName: "star.fill")
+                                                .foregroundColor(.yellow)
+                                                .font(.caption)
+                                        }
+                                        
+                                        if ingredient.isCustom {
+                                            Image(systemName: "person.fill")
+                                                .foregroundColor(.blue)
+                                                .font(.caption)
+                                        }
+                                    }
                                     
                                     if let brand = ingredient.brand {
                                         Text(brand)
@@ -61,23 +75,22 @@ struct IngredientPickerView: View {
                                 
                                 Spacer()
                                 
-                                if ingredient.isFavorite {
-                                    Image(systemName: "star.fill")
-                                        .foregroundColor(.yellow)
-                                        .font(.caption)
-                                }
-                                
-                                if ingredient.isCustom {
-                                    Image(systemName: "person.fill")
-                                        .foregroundColor(.blue)
-                                        .font(.caption)
-                                }
-                                
                                 if selectedIngredient?.id == ingredient.id {
                                     Image(systemName: "checkmark")
                                         .foregroundColor(.blue)
                                 }
                             }
+                        }
+                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                            Button {
+                                ingredient.isFavorite.toggle()
+                            } label: {
+                                Label(
+                                    ingredient.isFavorite ? "Unfavorite" : "Favorite",
+                                    systemImage: ingredient.isFavorite ? "star.slash" : "star.fill"
+                                )
+                            }
+                            .tint(ingredient.isFavorite ? .gray : .yellow)
                         }
                     }
                 } else {
@@ -113,13 +126,14 @@ struct IngredientPickerView: View {
 
 #Preview {
     @Previewable @State var selectedIngredient: Ingredient?
-    let sampleIngredients = [
-        Ingredient(name: "Flour, all-purpose", isFavorite: true),
-        Ingredient(name: "Sugar, granulated"),
-        Ingredient(name: "Butter", brand: "Kerry Gold", isFavorite: true)
-    ]
     
-    return IngredientPickerView(
+    let flour = Ingredient(name: "Flour, all-purpose", isFavorite: true)
+    let sugar = Ingredient(name: "Sugar, granulated")
+    let butter = Ingredient(name: "Butter", brand: "Kerry Gold", isFavorite: true, isCustom: true)
+    
+    let sampleIngredients = [flour, sugar, butter]
+    
+    IngredientPickerView(
         ingredients: sampleIngredients,
         selectedIngredient: $selectedIngredient
     )
