@@ -43,8 +43,10 @@ struct IngredientListView: View {
     @State private var searchText = ""
     @State private var sortOption: IngredientSortOption = .alphabetical
     @State private var filterOption: IngredientFilterOption = .all
-    @State private var showingSortOptions = false
-    @State private var showingFilterOptions = false
+    @State private var showingAddIngredient = false
+    @State private var ingredientToEdit: Ingredient?
+    @State private var ingredientToDelete: Ingredient?
+    @State private var showingDeleteConfirmation = false
     
     var filteredAndSortedIngredients: [Ingredient] {
         var ingredients = allIngredients
@@ -52,7 +54,7 @@ struct IngredientListView: View {
         // Apply filter
         switch filterOption {
         case .all:
-            break // Show all
+            break
         case .favorites:
             ingredients = ingredients.filter { $0.isFavorite }
         case .custom:
@@ -75,8 +77,6 @@ struct IngredientListView: View {
             ingredients.sort { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
         case .lastUsed:
             ingredients.sort { (lhs, rhs) in
-                // Items with lastUsedDate come first, sorted by most recent
-                // Items without lastUsedDate come last, sorted alphabetically
                 switch (lhs.lastUsedDate, rhs.lastUsedDate) {
                 case (.some(let lDate), .some(let rDate)):
                     return lDate > rDate
@@ -117,6 +117,50 @@ struct IngredientListView: View {
                                     }
                                     .tint(ingredient.isFavorite ? .gray : .yellow)
                                 }
+                                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                    if ingredient.isCustom {
+                                        Button(role: .destructive) {
+                                            ingredientToDelete = ingredient
+                                            showingDeleteConfirmation = true
+                                        } label: {
+                                            Label("Delete", systemImage: "trash")
+                                        }
+                                        
+                                        Button {
+                                            ingredientToEdit = ingredient
+                                        } label: {
+                                            Label("Edit", systemImage: "pencil")
+                                        }
+                                        .tint(.blue)
+                                    }
+                                }
+                                .contextMenu {
+                                    Button {
+                                        toggleFavorite(ingredient)
+                                    } label: {
+                                        Label(
+                                            ingredient.isFavorite ? "Unfavorite" : "Favorite",
+                                            systemImage: ingredient.isFavorite ? "star.slash.fill" : "star.fill"
+                                        )
+                                    }
+                                    
+                                    if ingredient.isCustom {
+                                        Button {
+                                            ingredientToEdit = ingredient
+                                        } label: {
+                                            Label("Edit", systemImage: "pencil")
+                                        }
+                                        
+                                        Divider()
+                                        
+                                        Button(role: .destructive) {
+                                            ingredientToDelete = ingredient
+                                            showingDeleteConfirmation = true
+                                        } label: {
+                                            Label("Delete", systemImage: "trash")
+                                        }
+                                    }
+                                }
                         }
                     }
                     .listStyle(.plain)
@@ -151,6 +195,32 @@ struct IngredientListView: View {
                         Label("Sort", systemImage: "arrow.up.arrow.down")
                     }
                 }
+                
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        showingAddIngredient = true
+                    } label: {
+                        Label("Add Ingredient", systemImage: "plus")
+                    }
+                }
+            }
+            .sheet(isPresented: $showingAddIngredient) {
+                IngredientEditorView()
+            }
+            .sheet(item: $ingredientToEdit) { ingredient in
+                IngredientEditorView(ingredient: ingredient)
+            }
+            .confirmationDialog(
+                "Delete \(ingredientToDelete?.name ?? "ingredient")?",
+                isPresented: $showingDeleteConfirmation,
+                presenting: ingredientToDelete
+            ) { ingredient in
+                Button("Delete", role: .destructive) {
+                    deleteIngredient(ingredient)
+                }
+                Button("Cancel", role: .cancel) { }
+            } message: { ingredient in
+                Text("This action cannot be undone. This ingredient has \(ingredient.conversions.count) conversion\(ingredient.conversions.count == 1 ? "" : "s").")
             }
         }
     }
@@ -160,8 +230,15 @@ struct IngredientListView: View {
             ingredient.isFavorite.toggle()
         }
     }
+    
+    private func deleteIngredient(_ ingredient: Ingredient) {
+        withAnimation {
+            modelContext.delete(ingredient)
+        }
+    }
 }
 
+// Keep IngredientRow the same as before...
 struct IngredientRow: View {
     @Bindable var ingredient: Ingredient
     
@@ -245,7 +322,6 @@ struct IngredientRow: View {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try! ModelContainer(for: Ingredient.self, configurations: config)
         
-        // Add sample data
         let flour = Ingredient(name: "Flour, all-purpose", brand: "King Arthur", isFavorite: true)
         flour.lastUsedDate = Date()
         
