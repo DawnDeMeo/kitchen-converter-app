@@ -14,13 +14,13 @@ struct ConversionEditorSheet: View {
     
     @State private var fromAmount: String = "1"
     @State private var fromUnit: MeasurementUnit = .cup
-    @State private var fromUnitType: UnitInputType = .standard
+    @State private var fromUnitType: UnitInputType = .volume
     @State private var countSingular: String = ""
     @State private var countPlural: String = ""
     
     @State private var toAmount: String = "1"
     @State private var toUnit: MeasurementUnit = .gram
-    @State private var toUnitType: UnitInputType = .standard
+    @State private var toUnitType: UnitInputType = .weight
     @State private var toCountSingular: String = ""
     @State private var toCountPlural: String = ""
     
@@ -28,20 +28,25 @@ struct ConversionEditorSheet: View {
     @State private var errorMessage = ""
     
     enum UnitInputType: String, CaseIterable {
-        case standard = "Standard"
+        case volume = "Volume"
+        case weight = "Weight"
         case count = "Count"
         
         var description: String {
             switch self {
-            case .standard: return "Volume or Weight"
+            case .volume: return "Volume (cups, tbsp, ml)"
+            case .weight: return "Weight (grams, oz, lb)"
             case .count: return "Pieces/Items"
             }
         }
     }
     
-    var standardUnits: [MeasurementUnit] {
-        [.cup, .tablespoon, .teaspoon, .milliliter, .liter, .fluidOunce,
-         .gram, .kilogram, .ounce, .pound]
+    var volumeUnits: [MeasurementUnit] {
+        [.cup, .tablespoon, .teaspoon, .milliliter, .liter, .fluidOunce]
+    }
+    
+    var weightUnits: [MeasurementUnit] {
+        [.gram, .kilogram, .ounce, .pound]
     }
     
     var body: some View {
@@ -50,21 +55,31 @@ struct ConversionEditorSheet: View {
                 Section("From") {
                     Picker("Unit Type", selection: $fromUnitType) {
                         ForEach(UnitInputType.allCases, id: \.self) { type in
-                            Text(type.description).tag(type)
+                            Text(type.rawValue).tag(type)
                         }
                     }
                     .pickerStyle(.segmented)
+                    .onChange(of: fromUnitType) { oldValue, newValue in
+                        handleFromUnitTypeChange(from: oldValue, to: newValue)
+                    }
                     
                     TextField("Amount", text: $fromAmount)
                         .keyboardType(.decimalPad)
                     
-                    if fromUnitType == .standard {
+                    switch fromUnitType {
+                    case .volume:
                         Picker("Unit", selection: $fromUnit) {
-                            ForEach(standardUnits, id: \.self) { unit in
+                            ForEach(volumeUnits, id: \.self) { unit in
                                 Text(unit.displayName).tag(unit)
                             }
                         }
-                    } else {
+                    case .weight:
+                        Picker("Unit", selection: $fromUnit) {
+                            ForEach(weightUnits, id: \.self) { unit in
+                                Text(unit.displayName).tag(unit)
+                            }
+                        }
+                    case .count:
                         TextField("Singular (e.g., egg)", text: $countSingular)
                         TextField("Plural (e.g., eggs)", text: $countPlural)
                     }
@@ -72,24 +87,42 @@ struct ConversionEditorSheet: View {
                 
                 Section("To") {
                     Picker("Unit Type", selection: $toUnitType) {
-                        ForEach(UnitInputType.allCases, id: \.self) { type in
-                            Text(type.description).tag(type)
+                        ForEach(allowedToUnitTypes, id: \.self) { type in
+                            Text(type.rawValue).tag(type)
                         }
                     }
                     .pickerStyle(.segmented)
+                    .onChange(of: toUnitType) { oldValue, newValue in
+                        handleToUnitTypeChange(from: oldValue, to: newValue)
+                    }
                     
                     TextField("Amount", text: $toAmount)
                         .keyboardType(.decimalPad)
                     
-                    if toUnitType == .standard {
+                    switch toUnitType {
+                    case .volume:
                         Picker("Unit", selection: $toUnit) {
-                            ForEach(standardUnits, id: \.self) { unit in
+                            ForEach(volumeUnits, id: \.self) { unit in
                                 Text(unit.displayName).tag(unit)
                             }
                         }
-                    } else {
+                    case .weight:
+                        Picker("Unit", selection: $toUnit) {
+                            ForEach(weightUnits, id: \.self) { unit in
+                                Text(unit.displayName).tag(unit)
+                            }
+                        }
+                    case .count:
                         TextField("Singular (e.g., piece)", text: $toCountSingular)
                         TextField("Plural (e.g., pieces)", text: $toCountPlural)
+                    }
+                }
+                
+                if fromUnitType == toUnitType {
+                    Section {
+                        Label("Cannot convert between the same unit types", systemImage: "exclamationmark.triangle.fill")
+                            .foregroundColor(.orange)
+                            .font(.callout)
                     }
                 }
                 
@@ -116,6 +149,7 @@ struct ConversionEditorSheet: View {
                     Button("Add") {
                         saveConversion()
                     }
+                    .disabled(fromUnitType == toUnitType)
                 }
             }
             .alert("Error", isPresented: $showingError) {
@@ -126,6 +160,43 @@ struct ConversionEditorSheet: View {
         }
     }
     
+    // Available "To" unit types based on "From" selection
+    private var allowedToUnitTypes: [UnitInputType] {
+        UnitInputType.allCases.filter { $0 != fromUnitType }
+    }
+    
+    private func handleFromUnitTypeChange(from oldType: UnitInputType, to newType: UnitInputType) {
+        // Update default unit when type changes
+        switch newType {
+        case .volume:
+            fromUnit = .cup
+        case .weight:
+            fromUnit = .gram
+        case .count:
+            break
+        }
+        
+        // If "to" type is now the same as "from", switch it
+        if toUnitType == newType {
+            // Pick the first different type
+            if let differentType = UnitInputType.allCases.first(where: { $0 != newType }) {
+                toUnitType = differentType
+            }
+        }
+    }
+    
+    private func handleToUnitTypeChange(from oldType: UnitInputType, to newType: UnitInputType) {
+        // Update default unit when type changes
+        switch newType {
+        case .volume:
+            toUnit = .cup
+        case .weight:
+            toUnit = .gram
+        case .count:
+            break
+        }
+    }
+    
     private var previewText: String? {
         guard let from = Double(fromAmount),
               let to = Double(toAmount) else {
@@ -133,21 +204,27 @@ struct ConversionEditorSheet: View {
         }
         
         let fromUnitText: String
-        if fromUnitType == .standard {
+        switch fromUnitType {
+        case .volume, .weight:
             fromUnitText = fromUnit.displayName(for: from)
-        } else if !countSingular.isEmpty && !countPlural.isEmpty {
-            fromUnitText = from == 1 ? countSingular : countPlural
-        } else {
-            return nil
+        case .count:
+            if !countSingular.isEmpty && !countPlural.isEmpty {
+                fromUnitText = from == 1 ? countSingular : countPlural
+            } else {
+                return nil
+            }
         }
         
         let toUnitText: String
-        if toUnitType == .standard {
+        switch toUnitType {
+        case .volume, .weight:
             toUnitText = toUnit.displayName(for: to)
-        } else if !toCountSingular.isEmpty && !toCountPlural.isEmpty {
-            toUnitText = to == 1 ? toCountSingular : toCountPlural
-        } else {
-            return nil
+        case .count:
+            if !toCountSingular.isEmpty && !toCountPlural.isEmpty {
+                toUnitText = to == 1 ? toCountSingular : toCountPlural
+            } else {
+                return nil
+            }
         }
         
         return "\(formatAmount(from)) \(fromUnitText) = \(formatAmount(to)) \(toUnitText)"
@@ -161,6 +238,13 @@ struct ConversionEditorSheet: View {
     }
     
     private func saveConversion() {
+        // Validate that unit types are different
+        guard fromUnitType != toUnitType else {
+            errorMessage = "Cannot convert between the same unit types. For example, volume-to-volume conversions (cup to ml) are universal and don't depend on the ingredient."
+            showingError = true
+            return
+        }
+        
         guard let fromAmt = Double(fromAmount), fromAmt > 0 else {
             errorMessage = "Please enter a valid 'from' amount"
             showingError = true
@@ -174,9 +258,10 @@ struct ConversionEditorSheet: View {
         }
         
         let finalFromUnit: MeasurementUnit
-        if fromUnitType == .standard {
+        switch fromUnitType {
+        case .volume, .weight:
             finalFromUnit = fromUnit
-        } else {
+        case .count:
             let singular = countSingular.trimmingCharacters(in: .whitespaces)
             let plural = countPlural.trimmingCharacters(in: .whitespaces)
             
@@ -190,9 +275,10 @@ struct ConversionEditorSheet: View {
         }
         
         let finalToUnit: MeasurementUnit
-        if toUnitType == .standard {
+        switch toUnitType {
+        case .volume, .weight:
             finalToUnit = toUnit
-        } else {
+        case .count:
             let singular = toCountSingular.trimmingCharacters(in: .whitespaces)
             let plural = toCountPlural.trimmingCharacters(in: .whitespaces)
             
