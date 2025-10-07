@@ -47,6 +47,7 @@ struct IngredientListView: View {
     @State private var ingredientToEdit: Ingredient?
     @State private var ingredientToDelete: Ingredient?
     @State private var showingDeleteConfirmation = false
+    @State private var ingredientToConvert: Ingredient?
     
     var filteredAndSortedIngredients: [Ingredient] {
         var ingredients = allIngredients
@@ -105,62 +106,75 @@ struct IngredientListView: View {
                 } else {
                     List {
                         ForEach(filteredAndSortedIngredients) { ingredient in
-                            IngredientRow(ingredient: ingredient)
-                                .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                                    Button {
-                                        toggleFavorite(ingredient)
-                                    } label: {
-                                        Label(
-                                            ingredient.isFavorite ? "Unfavorite" : "Favorite",
-                                            systemImage: ingredient.isFavorite ? "star.slash" : "star.fill"
-                                        )
-                                    }
-                                    .tint(ingredient.isFavorite ? .gray : .yellow)
+                            Button {
+                                ingredientToConvert = ingredient
+                            } label: {
+                                IngredientRow(ingredient: ingredient)
+                            }
+                            .buttonStyle(.plain)
+                            .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                Button {
+                                    toggleFavorite(ingredient)
+                                } label: {
+                                    Label(
+                                        ingredient.isFavorite ? "Unfavorite" : "Favorite",
+                                        systemImage: ingredient.isFavorite ? "star.slash" : "star.fill"
+                                    )
                                 }
-                                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                    if ingredient.isCustom {
-                                        Button(role: .destructive) {
-                                            ingredientToDelete = ingredient
-                                            showingDeleteConfirmation = true
-                                        } label: {
-                                            Label("Delete", systemImage: "trash")
-                                        }
-                                        
-                                        Button {
-                                            ingredientToEdit = ingredient
-                                        } label: {
-                                            Label("Edit", systemImage: "pencil")
-                                        }
-                                        .tint(.blue)
-                                    }
-                                }
-                                .contextMenu {
-                                    Button {
-                                        toggleFavorite(ingredient)
+                                .tint(ingredient.isFavorite ? .gray : .yellow)
+                            }
+                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                if ingredient.isCustom {
+                                    Button(role: .destructive) {
+                                        ingredientToDelete = ingredient
+                                        showingDeleteConfirmation = true
                                     } label: {
-                                        Label(
-                                            ingredient.isFavorite ? "Unfavorite" : "Favorite",
-                                            systemImage: ingredient.isFavorite ? "star.slash.fill" : "star.fill"
-                                        )
+                                        Label("Delete", systemImage: "trash")
                                     }
                                     
-                                    if ingredient.isCustom {
-                                        Button {
-                                            ingredientToEdit = ingredient
-                                        } label: {
-                                            Label("Edit", systemImage: "pencil")
-                                        }
-                                        
-                                        Divider()
-                                        
-                                        Button(role: .destructive) {
-                                            ingredientToDelete = ingredient
-                                            showingDeleteConfirmation = true
-                                        } label: {
-                                            Label("Delete", systemImage: "trash")
-                                        }
+                                    Button {
+                                        ingredientToEdit = ingredient
+                                    } label: {
+                                        Label("Edit", systemImage: "pencil")
+                                    }
+                                    .tint(.blue)
+                                }
+                            }
+                            .contextMenu {
+                                Button {
+                                    ingredientToConvert = ingredient
+                                } label: {
+                                    Label("Convert", systemImage: "arrow.left.arrow.right")
+                                }
+                                
+                                Divider()
+                                
+                                Button {
+                                    toggleFavorite(ingredient)
+                                } label: {
+                                    Label(
+                                        ingredient.isFavorite ? "Unfavorite" : "Favorite",
+                                        systemImage: ingredient.isFavorite ? "star.slash.fill" : "star.fill"
+                                    )
+                                }
+                                
+                                if ingredient.isCustom {
+                                    Button {
+                                        ingredientToEdit = ingredient
+                                    } label: {
+                                        Label("Edit", systemImage: "pencil")
+                                    }
+                                    
+                                    Divider()
+                                    
+                                    Button(role: .destructive) {
+                                        ingredientToDelete = ingredient
+                                        showingDeleteConfirmation = true
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
                                     }
                                 }
+                            }
                         }
                     }
                     .listStyle(.plain)
@@ -210,6 +224,18 @@ struct IngredientListView: View {
             .sheet(item: $ingredientToEdit) { ingredient in
                 IngredientEditorView(ingredient: ingredient)
             }
+            .sheet(item: $ingredientToConvert) { ingredient in
+                NavigationStack {
+                    ConversionView(preselectedIngredient: ingredient)
+                        .toolbar {
+                            ToolbarItem(placement: .cancellationAction) {
+                                Button("Done") {
+                                    ingredientToConvert = nil
+                                }
+                            }
+                        }
+                }
+            }
             .confirmationDialog(
                 "Delete \(ingredientToDelete?.name ?? "ingredient")?",
                 isPresented: $showingDeleteConfirmation,
@@ -238,7 +264,6 @@ struct IngredientListView: View {
     }
 }
 
-// Keep IngredientRow the same as before...
 struct IngredientRow: View {
     @Bindable var ingredient: Ingredient
     

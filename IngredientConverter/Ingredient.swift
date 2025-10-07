@@ -14,7 +14,7 @@ class Ingredient {
     var name: String
     var brand: String?
     var isFavorite: Bool
-    var isCustom: Bool // true = user-added, false = default database
+    var isCustom: Bool
     var lastUsedDate: Date?
     
     @Relationship(deleteRule: .cascade) var conversions: [UnitConversion]

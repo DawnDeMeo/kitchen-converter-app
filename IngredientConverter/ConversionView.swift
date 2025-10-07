@@ -19,132 +19,164 @@ struct ConversionView: View {
     @State private var conversionResult: Double?
     @State private var showingIngredientPicker = false
     
+    @FocusState private var isInputFocused: Bool
+    
     private let conversionEngine = ConversionEngine()
+    
+    // Add initializer to support preselected ingredient
+    init(preselectedIngredient: Ingredient? = nil) {
+        _selectedIngredient = State(initialValue: preselectedIngredient)
+    }
     
     var body: some View {
         NavigationStack {
-            Form {
-                // Ingredient Selection
-                Section("Ingredient") {
-                    Button {
-                        showingIngredientPicker = true
-                    } label: {
-                        HStack {
-                            Text(selectedIngredient?.name ?? "Select an ingredient")
-                                .foregroundColor(selectedIngredient == nil ? .gray : .primary)
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(.gray)
+            ScrollViewReader { proxy in
+                Form {
+                    // Ingredient Selection
+                    Section("Ingredient") {
+                        Button {
+                            isInputFocused = false
+                            showingIngredientPicker = true
+                        } label: {
+                            HStack {
+                                Text(selectedIngredient?.name ?? "Select an ingredient")
+                                    .foregroundColor(selectedIngredient == nil ? .gray : .primary)
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .foregroundColor(.gray)
+                                    .font(.caption)
+                            }
+                        }
+                        
+                        if let ingredient = selectedIngredient, let brand = ingredient.brand {
+                            Text(brand)
                                 .font(.caption)
+                                .foregroundColor(.secondary)
                         }
                     }
                     
-                    if let ingredient = selectedIngredient, let brand = ingredient.brand {
-                        Text(brand)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                
-                // Input Amount
-                Section("Amount") {
-                    TextField("Enter amount", text: $inputAmount)
-                        .keyboardType(.decimalPad)
-                        .onChange(of: inputAmount) { _, _ in
-                            performConversion()
-                        }
-                }
-                
-                // From Unit
-                Section("From") {
-                    if let ingredient = selectedIngredient {
-                        Picker("Unit", selection: $selectedFromUnit) {
-                            Text("Select unit").tag(nil as MeasurementUnit?)
-                            ForEach(availableUnits(for: ingredient), id: \.self) { unit in
-                                Text(unitDisplayText(unit)).tag(unit as MeasurementUnit?)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        .onChange(of: selectedFromUnit) { _, _ in
-                            performConversion()
-                        }
-                    } else {
-                        Text("Select an ingredient first")
-                            .foregroundColor(.gray)
-                    }
-                }
-                
-                // Swap Button
-                if selectedFromUnit != nil && selectedToUnit != nil {
-                    Section {
-                        Button {
-                            swapUnits()
-                        } label: {
-                            HStack {
-                                Spacer()
-                                Image(systemName: "arrow.up.arrow.down")
-                                Text("Swap Units")
-                                Spacer()
+                    // Input Amount
+                    Section("Amount") {
+                        HStack {
+                            TextField("Enter amount", text: $inputAmount)
+                                .keyboardType(.decimalPad)
+                                .focused($isInputFocused)
+                                .onChange(of: inputAmount) { _, _ in
+                                    performConversion()
+                                }
+                            
+                            if isInputFocused {
+                                Button("Done") {
+                                    isInputFocused = false
+                                }
+                                .buttonStyle(.borderedProminent)
                             }
                         }
                     }
-                }
-                
-                // To Unit
-                Section("To") {
-                    if let ingredient = selectedIngredient {
-                        Picker("Unit", selection: $selectedToUnit) {
-                            Text("Select unit").tag(nil as MeasurementUnit?)
-                            ForEach(availableUnits(for: ingredient), id: \.self) { unit in
-                                Text(unitDisplayText(unit)).tag(unit as MeasurementUnit?)
+                    
+                    // From Unit
+                    Section("From") {
+                        if let ingredient = selectedIngredient {
+                            Picker("Unit", selection: $selectedFromUnit) {
+                                Text("Select unit").tag(nil as MeasurementUnit?)
+                                ForEach(availableUnits(for: ingredient), id: \.self) { unit in
+                                    Text(unitDisplayText(unit)).tag(unit as MeasurementUnit?)
+                                }
+                            }
+                            .pickerStyle(.menu)
+                            .onChange(of: selectedFromUnit) { _, _ in
+                                performConversion()
+                                withAnimation {
+                                    proxy.scrollTo("result", anchor: .bottom)
+                                }
+                            }
+                        } else {
+                            Text("Select an ingredient first")
+                                .foregroundColor(.gray)
+                        }
+                    }
+                    
+                    // Swap Button
+                    if selectedFromUnit != nil && selectedToUnit != nil {
+                        Section {
+                            Button {
+                                isInputFocused = false
+                                swapUnits()
+                            } label: {
+                                HStack {
+                                    Spacer()
+                                    Image(systemName: "arrow.up.arrow.down")
+                                    Text("Swap Units")
+                                    Spacer()
+                                }
                             }
                         }
-                        .pickerStyle(.menu)
-                        .onChange(of: selectedToUnit) { _, _ in
-                            performConversion()
-                        }
-                    } else {
-                        Text("Select an ingredient first")
-                            .foregroundColor(.gray)
                     }
-                }
-                
-                // Result
-                if let result = conversionResult,
-                   let fromUnit = selectedFromUnit,
-                   let toUnit = selectedToUnit,
-                   let amount = Double(inputAmount) {
-                    Section("Result") {
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack {
-                                Text(formatAmount(amount))
-                                    .font(.title2)
-                                Text(unitDisplayText(fromUnit, amount: amount))
+                    
+                    // To Unit
+                    Section("To") {
+                        if let ingredient = selectedIngredient {
+                            Picker("Unit", selection: $selectedToUnit) {
+                                Text("Select unit").tag(nil as MeasurementUnit?)
+                                ForEach(availableUnits(for: ingredient), id: \.self) { unit in
+                                    Text(unitDisplayText(unit)).tag(unit as MeasurementUnit?)
+                                }
+                            }
+                            .pickerStyle(.menu)
+                            .onChange(of: selectedToUnit) { _, _ in
+                                performConversion()
+                                withAnimation {
+                                    proxy.scrollTo("result", anchor: .bottom)
+                                }
+                            }
+                        } else {
+                            Text("Select an ingredient first")
+                                .foregroundColor(.gray)
+                        }
+                    }
+                    
+                    // Result
+                    if let result = conversionResult,
+                       let fromUnit = selectedFromUnit,
+                       let toUnit = selectedToUnit,
+                       let amount = Double(inputAmount) {
+                        Section("Result") {
+                            VStack(alignment: .leading, spacing: 12) {
+                                HStack {
+                                    Text(formatAmount(amount))
+                                        .font(.title2)
+                                    Text(unitDisplayText(fromUnit, amount: amount))
+                                        .font(.title3)
+                                        .foregroundColor(.secondary)
+                                }
+                                
+                                Image(systemName: "equal")
+                                    .foregroundColor(.blue)
                                     .font(.title3)
-                                    .foregroundColor(.secondary)
+                                
+                                HStack {
+                                    Text(formatAmount(result))
+                                        .font(.system(.title, design: .rounded))
+                                        .bold()
+                                        .foregroundColor(.blue)
+                                    Text(unitDisplayText(toUnit, amount: result))
+                                        .font(.title2)
+                                        .foregroundColor(.secondary)
+                                }
                             }
-                            
-                            Image(systemName: "equal")
-                                .foregroundColor(.blue)
-                                .font(.title3)
-                            
-                            HStack {
-                                Text(formatAmount(result))
-                                    .font(.title)
-                                    .bold()
-                                Text(unitDisplayText(toUnit, amount: result))
-                                    .font(.title2)
-                                    .foregroundColor(.secondary)
-                            }
+                            .padding(.vertical, 8)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        .padding(.vertical, 8)
-                    }
-                } else if selectedIngredient != nil && !inputAmount.isEmpty && selectedFromUnit != nil && selectedToUnit != nil {
-                    Section("Result") {
-                        Text("No conversion available")
-                            .foregroundColor(.red)
+                        .id("result")
+                    } else if selectedIngredient != nil && !inputAmount.isEmpty && selectedFromUnit != nil && selectedToUnit != nil {
+                        Section("Result") {
+                            Label("No conversion available", systemImage: "exclamationmark.triangle")
+                                .foregroundColor(.orange)
+                        }
+                        .id("result")
                     }
                 }
+                .scrollDismissesKeyboard(.interactively)
             }
             .navigationTitle("Convert")
             .sheet(isPresented: $showingIngredientPicker) {
@@ -158,6 +190,17 @@ struct ConversionView: View {
                 selectedFromUnit = nil
                 selectedToUnit = nil
                 conversionResult = nil
+            }
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Done") {
+                        isInputFocused = false
+                    }
+                }
+            }
+            .onTapGesture {
+                isInputFocused = false
             }
         }
     }
