@@ -18,6 +18,11 @@ class ConversionEngine {
             return amount
         }
         
+        // If both units are the same type (both volume or both weight), use Foundation's conversion
+        if from.type == to.type, from.type == .volume || from.type == .weight {
+            return UnitConversionHelper.convert(amount: amount, from: from, to: to)
+        }
+        
         // Try direct conversion
         if let result = directConversion(amount: amount, from: from, to: to, for: ingredient) {
             return result
@@ -88,6 +93,12 @@ class ConversionEngine {
         // Mark current unit as visited
         visited.insert(currentUnit)
         
+        // Check if we can convert using Foundation's standard conversions
+        if currentUnit.type == targetUnit.type,
+           let standardConversion = UnitConversionHelper.convert(amount: currentAmount, from: currentUnit, to: targetUnit) {
+            return standardConversion
+        }
+        
         // Try all conversions from current unit
         for conversion in ingredient.conversions {
             var nextUnit: MeasurementUnit?
@@ -109,6 +120,12 @@ class ConversionEngine {
                 // Check if we reached the target
                 if unit == targetUnit {
                     return amount
+                }
+                
+                // Check if we can reach target via standard conversion
+                if unit.type == targetUnit.type,
+                   let finalAmount = UnitConversionHelper.convert(amount: amount, from: unit, to: targetUnit) {
+                    return finalAmount
                 }
                 
                 // Otherwise, continue searching recursively
