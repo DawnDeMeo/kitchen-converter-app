@@ -42,11 +42,11 @@ struct ConversionEditorSheet: View {
     }
     
     var volumeUnits: [MeasurementUnit] {
-        [.cup, .tablespoon, .teaspoon, .milliliter, .liter, .fluidOunce]
+        [.teaspoon, .tablespoon, .cup, .pint, .quart, .gallon, .liter, .centiliter, .milliliter, .fluidOunce]
     }
-    
+
     var weightUnits: [MeasurementUnit] {
-        [.gram, .kilogram, .ounce, .pound]
+        [.pound, .ounce, .gram, .milligram, .kilogram]
     }
     
     var body: some View {
@@ -184,12 +184,12 @@ struct ConversionEditorSheet: View {
             }
         }
     }
-    
+
     private func handleToUnitTypeChange(from oldType: UnitInputType, to newType: UnitInputType) {
         // Update default unit when type changes
         switch newType {
         case .volume:
-            toUnit = .cup
+            toUnit = .milliliter
         case .weight:
             toUnit = .gram
         case .count:

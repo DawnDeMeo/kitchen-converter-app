@@ -51,16 +51,24 @@ struct UnitConversionHelper {
     
     private static func foundationVolumeUnit(for unit: MeasurementUnit) -> UnitVolume? {
         switch unit {
-        case .cup:
-            return .cups
-        case .tablespoon:
-            return .tablespoons
         case .teaspoon:
             return .teaspoons
-        case .milliliter:
-            return .milliliters
+        case .tablespoon:
+            return .tablespoons
+        case .cup:
+            return .cups
+        case .pint:
+            return .pints
+        case .quart:
+            return .quarts
+        case .gallon:
+            return .gallons
         case .liter:
             return .liters
+        case .centiliter:
+            return .centiliters
+        case .milliliter:
+            return .milliliters
         case .fluidOunce:
             return .fluidOunces
         default:
@@ -70,14 +78,16 @@ struct UnitConversionHelper {
     
     private static func foundationWeightUnit(for unit: MeasurementUnit) -> UnitMass? {
         switch unit {
-        case .gram:
-            return .grams
-        case .kilogram:
-            return .kilograms
-        case .ounce:
-            return .ounces
         case .pound:
             return .pounds
+        case .ounce:
+            return .ounces
+        case .gram:
+            return .grams
+        case .milligram:
+            return .milligrams
+        case .kilogram:
+            return .kilograms
         default:
             return nil
         }
@@ -87,9 +97,9 @@ struct UnitConversionHelper {
     static func allUnitsOfSameType(as unit: MeasurementUnit) -> [MeasurementUnit] {
         switch unit.type {
         case .volume:
-            return [.cup, .tablespoon, .teaspoon, .milliliter, .liter, .fluidOunce]
+            return [.teaspoon, .tablespoon, .cup, .pint, .quart, .gallon, .liter, .centiliter, .milliliter, .fluidOunce]
         case .weight:
-            return [.gram, .kilogram, .ounce, .pound]
+            return [.pound, .ounce, .gram, .milligram, .kilogram]
         case .count, .other:
             return [unit]
         }

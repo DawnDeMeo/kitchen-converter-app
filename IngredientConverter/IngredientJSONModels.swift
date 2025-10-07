@@ -74,17 +74,40 @@ enum UnitJSON: Codable {
         switch self {
         case .simple(let string):
             switch string.lowercased() {
-            case "cup": return .cup
-            case "tablespoon", "tbsp": return .tablespoon
-            case "teaspoon", "tsp": return .teaspoon
-            case "milliliter", "ml": return .milliliter
-            case "liter", "l": return .liter
-            case "fluidounce", "fl oz", "floz": return .fluidOunce
-            case "gram", "g": return .gram
-            case "kilogram", "kg": return .kilogram
-            case "ounce", "oz": return .ounce
-            case "pound", "lb": return .pound
-            default: return .other(name: string)
+            // Volume
+            case "teaspoon", "tsp":
+                return .teaspoon
+            case "tablespoon", "tbsp":
+                return .tablespoon
+            case "cup":
+                return .cup
+            case "pint", "pt":
+                return .pint
+            case "quart", "qt":
+                return .quart
+            case "gallon", "gal":
+                return .gallon
+            case "liter", "l":
+                return .liter
+            case "centiliter", "cl":
+                return .centiliter
+            case "milliliter", "ml":
+                return .milliliter
+            case "fluidounce", "fl oz", "floz":
+                return .fluidOunce
+            // Weight
+            case "pound", "lb":
+                return .pound
+            case "ounce", "oz":
+                return .ounce
+            case "gram", "g":
+                return .gram
+            case "milligram", "mg":
+                return .milligram
+            case "kilogram", "kg":
+                return .kilogram
+            default:
+                return .other(name: string)
             }
         case .count(let countUnit):
             return .count(singular: countUnit.singular, plural: countUnit.plural)
