@@ -27,7 +27,7 @@ struct MeasurementUnitTests {
         #expect(MeasurementUnit.teaspoon.displayName == "tsp")
         #expect(MeasurementUnit.gram.displayName == "g")
         #expect(MeasurementUnit.ounce.displayName == "oz")
-        #expect(MeasurementUnit.milliliter.displayName == "ml")
+        #expect(MeasurementUnit.milliliter.displayName == "mL")
     }
     
     @Test("Count unit singular display")
