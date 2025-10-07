@@ -267,29 +267,6 @@ struct IngredientListView: View {
 struct IngredientRow: View {
     @Bindable var ingredient: Ingredient
     
-    private var lastUsedText: String {
-        guard let lastUsed = ingredient.lastUsedDate else {
-            return "Never used"
-        }
-        
-        let calendar = Calendar.current
-        let now = Date()
-        
-        if calendar.isDateInToday(lastUsed) {
-            let formatter = DateFormatter()
-            formatter.timeStyle = .short
-            return "Used today at \(formatter.string(from: lastUsed))"
-        } else if calendar.isDateInYesterday(lastUsed) {
-            return "Used yesterday"
-        } else if let days = calendar.dateComponents([.day], from: lastUsed, to: now).day, days < 7 {
-            return "Used \(days) day\(days == 1 ? "" : "s") ago"
-        } else {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .short
-            return "Used \(formatter.string(from: lastUsed))"
-        }
-    }
-    
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 6) {
@@ -313,16 +290,6 @@ struct IngredientRow: View {
                 if let brand = ingredient.brand {
                     Text(brand)
                         .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                
-                HStack(spacing: 12) {
-                    Label("\(ingredient.conversions.count)", systemImage: "arrow.left.arrow.right")
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
-                    
-                    Text(lastUsedText)
-                        .font(.caption2)
                         .foregroundColor(.secondary)
                 }
             }
