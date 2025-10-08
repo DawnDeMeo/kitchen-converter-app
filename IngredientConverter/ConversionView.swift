@@ -50,8 +50,8 @@ struct ConversionView: View {
                 // Input Amount
                 Section("Amount") {
                     HStack {
-                        TextField("Enter amount", text: $inputAmount)
-                            .keyboardType(.decimalPad)
+                        TextField("Enter amount (e.g., 1 1/2)", text: $inputAmount)
+                            .keyboardType(.numbersAndPunctuation)
                             .focused($isInputFocused)
                             .onChange(of: inputAmount) { _, _ in
                                 performConversion()
@@ -125,11 +125,11 @@ struct ConversionView: View {
                 if let result = conversionResult,
                    let fromUnit = selectedFromUnit,
                    let toUnit = selectedToUnit,
-                   let amount = Double(inputAmount) {
+                   let amount = FractionParser.parse(inputAmount) {
                     Section("Result") {
                         VStack(alignment: .leading, spacing: 12) {
                             HStack {
-                                Text(formatAmount(amount))
+                                Text(inputAmount)  // Show what they typed
                                     .font(.title2)
                                 Text(unitDisplayText(fromUnit, amount: amount))
                                     .font(.title3)
@@ -221,7 +221,7 @@ struct ConversionView: View {
         guard let ingredient = selectedIngredient,
               let fromUnit = selectedFromUnit,
               let toUnit = selectedToUnit,
-              let amount = Double(inputAmount),
+              let amount = FractionParser.parse(inputAmount),
               amount > 0 else {
             conversionResult = nil
             return
