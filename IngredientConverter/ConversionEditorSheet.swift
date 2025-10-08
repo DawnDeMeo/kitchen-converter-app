@@ -8,17 +8,20 @@
 import SwiftUI
 
 struct ConversionEditorSheet: View {
+    @FocusState private var fromAmountFocused: Bool
+    @FocusState private var toAmountFocused: Bool
+    
     @Environment(\.dismiss) private var dismiss
     
     let onSave: (ConversionEditor) -> Void
     
-    @State private var fromAmount: String = "1"
+    @State private var fromAmount: String = ""
     @State private var fromUnit: MeasurementUnit = .cup
     @State private var fromUnitType: UnitInputType = .volume
     @State private var countSingular: String = ""
     @State private var countPlural: String = ""
 
-    @State private var toAmount: String = "1"
+    @State private var toAmount: String = ""
     @State private var toUnit: MeasurementUnit = .gram
     @State private var toUnitType: UnitInputType = .weight
     @State private var toCountSingular: String = ""
@@ -55,8 +58,9 @@ struct ConversionEditorSheet: View {
                         handleFromUnitTypeChange(from: oldValue, to: newValue)
                     }
                     
-                    TextField("Amount (e.g., 1 1/2)", text: $fromAmount)
+                    TextField("Enter amount (e.g., 1 1/2)", text: $fromAmount)
                         .keyboardType(.numbersAndPunctuation)
+                        .focused($fromAmountFocused)
                     
                     switch fromUnitType {
                     case .volume:
@@ -88,8 +92,9 @@ struct ConversionEditorSheet: View {
                         handleToUnitTypeChange(from: oldValue, to: newValue)
                     }
                     
-                    TextField("Amount (e.g., 1 1/2)", text: $toAmount)
+                    TextField("Enter amount (e.g., 1 1/2)", text: $toAmount)
                         .keyboardType(.numbersAndPunctuation)
+                        .focused($toAmountFocused)
                     
                     switch toUnitType {
                     case .volume:
@@ -141,7 +146,32 @@ struct ConversionEditorSheet: View {
                     Button("Add") {
                         saveConversion()
                     }
-                    .disabled(fromUnitType == toUnitType)
+                }
+                
+                ToolbarItemGroup(placement: .keyboard) {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            ForEach(FractionInputHelper.commonFractions, id: \.self) { fraction in
+                                Button(fraction) {
+                                    // Add to whichever field is focused
+                                    if fromAmountFocused {
+                                        fromAmount = FractionInputHelper.appendFraction(fraction, to: fromAmount)
+                                    } else if toAmountFocused {
+                                        toAmount = FractionInputHelper.appendFraction(fraction, to: toAmount)
+                                    }
+                                }
+                                .buttonStyle(.bordered)
+                                .font(.subheadline)
+                            }
+                        }
+                    }
+                    
+                    Spacer()
+                    
+                    Button("Done") {
+                        fromAmountFocused = false
+                        toAmountFocused = false
+                    }
                 }
             }
             .alert("Error", isPresented: $showingError) {

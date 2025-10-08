@@ -164,7 +164,21 @@ struct ConversionView: View {
         }
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(FractionInputHelper.commonFractions, id: \.self) { fraction in
+                            Button(fraction) {
+                                inputAmount = FractionInputHelper.appendFraction(fraction, to: inputAmount)
+                                performConversion()
+                            }
+                            .buttonStyle(.bordered)
+                            .font(.subheadline)
+                        }
+                    }
+                }
+                
                 Spacer()
+                
                 Button("Done") {
                     isInputFocused = false
                 }
