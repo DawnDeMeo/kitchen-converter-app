@@ -49,21 +49,12 @@ struct ConversionView: View {
                 
                 // Input Amount
                 Section("Amount") {
-                    HStack {
-                        TextField("Enter amount (e.g., 1 1/2)", text: $inputAmount)
-                            .keyboardType(.numbersAndPunctuation)
-                            .focused($isInputFocused)
-                            .onChange(of: inputAmount) { _, _ in
-                                performConversion()
-                            }
-                        
-                        if isInputFocused {
-                            Button("Done") {
-                                isInputFocused = false
-                            }
-                            .buttonStyle(.borderedProminent)
+                    TextField("Enter amount (e.g., 1 1/2)", text: $inputAmount)
+                        .keyboardType(.numbersAndPunctuation)
+                        .focused($isInputFocused)
+                        .onChange(of: inputAmount) { _, _ in
+                            performConversion()
                         }
-                    }
                 }
                 
                 // From Unit
