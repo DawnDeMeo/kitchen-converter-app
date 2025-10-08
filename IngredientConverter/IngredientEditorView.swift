@@ -212,7 +212,7 @@ struct ConversionEditorRow: View {
             
             HStack {
                 TextField("Amount", value: $conversion.fromAmount, format: .number)
-                    .keyboardType(.decimalPad)
+                    .keyboardType(.numbersAndPunctuation)
                     .textFieldStyle(.roundedBorder)
                     .frame(width: 80)
                 
@@ -233,7 +233,7 @@ struct ConversionEditorRow: View {
             
             HStack {
                 TextField("Amount", value: $conversion.toAmount, format: .number)
-                    .keyboardType(.decimalPad)
+                    .keyboardType(.numbersAndPunctuation)
                     .textFieldStyle(.roundedBorder)
                     .frame(width: 80)
                 

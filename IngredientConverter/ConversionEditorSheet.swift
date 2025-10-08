@@ -17,7 +17,7 @@ struct ConversionEditorSheet: View {
     @State private var fromUnitType: UnitInputType = .volume
     @State private var countSingular: String = ""
     @State private var countPlural: String = ""
-    
+
     @State private var toAmount: String = "1"
     @State private var toUnit: MeasurementUnit = .gram
     @State private var toUnitType: UnitInputType = .weight
@@ -31,14 +31,6 @@ struct ConversionEditorSheet: View {
         case volume = "Volume"
         case weight = "Weight"
         case count = "Count"
-        
-        var description: String {
-            switch self {
-            case .volume: return "Volume (cups, tbsp, ml)"
-            case .weight: return "Weight (grams, oz, lb)"
-            case .count: return "Pieces/Items"
-            }
-        }
     }
     
     var volumeUnits: [MeasurementUnit] {
@@ -63,8 +55,8 @@ struct ConversionEditorSheet: View {
                         handleFromUnitTypeChange(from: oldValue, to: newValue)
                     }
                     
-                    TextField("Amount", text: $fromAmount)
-                        .keyboardType(.decimalPad)
+                    TextField("Amount (e.g., 1 1/2)", text: $fromAmount)
+                        .keyboardType(.numbersAndPunctuation)
                     
                     switch fromUnitType {
                     case .volume:
@@ -96,8 +88,8 @@ struct ConversionEditorSheet: View {
                         handleToUnitTypeChange(from: oldValue, to: newValue)
                     }
                     
-                    TextField("Amount", text: $toAmount)
-                        .keyboardType(.decimalPad)
+                    TextField("Amount (e.g., 1 1/2)", text: $toAmount)
+                        .keyboardType(.numbersAndPunctuation)
                     
                     switch toUnitType {
                     case .volume:
@@ -198,8 +190,8 @@ struct ConversionEditorSheet: View {
     }
     
     private var previewText: String? {
-        guard let from = Double(fromAmount),
-              let to = Double(toAmount) else {
+        guard let from = FractionParser.parse(fromAmount),
+              let to = FractionParser.parse(toAmount) else {
             return nil
         }
         
@@ -227,14 +219,7 @@ struct ConversionEditorSheet: View {
             }
         }
         
-        return "\(formatAmount(from)) \(fromUnitText) = \(formatAmount(to)) \(toUnitText)"
-    }
-    
-    private func formatAmount(_ amount: Double) -> String {
-        let formatter = NumberFormatter()
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 2
-        return formatter.string(from: NSNumber(value: amount)) ?? "\(amount)"
+        return "\(fromAmount) \(fromUnitText) = \(toAmount) \(toUnitText)"
     }
     
     private func saveConversion() {
@@ -245,13 +230,13 @@ struct ConversionEditorSheet: View {
             return
         }
         
-        guard let fromAmt = Double(fromAmount), fromAmt > 0 else {
+        guard let fromAmt = FractionParser.parse(fromAmount), fromAmt > 0 else {
             errorMessage = "Please enter a valid 'from' amount"
             showingError = true
             return
         }
         
-        guard let toAmt = Double(toAmount), toAmt > 0 else {
+        guard let toAmt = FractionParser.parse(toAmount), toAmt > 0 else {
             errorMessage = "Please enter a valid 'to' amount"
             showingError = true
             return
