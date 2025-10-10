@@ -46,91 +46,133 @@ struct ConversionEditorSheet: View {
     
     var body: some View {
         NavigationStack {
-            Form {
-                Section("From") {
-                    Picker("Unit Type", selection: $fromUnitType) {
-                        ForEach(UnitInputType.allCases, id: \.self) { type in
-                            Text(type.rawValue).tag(type)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .onChange(of: fromUnitType) { oldValue, newValue in
-                        handleFromUnitTypeChange(from: oldValue, to: newValue)
-                    }
-                    
-                    TextField("Enter amount (e.g., 1 1/2)", text: $fromAmount)
-                        .keyboardType(.numbersAndPunctuation)
-                        .focused($fromAmountFocused)
-                    
-                    switch fromUnitType {
-                    case .volume:
-                        Picker("Unit", selection: $fromUnit) {
-                            ForEach(volumeUnits, id: \.self) { unit in
-                                Text(unit.displayName).tag(unit)
+            VStack(spacing: 0) {
+                Form {
+                    Section("From") {
+                        Picker("Unit Type", selection: $fromUnitType) {
+                            ForEach(UnitInputType.allCases, id: \.self) { type in
+                                Text(type.rawValue).tag(type)
                             }
                         }
-                    case .weight:
-                        Picker("Unit", selection: $fromUnit) {
-                            ForEach(weightUnits, id: \.self) { unit in
-                                Text(unit.displayName).tag(unit)
+                        .pickerStyle(.segmented)
+                        .onChange(of: fromUnitType) { oldValue, newValue in
+                            handleFromUnitTypeChange(from: oldValue, to: newValue)
+                        }
+                        
+                        AmountTextField(
+                            text: $fromAmount,
+                            placeholder: "Enter from amount (e.g., 1 1/2)",
+                            isFocused: $fromAmountFocused
+                        )
+                        
+                        switch fromUnitType {
+                        case .volume:
+                            Picker("Unit", selection: $fromUnit) {
+                                ForEach(volumeUnits, id: \.self) { unit in
+                                    Text(unit.displayName).tag(unit)
+                                }
                             }
+                        case .weight:
+                            Picker("Unit", selection: $fromUnit) {
+                                ForEach(weightUnits, id: \.self) { unit in
+                                    Text(unit.displayName).tag(unit)
+                                }
+                            }
+                        case .count:
+                            TextField("Singular (e.g., egg)", text: $countSingular)
+                            TextField("Plural (e.g., eggs)", text: $countPlural)
                         }
-                    case .count:
-                        TextField("Singular (e.g., egg)", text: $countSingular)
-                        TextField("Plural (e.g., eggs)", text: $countPlural)
-                    }
-                }
-                
-                Section("To") {
-                    Picker("Unit Type", selection: $toUnitType) {
-                        ForEach(allowedToUnitTypes, id: \.self) { type in
-                            Text(type.rawValue).tag(type)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .onChange(of: toUnitType) { oldValue, newValue in
-                        handleToUnitTypeChange(from: oldValue, to: newValue)
                     }
                     
-                    TextField("Enter amount (e.g., 1 1/2)", text: $toAmount)
-                        .keyboardType(.numbersAndPunctuation)
-                        .focused($toAmountFocused)
-                    
-                    switch toUnitType {
-                    case .volume:
-                        Picker("Unit", selection: $toUnit) {
-                            ForEach(volumeUnits, id: \.self) { unit in
-                                Text(unit.displayName).tag(unit)
+                    Section("To") {
+                        Picker("Unit Type", selection: $toUnitType) {
+                            ForEach(allowedToUnitTypes, id: \.self) { type in
+                                Text(type.rawValue).tag(type)
                             }
                         }
-                    case .weight:
-                        Picker("Unit", selection: $toUnit) {
-                            ForEach(weightUnits, id: \.self) { unit in
-                                Text(unit.displayName).tag(unit)
-                            }
+                        .pickerStyle(.segmented)
+                        .onChange(of: toUnitType) { oldValue, newValue in
+                            handleToUnitTypeChange(from: oldValue, to: newValue)
                         }
-                    case .count:
-                        TextField("Singular (e.g., piece)", text: $toCountSingular)
-                        TextField("Plural (e.g., pieces)", text: $toCountPlural)
+                        
+                        AmountTextField(
+                            text: $toAmount,
+                            placeholder: "Enter to amount (e.g., 1 1/2)",
+                            isFocused: $toAmountFocused
+                        )
+                        
+                        switch toUnitType {
+                        case .volume:
+                            Picker("Unit", selection: $toUnit) {
+                                ForEach(volumeUnits, id: \.self) { unit in
+                                    Text(unit.displayName).tag(unit)
+                                }
+                            }
+                        case .weight:
+                            Picker("Unit", selection: $toUnit) {
+                                ForEach(weightUnits, id: \.self) { unit in
+                                    Text(unit.displayName).tag(unit)
+                                }
+                            }
+                        case .count:
+                            TextField("Singular (e.g., piece)", text: $toCountSingular)
+                            TextField("Plural (e.g., pieces)", text: $toCountPlural)
+                        }
                     }
-                }
-                
-                if fromUnitType == toUnitType {
+                    
+                    if fromUnitType == toUnitType {
+                        Section {
+                            Label("Cannot convert between the same unit types", systemImage: "exclamationmark.triangle.fill")
+                                .foregroundColor(.orange)
+                                .font(.callout)
+                        }
+                    }
+                    
                     Section {
-                        Label("Cannot convert between the same unit types", systemImage: "exclamationmark.triangle.fill")
-                            .foregroundColor(.orange)
-                            .font(.callout)
+                        if let preview = previewText {
+                            Text(preview)
+                                .font(.callout)
+                                .foregroundColor(.secondary)
+                        }
+                    } header: {
+                        Text("Preview")
                     }
                 }
                 
-                Section {
-                    if let preview = previewText {
-                        Text(preview)
-                            .font(.callout)
-                            .foregroundColor(.secondary)
+                // Custom keyboard accessory view - consistent with ConversionViewFixed
+                if fromAmountFocused || toAmountFocused {
+                    VStack(spacing: 0) {
+                        Divider()
+                        
+                        HStack {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 8) {
+                                    ForEach(FractionInputHelper.commonFractions, id: \.self) { fraction in
+                                        Button(fraction) {
+                                            // Add to whichever field is focused
+                                            if fromAmountFocused {
+                                                fromAmount = FractionInputHelper.appendFraction(fraction, to: fromAmount)
+                                            } else if toAmountFocused {
+                                                toAmount = FractionInputHelper.appendFraction(fraction, to: toAmount)
+                                            }
+                                        }
+                                        .buttonStyle(.bordered)
+                                        .font(.subheadline)
+                                    }
+                                }
+                                .padding(.horizontal)
+                            }
+                            
+                            Button("Done") {
+                                fromAmountFocused = false
+                                toAmountFocused = false
+                            }
+                            .padding(.trailing)
+                        }
+                        .padding(.vertical, 8)
+                        .background(.regularMaterial)
                     }
-                } header: {
-                    Text("Preview")
+                    .transition(.move(edge: .bottom))
                 }
             }
             .navigationTitle("Add Conversion")
@@ -147,38 +189,13 @@ struct ConversionEditorSheet: View {
                         saveConversion()
                     }
                 }
-                
-                ToolbarItemGroup(placement: .keyboard) {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 8) {
-                            ForEach(FractionInputHelper.commonFractions, id: \.self) { fraction in
-                                Button(fraction) {
-                                    // Add to whichever field is focused
-                                    if fromAmountFocused {
-                                        fromAmount = FractionInputHelper.appendFraction(fraction, to: fromAmount)
-                                    } else if toAmountFocused {
-                                        toAmount = FractionInputHelper.appendFraction(fraction, to: toAmount)
-                                    }
-                                }
-                                .buttonStyle(.bordered)
-                                .font(.subheadline)
-                            }
-                        }
-                    }
-                    
-                    Spacer()
-                    
-                    Button("Done") {
-                        fromAmountFocused = false
-                        toAmountFocused = false
-                    }
-                }
             }
             .alert("Error", isPresented: $showingError) {
                 Button("OK", role: .cancel) { }
             } message: {
                 Text(errorMessage)
             }
+            .animation(.easeInOut(duration: 0.3), value: fromAmountFocused || toAmountFocused)
         }
     }
     

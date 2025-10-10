@@ -28,132 +28,164 @@ struct ConversionView: View {
     }
     
     var body: some View {
-        ScrollViewReader { proxy in
-            Form {
-                // Ingredient Display (not selectable)
-                if let ingredient = selectedIngredient {
-                    Section("Ingredient") {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(ingredient.name)
-                                .font(.headline)
-                            
-                            if let brand = ingredient.brand {
-                                Text(brand)
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                        .padding(.vertical, 4)
-                    }
-                }
-                
-                // Input Amount
-                Section("Amount") {
-                    TextField("Enter amount (e.g., 1 1/2)", text: $inputAmount)
-                        .keyboardType(.numbersAndPunctuation)
-                        .focused($isInputFocused)
-                        .onChange(of: inputAmount) { _, _ in
-                            performConversion()
-                        }
-                }
-                
-                // From Unit
-                Section("From") {
+        VStack(spacing: 0) {
+            ScrollViewReader { proxy in
+                Form {
+                    // Ingredient Display (not selectable)
                     if let ingredient = selectedIngredient {
-                        Picker("Unit", selection: $selectedFromUnit) {
-                            Text("Select unit").tag(nil as MeasurementUnit?)
-                            ForEach(availableUnits(for: ingredient), id: \.self) { unit in
-                                Text(unit.fullDisplayName).tag(unit as MeasurementUnit?)
+                        Section("Ingredient") {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(ingredient.name)
+                                    .font(.headline)
+                                
+                                if let brand = ingredient.brand {
+                                    Text(brand)
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
                             }
+                            .padding(.vertical, 4)
                         }
-                        .pickerStyle(.menu)
-                        .onChange(of: selectedFromUnit) { _, _ in
-                            performConversion()
-                            withAnimation {
-                                proxy.scrollTo("result", anchor: .bottom)
+                    }
+                    
+                    // Input Amount
+                    Section("Amount") {
+                        AmountTextField(
+                            text: $inputAmount,
+                            isFocused: $isInputFocused,
+                            onChange: performConversion
+                        )
+                    }
+                    
+                    // From Unit
+                    Section("From") {
+                        if let ingredient = selectedIngredient {
+                            Picker("Unit", selection: $selectedFromUnit) {
+                                Text("Select unit").tag(nil as MeasurementUnit?)
+                                ForEach(availableUnits(for: ingredient), id: \.self) { unit in
+                                    Text(unit.fullDisplayName).tag(unit as MeasurementUnit?)
+                                }
+                            }
+                            .pickerStyle(.menu)
+                            .onChange(of: selectedFromUnit) { _, _ in
+                                performConversion()
+                                withAnimation {
+                                    proxy.scrollTo("result", anchor: .bottom)
+                                }
                             }
                         }
                     }
-                }
-                
-                // Swap Button
-                if selectedFromUnit != nil && selectedToUnit != nil {
-                    Section {
-                        Button {
-                            isInputFocused = false
-                            swapUnits()
-                        } label: {
-                            HStack {
-                                Spacer()
-                                Image(systemName: "arrow.up.arrow.down")
-                                Text("Swap Units")
-                                Spacer()
+                    
+                    // Swap Button
+                    if selectedFromUnit != nil && selectedToUnit != nil {
+                        Section {
+                            Button {
+                                isInputFocused = false
+                                swapUnits()
+                            } label: {
+                                HStack {
+                                    Spacer()
+                                    Image(systemName: "arrow.up.arrow.down")
+                                    Text("Swap Units")
+                                    Spacer()
+                                }
                             }
                         }
                     }
-                }
-                
-                // To Unit
-                Section("To") {
-                    if let ingredient = selectedIngredient {
-                        Picker("Unit", selection: $selectedToUnit) {
-                            Text("Select unit").tag(nil as MeasurementUnit?)
-                            ForEach(availableUnits(for: ingredient), id: \.self) { unit in
-                                Text(unit.fullDisplayName).tag(unit as MeasurementUnit?)
+                    
+                    // To Unit
+                    Section("To") {
+                        if let ingredient = selectedIngredient {
+                            Picker("Unit", selection: $selectedToUnit) {
+                                Text("Select unit").tag(nil as MeasurementUnit?)
+                                ForEach(availableUnits(for: ingredient), id: \.self) { unit in
+                                    Text(unit.fullDisplayName).tag(unit as MeasurementUnit?)
+                                }
                             }
-                        }
-                        .pickerStyle(.menu)
-                        .onChange(of: selectedToUnit) { _, _ in
-                            performConversion()
-                            withAnimation {
-                                proxy.scrollTo("result", anchor: .bottom)
+                            .pickerStyle(.menu)
+                            .onChange(of: selectedToUnit) { _, _ in
+                                performConversion()
+                                withAnimation {
+                                    proxy.scrollTo("result", anchor: .bottom)
+                                }
                             }
                         }
                     }
-                }
-                
-                // Result
-                if let result = conversionResult,
-                   let fromUnit = selectedFromUnit,
-                   let toUnit = selectedToUnit,
-                   let amount = FractionParser.parse(inputAmount) {
-                    Section("Result") {
-                        VStack(alignment: .leading, spacing: 12) {
-                            HStack {
-                                Text(inputAmount)  // Show what they typed
-                                    .font(.title2)
-                                Text(unitDisplayText(fromUnit, amount: amount))
-                                    .font(.title3)
-                                    .foregroundColor(.secondary)
-                            }
-                            
-                            Image(systemName: "equal")
-                                .foregroundColor(.blue)
-                                .font(.title3)
-                            
-                            HStack {
-                                Text(formatAmount(result))
-                                    .font(.system(.title, design: .rounded))
-                                    .bold()
+                    
+                    // Result
+                    if let result = conversionResult,
+                       let fromUnit = selectedFromUnit,
+                       let toUnit = selectedToUnit,
+                       let amount = FractionParser.parse(inputAmount) {
+                        Section("Result") {
+                            VStack(alignment: .leading, spacing: 12) {
+                                HStack {
+                                    Text(inputAmount)  // Show what they typed
+                                        .font(.title2)
+                                    Text(unitDisplayText(fromUnit, amount: amount))
+                                        .font(.title3)
+                                        .foregroundColor(.secondary)
+                                }
+                                
+                                Image(systemName: "equal")
                                     .foregroundColor(.blue)
-                                Text(unitDisplayText(toUnit, amount: result))
-                                    .font(.title2)
-                                    .foregroundColor(.secondary)
+                                    .font(.title3)
+                                
+                                HStack {
+                                    Text(formatAmount(result))
+                                        .font(.system(.title, design: .rounded))
+                                        .bold()
+                                        .foregroundColor(.blue)
+                                    Text(unitDisplayText(toUnit, amount: result))
+                                        .font(.title2)
+                                        .foregroundColor(.secondary)
+                                }
                             }
+                            .padding(.vertical, 8)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        .padding(.vertical, 8)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .id("result")
+                    } else if selectedIngredient != nil && !inputAmount.isEmpty && selectedFromUnit != nil && selectedToUnit != nil {
+                        Section("Result") {
+                            Label("No conversion available", systemImage: "exclamationmark.triangle")
+                                .foregroundColor(.orange)
+                        }
+                        .id("result")
                     }
-                    .id("result")
-                } else if selectedIngredient != nil && !inputAmount.isEmpty && selectedFromUnit != nil && selectedToUnit != nil {
-                    Section("Result") {
-                        Label("No conversion available", systemImage: "exclamationmark.triangle")
-                            .foregroundColor(.orange)
-                    }
-                    .id("result")
                 }
+                .scrollDismissesKeyboard(.interactively)
             }
-            .scrollDismissesKeyboard(.interactively)
+            
+            // Custom keyboard accessory view - reliable and consistent
+            if isInputFocused {
+                VStack(spacing: 0) {
+                    Divider()
+                    
+                    HStack {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 8) {
+                                ForEach(FractionInputHelper.commonFractions, id: \.self) { fraction in
+                                    Button(fraction) {
+                                        inputAmount = FractionInputHelper.appendFraction(fraction, to: inputAmount)
+                                        performConversion()
+                                    }
+                                    .buttonStyle(.bordered)
+                                    .font(.subheadline)
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+                        
+                        Button("Done") {
+                            isInputFocused = false
+                        }
+                        .padding(.trailing)
+                    }
+                    .padding(.vertical, 8)
+                    .background(.regularMaterial)
+                }
+                .transition(.move(edge: .bottom))
+            }
         }
         .navigationTitle("Convert")
         .onChange(of: selectedIngredient) { _, _ in
@@ -162,28 +194,7 @@ struct ConversionView: View {
             selectedToUnit = nil
             conversionResult = nil
         }
-        .toolbar {
-            ToolbarItemGroup(placement: .keyboard) {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 8) {
-                        ForEach(FractionInputHelper.commonFractions, id: \.self) { fraction in
-                            Button(fraction) {
-                                inputAmount = FractionInputHelper.appendFraction(fraction, to: inputAmount)
-                                performConversion()
-                            }
-                            .buttonStyle(.bordered)
-                            .font(.subheadline)
-                        }
-                    }
-                }
-                
-                Spacer()
-                
-                Button("Done") {
-                    isInputFocused = false
-                }
-            }
-        }
+        .animation(.easeInOut(duration: 0.3), value: isInputFocused)
     }
     
     // MARK: - Helper Functions
