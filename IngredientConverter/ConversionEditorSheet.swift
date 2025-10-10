@@ -139,7 +139,7 @@ struct ConversionEditorSheet: View {
                     }
                 }
                 
-                // Custom keyboard accessory view - consistent with ConversionViewFixed
+                // Custom keyboard accessory view - consistent with ConversionView
                 if fromAmountFocused || toAmountFocused {
                     VStack(spacing: 0) {
                         Divider()
