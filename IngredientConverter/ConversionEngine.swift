@@ -8,36 +8,67 @@
 import Foundation
 
 class ConversionEngine {
-    
+
+    // Cache for conversion ratios: (ingredientID, fromUnit, toUnit) -> ratio
+    private var conversionCache: [CacheKey: Double] = [:]
+
+    // Cache key for storing conversion ratios
+    private struct CacheKey: Hashable {
+        let ingredientID: UUID
+        let fromUnit: MeasurementUnit
+        let toUnit: MeasurementUnit
+    }
+
     /// Convert an amount from one unit to another for a specific ingredient
     func convert(amount: Double, from: MeasurementUnit, to: MeasurementUnit,
                  for ingredient: Ingredient) -> Double? {
-        
+
         // If converting to the same unit, just return the amount
         if from == to {
             return amount
         }
-        
+
+        // Check cache for previously computed conversion ratio
+        let cacheKey = CacheKey(ingredientID: ingredient.id, fromUnit: from, toUnit: to)
+        if let cachedRatio = conversionCache[cacheKey] {
+            return amount * cachedRatio
+        }
+
         // If both units are the same type (both volume or both weight), use Foundation's conversion
         if from.type == to.type, from.type == .volume || from.type == .weight {
-            return UnitConversionHelper.convert(amount: amount, from: from, to: to)
+            if let result = UnitConversionHelper.convert(amount: amount, from: from, to: to) {
+                // Cache the ratio for future conversions
+                let ratio = result / amount
+                conversionCache[cacheKey] = ratio
+                return result
+            }
+            return nil
         }
-        
+
         // Try direct conversion
         if let result = directConversion(amount: amount, from: from, to: to, for: ingredient) {
+            // Cache the ratio
+            let ratio = result / amount
+            conversionCache[cacheKey] = ratio
             return result
         }
-        
+
         // Try reverse conversion
         if let result = reverseConversion(amount: amount, from: from, to: to, for: ingredient) {
+            // Cache the ratio
+            let ratio = result / amount
+            conversionCache[cacheKey] = ratio
             return result
         }
-        
+
         // Try chained conversion
         if let result = chainedConversion(amount: amount, from: from, to: to, for: ingredient) {
+            // Cache the ratio
+            let ratio = result / amount
+            conversionCache[cacheKey] = ratio
             return result
         }
-        
+
         // No conversion found
         return nil
     }
@@ -142,5 +173,15 @@ class ConversionEngine {
         }
         
         return nil
+    }
+
+    /// Clear the conversion cache (useful for testing or memory management)
+    func clearCache() {
+        conversionCache.removeAll()
+    }
+
+    /// Get the current cache size (for monitoring)
+    var cacheSize: Int {
+        return conversionCache.count
     }
 }
