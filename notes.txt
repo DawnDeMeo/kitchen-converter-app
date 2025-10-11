@@ -1,0 +1,11 @@
+option to reset database to default (delete all custom) - could be in settings
+
+add about page / settings
+
+help section or faq
+
+icon - outline of kitchen scale?
+
+disclaimer and/or sources reviewed against
+
+verify conversions

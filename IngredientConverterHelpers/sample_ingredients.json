@@ -1,0 +1,74 @@
+{
+  "ingredients": [
+    {
+      "name": "Flour, all-purpose, sifted",
+      "brand": "King Arthur",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 120.0,
+          "toUnit": "gram"
+        },
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 4.25,
+          "toUnit": "ounce"
+        },
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "tablespoon",
+          "toAmount": 7.5,
+          "toUnit": "gram"
+        }
+      ]
+    },
+    {
+      "name": "Sugar, granulated",
+      "brand": null,
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 200.0,
+          "toUnit": "gram"
+        }
+      ]
+    },
+    {
+      "name": "Eggs, large",
+      "brand": null,
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": {
+            "count": {
+              "singular": "egg",
+              "plural": "eggs"
+            }
+          },
+          "toAmount": 50.0,
+          "toUnit": "gram"
+        }
+      ]
+    },
+    {
+      "name": "Graham crackers",
+      "brand": null,
+      "conversions": [
+        {
+          "fromAmount": 8.0,
+          "fromUnit": {
+            "count": {
+              "singular": "cracker",
+              "plural": "crackers"
+            }
+          },
+          "toAmount": 30.0,
+          "toUnit": "gram"
+        }
+      ]
+    }
+  ]
+}
