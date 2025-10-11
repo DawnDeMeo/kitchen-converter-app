@@ -38,8 +38,8 @@ enum IngredientFilterOption: String, CaseIterable {
 
 struct IngredientListView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var allIngredients: [Ingredient]
-    
+
+    @State private var ingredients: [Ingredient] = []
     @State private var searchText = ""
     @State private var sortOption: IngredientSortOption = .alphabetical
     @State private var filterOption: IngredientFilterOption = .all
@@ -48,56 +48,87 @@ struct IngredientListView: View {
     @State private var ingredientToDelete: Ingredient?
     @State private var showingDeleteConfirmation = false
     @State private var ingredientToConvert: Ingredient?
-    
-    var filteredAndSortedIngredients: [Ingredient] {
-        var ingredients = allIngredients
-        
-        // Apply filter
-        switch filterOption {
-        case .all:
-            break
-        case .favorites:
-            ingredients = ingredients.filter { $0.isFavorite }
-        case .custom:
-            ingredients = ingredients.filter { $0.isCustom }
-        case .defaultOnly:
-            ingredients = ingredients.filter { !$0.isCustom }
-        }
-        
-        // Apply search
-        if !searchText.isEmpty {
-            ingredients = ingredients.filter { ingredient in
-                ingredient.name.localizedCaseInsensitiveContains(searchText) ||
-                (ingredient.brand?.localizedCaseInsensitiveContains(searchText) ?? false)
+
+    // Fetch ingredients with predicates and sorting at the database level
+    private func fetchIngredients() {
+        var descriptor = FetchDescriptor<Ingredient>()
+
+        // Build combined predicate based on filter and search
+        let search = searchText
+
+        switch (filterOption, searchText.isEmpty) {
+        case (.all, true):
+            // No predicate needed - fetch all
+            descriptor.predicate = nil
+
+        case (.all, false):
+            // Only search predicate
+            descriptor.predicate = #Predicate { ingredient in
+                ingredient.name.localizedStandardContains(search) ||
+                (ingredient.brand?.localizedStandardContains(search) ?? false)
+            }
+
+        case (.favorites, true):
+            // Only favorites predicate
+            descriptor.predicate = #Predicate { $0.isFavorite == true }
+
+        case (.favorites, false):
+            // Favorites AND search
+            descriptor.predicate = #Predicate { ingredient in
+                ingredient.isFavorite == true &&
+                (ingredient.name.localizedStandardContains(search) ||
+                 (ingredient.brand?.localizedStandardContains(search) ?? false))
+            }
+
+        case (.custom, true):
+            // Only custom predicate
+            descriptor.predicate = #Predicate { $0.isCustom == true }
+
+        case (.custom, false):
+            // Custom AND search
+            descriptor.predicate = #Predicate { ingredient in
+                ingredient.isCustom == true &&
+                (ingredient.name.localizedStandardContains(search) ||
+                 (ingredient.brand?.localizedStandardContains(search) ?? false))
+            }
+
+        case (.defaultOnly, true):
+            // Only default predicate
+            descriptor.predicate = #Predicate { $0.isCustom == false }
+
+        case (.defaultOnly, false):
+            // Default AND search
+            descriptor.predicate = #Predicate { ingredient in
+                ingredient.isCustom == false &&
+                (ingredient.name.localizedStandardContains(search) ||
+                 (ingredient.brand?.localizedStandardContains(search) ?? false))
             }
         }
-        
-        // Apply sort
+
+        // Apply sort descriptors at database level
         switch sortOption {
         case .alphabetical:
-            ingredients.sort { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+            descriptor.sortBy = [SortDescriptor(\Ingredient.name, order: .forward)]
         case .lastUsed:
-            ingredients.sort { (lhs, rhs) in
-                switch (lhs.lastUsedDate, rhs.lastUsedDate) {
-                case (.some(let lDate), .some(let rDate)):
-                    return lDate > rDate
-                case (.some, .none):
-                    return true
-                case (.none, .some):
-                    return false
-                case (.none, .none):
-                    return lhs.name.localizedCaseInsensitiveCompare(rhs.name) == .orderedAscending
-                }
-            }
+            descriptor.sortBy = [
+                SortDescriptor(\Ingredient.lastUsedDate, order: .reverse),
+                SortDescriptor(\Ingredient.name, order: .forward)
+            ]
         }
-        
-        return ingredients
+
+        // Fetch from SwiftData
+        do {
+            ingredients = try modelContext.fetch(descriptor)
+        } catch {
+            print("Failed to fetch ingredients: \(error)")
+            ingredients = []
+        }
     }
     
     var body: some View {
         NavigationStack {
             Group {
-                if filteredAndSortedIngredients.isEmpty {
+                if ingredients.isEmpty {
                     ContentUnavailableView(
                         searchText.isEmpty ? "No Ingredients" : "No Results",
                         systemImage: searchText.isEmpty ? "tray" : "magnifyingglass",
@@ -105,7 +136,7 @@ struct IngredientListView: View {
                     )
                 } else {
                     List {
-                        ForEach(filteredAndSortedIngredients) { ingredient in
+                        ForEach(ingredients) { ingredient in
                             Button {
                                 ingredientToConvert = ingredient
                             } label: {
@@ -218,10 +249,14 @@ struct IngredientListView: View {
                     }
                 }
             }
-            .sheet(isPresented: $showingAddIngredient) {
+            .sheet(isPresented: $showingAddIngredient, onDismiss: {
+                fetchIngredients()
+            }) {
                 IngredientEditorView()
             }
-            .sheet(item: $ingredientToEdit) { ingredient in
+            .sheet(item: $ingredientToEdit, onDismiss: {
+                fetchIngredients()
+            }) { ingredient in
                 IngredientEditorView(ingredient: ingredient)
             }
             .sheet(item: $ingredientToConvert) { ingredient in
@@ -248,18 +283,35 @@ struct IngredientListView: View {
             } message: { ingredient in
                 Text("This action cannot be undone. This ingredient has \(ingredient.conversions.count) conversion\(ingredient.conversions.count == 1 ? "" : "s").")
             }
+            .onAppear {
+                fetchIngredients()
+            }
+            .onChange(of: searchText) { _, _ in
+                fetchIngredients()
+            }
+            .onChange(of: filterOption) { _, _ in
+                fetchIngredients()
+            }
+            .onChange(of: sortOption) { _, _ in
+                fetchIngredients()
+            }
         }
     }
     
     private func toggleFavorite(_ ingredient: Ingredient) {
         withAnimation {
             ingredient.isFavorite.toggle()
+            // Refetch to reflect changes if filtering by favorites
+            if filterOption == .favorites {
+                fetchIngredients()
+            }
         }
     }
-    
+
     private func deleteIngredient(_ ingredient: Ingredient) {
         withAnimation {
             modelContext.delete(ingredient)
+            fetchIngredients()
         }
     }
 }
