@@ -17,9 +17,10 @@ struct ConversionView: View {
     @State private var selectedFromUnit: MeasurementUnit?
     @State private var selectedToUnit: MeasurementUnit?
     @State private var conversionResult: Double?
-    
+    @State private var cachedAvailableUnits: [MeasurementUnit] = []
+
     @FocusState private var isInputFocused: Bool
-    
+
     private let conversionEngine = ConversionEngine()
     
     // Add initializer to support preselected ingredient
@@ -59,10 +60,10 @@ struct ConversionView: View {
                     
                     // From Unit
                     Section("From") {
-                        if let ingredient = selectedIngredient {
+                        if selectedIngredient != nil {
                             Picker("Unit", selection: $selectedFromUnit) {
                                 Text("Select unit").tag(nil as MeasurementUnit?)
-                                ForEach(availableUnits(for: ingredient), id: \.self) { unit in
+                                ForEach(cachedAvailableUnits, id: \.self) { unit in
                                     Text(unit.fullDisplayName).tag(unit as MeasurementUnit?)
                                 }
                             }
@@ -95,10 +96,10 @@ struct ConversionView: View {
                     
                     // To Unit
                     Section("To") {
-                        if let ingredient = selectedIngredient {
+                        if selectedIngredient != nil {
                             Picker("Unit", selection: $selectedToUnit) {
                                 Text("Select unit").tag(nil as MeasurementUnit?)
-                                ForEach(availableUnits(for: ingredient), id: \.self) { unit in
+                                ForEach(cachedAvailableUnits, id: \.self) { unit in
                                     Text(unit.fullDisplayName).tag(unit as MeasurementUnit?)
                                 }
                             }
@@ -188,33 +189,46 @@ struct ConversionView: View {
             }
         }
         .navigationTitle("Convert")
-        .onChange(of: selectedIngredient) { _, _ in
+        .onChange(of: selectedIngredient) { _, newIngredient in
             // Reset units when ingredient changes
             selectedFromUnit = nil
             selectedToUnit = nil
             conversionResult = nil
+
+            // Compute and cache available units for new ingredient
+            if let ingredient = newIngredient {
+                cachedAvailableUnits = computeAvailableUnits(for: ingredient)
+            } else {
+                cachedAvailableUnits = []
+            }
+        }
+        .onAppear {
+            // Compute units on initial appearance if ingredient is preselected
+            if let ingredient = selectedIngredient {
+                cachedAvailableUnits = computeAvailableUnits(for: ingredient)
+            }
         }
         .animation(.easeInOut(duration: 0.3), value: isInputFocused)
     }
     
     // MARK: - Helper Functions
-    
-    private func availableUnits(for ingredient: Ingredient) -> [MeasurementUnit] {
+
+    private func computeAvailableUnits(for ingredient: Ingredient) -> [MeasurementUnit] {
         var units = Set<MeasurementUnit>()
-        
+
         // Add all units from conversions
         for conversion in ingredient.conversions {
             units.insert(conversion.fromUnit)
             units.insert(conversion.toUnit)
-            
+
             // Add all units of the same type
             let fromSameType = UnitConversionHelper.allUnitsOfSameType(as: conversion.fromUnit)
             units.formUnion(fromSameType)
-            
+
             let toSameType = UnitConversionHelper.allUnitsOfSameType(as: conversion.toUnit)
             units.formUnion(toSameType)
         }
-        
+
         return Array(units).sorted { unitDisplayText($0) < unitDisplayText($1) }
     }
     
