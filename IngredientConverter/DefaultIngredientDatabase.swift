@@ -35,7 +35,7 @@ struct DefaultIngredientDatabase {
     }
     
     private static func convertJSONToIngredient(_ json: IngredientJSON) -> Ingredient? {
-        let ingredient = Ingredient(name: json.name, brand: json.brand, isCustom: false)
+        let ingredient = Ingredient(name: json.name, category: json.category, brand: json.brand, isCustom: false)
         
         for conversionJSON in json.conversions {
             guard let fromUnit = conversionJSON.fromUnit.toMeasurementUnit(),

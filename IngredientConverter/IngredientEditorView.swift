@@ -16,12 +16,31 @@ struct IngredientEditorView: View {
     
     @State private var name: String = ""
     @State private var brand: String = ""
+    @State private var category: String = "Other"
     @State private var conversions: [ConversionEditor] = []
     @State private var showingAddConversion = false
-    
+
     // For validation
     @State private var showingError = false
     @State private var errorMessage = ""
+
+    // Available categories matching the database
+    private let availableCategories = [
+        "Baking",
+        "Chocolate",
+        "Dairy",
+        "Dried Fruit",
+        "Egg",
+        "Fat",
+        "Flour",
+        "Fruit",
+        "Grain",
+        "Nut",
+        "Other",
+        "Spice",
+        "Sugar",
+        "Vegetable"
+    ]
     
     var isEditing: Bool {
         ingredientToEdit != nil
@@ -37,6 +56,12 @@ struct IngredientEditorView: View {
                 Section("Basic Info") {
                     TextField("Name", text: $name)
                     TextField("Brand (optional)", text: $brand)
+
+                    Picker("Category", selection: $category) {
+                        ForEach(availableCategories, id: \.self) { category in
+                            Text(category).tag(category)
+                        }
+                    }
                 }
                 
                 Section {
@@ -103,9 +128,10 @@ struct IngredientEditorView: View {
     
     private func loadIngredient() {
         guard let ingredient = ingredientToEdit else { return }
-        
+
         name = ingredient.name
         brand = ingredient.brand ?? ""
+        category = ingredient.category ?? "Other"
         conversions = ingredient.conversions.map { conversion in
             ConversionEditor(
                 fromAmount: conversion.fromAmount,
@@ -136,8 +162,9 @@ struct IngredientEditorView: View {
             // Update existing ingredient
             existing.name = trimmedName
             existing.brand = trimmedBrand.isEmpty ? nil : trimmedBrand
+            existing.category = category
             existing.conversions.removeAll()
-            
+
             for conversionEditor in conversions {
                 let conversion = UnitConversion(
                     fromAmount: conversionEditor.fromAmount,
@@ -152,10 +179,11 @@ struct IngredientEditorView: View {
             // Create new ingredient
             let newIngredient = Ingredient(
                 name: trimmedName,
+                category: category,
                 brand: trimmedBrand.isEmpty ? nil : trimmedBrand,
                 isCustom: true
             )
-            
+
             for conversionEditor in conversions {
                 let conversion = UnitConversion(
                     fromAmount: conversionEditor.fromAmount,
@@ -165,7 +193,7 @@ struct IngredientEditorView: View {
                 )
                 newIngredient.conversions.append(conversion)
             }
-            
+
             modelContext.insert(newIngredient)
         }
         

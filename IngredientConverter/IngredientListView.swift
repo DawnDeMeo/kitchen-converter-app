@@ -43,6 +43,8 @@ struct IngredientListView: View {
     @State private var searchText = ""
     @State private var sortOption: IngredientSortOption = .alphabetical
     @State private var filterOption: IngredientFilterOption = .all
+    @State private var selectedCategory: String? = nil
+    @State private var availableCategories: [String] = []
     @State private var showingAddIngredient = false
     @State private var ingredientToEdit: Ingredient?
     @State private var ingredientToDelete: Ingredient?
@@ -53,53 +55,116 @@ struct IngredientListView: View {
     private func fetchIngredients() {
         var descriptor = FetchDescriptor<Ingredient>()
 
-        // Build combined predicate based on filter and search
+        // Build combined predicate based on filter, search, and category
         let search = searchText
+        let category = selectedCategory
 
-        switch (filterOption, searchText.isEmpty) {
-        case (.all, true):
-            // No predicate needed - fetch all
+        switch (filterOption, searchText.isEmpty, selectedCategory == nil) {
+        // No filters at all
+        case (.all, true, true):
             descriptor.predicate = nil
 
-        case (.all, false):
-            // Only search predicate
+        // Only category filter
+        case (.all, true, false):
+            descriptor.predicate = #Predicate { ingredient in
+                ingredient.category == category
+            }
+
+        // Only search filter
+        case (.all, false, true):
             descriptor.predicate = #Predicate { ingredient in
                 ingredient.name.localizedStandardContains(search) ||
                 (ingredient.brand?.localizedStandardContains(search) ?? false)
             }
 
-        case (.favorites, true):
-            // Only favorites predicate
+        // Category AND search
+        case (.all, false, false):
+            descriptor.predicate = #Predicate { ingredient in
+                ingredient.category == category &&
+                (ingredient.name.localizedStandardContains(search) ||
+                 (ingredient.brand?.localizedStandardContains(search) ?? false))
+            }
+
+        // Favorites only
+        case (.favorites, true, true):
             descriptor.predicate = #Predicate { $0.isFavorite == true }
 
-        case (.favorites, false):
-            // Favorites AND search
+        // Favorites AND category
+        case (.favorites, true, false):
+            descriptor.predicate = #Predicate { ingredient in
+                ingredient.isFavorite == true &&
+                ingredient.category == category
+            }
+
+        // Favorites AND search
+        case (.favorites, false, true):
             descriptor.predicate = #Predicate { ingredient in
                 ingredient.isFavorite == true &&
                 (ingredient.name.localizedStandardContains(search) ||
                  (ingredient.brand?.localizedStandardContains(search) ?? false))
             }
 
-        case (.custom, true):
-            // Only custom predicate
+        // Favorites AND category AND search
+        case (.favorites, false, false):
+            descriptor.predicate = #Predicate { ingredient in
+                ingredient.isFavorite == true &&
+                ingredient.category == category &&
+                (ingredient.name.localizedStandardContains(search) ||
+                 (ingredient.brand?.localizedStandardContains(search) ?? false))
+            }
+
+        // Custom only
+        case (.custom, true, true):
             descriptor.predicate = #Predicate { $0.isCustom == true }
 
-        case (.custom, false):
-            // Custom AND search
+        // Custom AND category
+        case (.custom, true, false):
+            descriptor.predicate = #Predicate { ingredient in
+                ingredient.isCustom == true &&
+                ingredient.category == category
+            }
+
+        // Custom AND search
+        case (.custom, false, true):
             descriptor.predicate = #Predicate { ingredient in
                 ingredient.isCustom == true &&
                 (ingredient.name.localizedStandardContains(search) ||
                  (ingredient.brand?.localizedStandardContains(search) ?? false))
             }
 
-        case (.defaultOnly, true):
-            // Only default predicate
+        // Custom AND category AND search
+        case (.custom, false, false):
+            descriptor.predicate = #Predicate { ingredient in
+                ingredient.isCustom == true &&
+                ingredient.category == category &&
+                (ingredient.name.localizedStandardContains(search) ||
+                 (ingredient.brand?.localizedStandardContains(search) ?? false))
+            }
+
+        // Default only
+        case (.defaultOnly, true, true):
             descriptor.predicate = #Predicate { $0.isCustom == false }
 
-        case (.defaultOnly, false):
-            // Default AND search
+        // Default AND category
+        case (.defaultOnly, true, false):
             descriptor.predicate = #Predicate { ingredient in
                 ingredient.isCustom == false &&
+                ingredient.category == category
+            }
+
+        // Default AND search
+        case (.defaultOnly, false, true):
+            descriptor.predicate = #Predicate { ingredient in
+                ingredient.isCustom == false &&
+                (ingredient.name.localizedStandardContains(search) ||
+                 (ingredient.brand?.localizedStandardContains(search) ?? false))
+            }
+
+        // Default AND category AND search
+        case (.defaultOnly, false, false):
+            descriptor.predicate = #Predicate { ingredient in
+                ingredient.isCustom == false &&
+                ingredient.category == category &&
                 (ingredient.name.localizedStandardContains(search) ||
                  (ingredient.brand?.localizedStandardContains(search) ?? false))
             }
@@ -122,6 +187,18 @@ struct IngredientListView: View {
         } catch {
             print("Failed to fetch ingredients: \(error)")
             ingredients = []
+        }
+    }
+
+    private func fetchAvailableCategories() {
+        let descriptor = FetchDescriptor<Ingredient>()
+        do {
+            let allIngredients = try modelContext.fetch(descriptor)
+            let categories = Set(allIngredients.compactMap { $0.category })
+            availableCategories = categories.sorted()
+        } catch {
+            print("Failed to fetch categories: \(error)")
+            availableCategories = []
         }
     }
     
@@ -222,12 +299,42 @@ struct IngredientListView: View {
                                     .tag(option)
                             }
                         }
+
+                        Divider()
+
+                        Menu {
+                            Button {
+                                selectedCategory = nil
+                            } label: {
+                                Label("All Categories", systemImage: "square.stack.3d.up")
+                            }
+
+                            Divider()
+
+                            ForEach(availableCategories, id: \.self) { category in
+                                Button {
+                                    selectedCategory = category
+                                } label: {
+                                    HStack {
+                                        Text(category)
+                                        if selectedCategory == category {
+                                            Image(systemName: "checkmark")
+                                        }
+                                    }
+                                }
+                            }
+                        } label: {
+                            Label(
+                                selectedCategory ?? "Category",
+                                systemImage: "tag"
+                            )
+                        }
                     } label: {
                         Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
-                            .symbolVariant(filterOption == .all ? .none : .fill)
+                            .symbolVariant(filterOption == .all && selectedCategory == nil ? .none : .fill)
                     }
                 }
-                
+
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
                         Picker("Sort", selection: $sortOption) {
@@ -240,7 +347,7 @@ struct IngredientListView: View {
                         Label("Sort", systemImage: "arrow.up.arrow.down")
                     }
                 }
-                
+
                 ToolbarItem(placement: .primaryAction) {
                     Button {
                         showingAddIngredient = true
@@ -284,6 +391,7 @@ struct IngredientListView: View {
                 Text("This action cannot be undone. This ingredient has \(ingredient.conversions.count) conversion\(ingredient.conversions.count == 1 ? "" : "s").")
             }
             .onAppear {
+                fetchAvailableCategories()
                 fetchIngredients()
             }
             .onChange(of: searchText) { _, _ in
@@ -293,6 +401,9 @@ struct IngredientListView: View {
                 fetchIngredients()
             }
             .onChange(of: sortOption) { _, _ in
+                fetchIngredients()
+            }
+            .onChange(of: selectedCategory) { _, _ in
                 fetchIngredients()
             }
         }

@@ -1,9 +1,7 @@
-
 {
   "ingredients": [
     {
-      "name": "Flour, all-purpose",
-      "brand": null,
+      "name": "All-purpose flour",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -17,11 +15,11 @@
           "toAmount": 8.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Flour"
     },
     {
-      "name": "Flour, bread",
-      "brand": null,
+      "name": "Bread flour",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -29,11 +27,11 @@
           "toAmount": 127.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Flour"
     },
     {
-      "name": "Flour, cake",
-      "brand": null,
+      "name": "Cake flour",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -41,11 +39,11 @@
           "toAmount": 114.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Flour"
     },
     {
-      "name": "Flour, whole wheat",
-      "brand": null,
+      "name": "Whole wheat flour",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -53,11 +51,11 @@
           "toAmount": 120.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Flour"
     },
     {
-      "name": "Flour, self-rising",
-      "brand": null,
+      "name": "Self-rising flour",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -65,11 +63,11 @@
           "toAmount": 125.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Flour"
     },
     {
-      "name": "Flour, almond",
-      "brand": null,
+      "name": "Almond flour",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -77,11 +75,11 @@
           "toAmount": 96.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Flour"
     },
     {
-      "name": "Flour, coconut",
-      "brand": null,
+      "name": "Coconut flour",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -89,11 +87,11 @@
           "toAmount": 112.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Flour"
     },
     {
-      "name": "Flour, rice",
-      "brand": null,
+      "name": "Rice flour",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -101,11 +99,11 @@
           "toAmount": 158.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Flour"
     },
     {
       "name": "Cornmeal",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -113,11 +111,11 @@
           "toAmount": 138.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Flour"
     },
     {
-      "name": "Sugar, granulated",
-      "brand": null,
+      "name": "Granulated sugar",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -137,11 +135,11 @@
           "toAmount": 4.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Sugar"
     },
     {
-      "name": "Sugar, brown, packed",
-      "brand": null,
+      "name": "Brown sugar, packed",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -155,11 +153,11 @@
           "toAmount": 14.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Sugar"
     },
     {
-      "name": "Sugar, powdered",
-      "brand": null,
+      "name": "Powdered sugar",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -173,11 +171,11 @@
           "toAmount": 8.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Sugar"
     },
     {
       "name": "Honey",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -191,11 +189,11 @@
           "toAmount": 21.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Sugar"
     },
     {
       "name": "Maple syrup",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -209,11 +207,11 @@
           "toAmount": 20.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Sugar"
     },
     {
       "name": "Corn syrup",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -221,11 +219,11 @@
           "toAmount": 328.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Sugar"
     },
     {
       "name": "Molasses",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -239,11 +237,11 @@
           "toAmount": 21.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Sugar"
     },
     {
       "name": "Butter",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -274,11 +272,11 @@
           "toAmount": 113.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Fat"
     },
     {
-      "name": "Oil, vegetable",
-      "brand": null,
+      "name": "Vegetable oil",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -292,11 +290,11 @@
           "toAmount": 14.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Fat"
     },
     {
-      "name": "Oil, olive",
-      "brand": null,
+      "name": "Olive oil",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -310,11 +308,11 @@
           "toAmount": 14.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Fat"
     },
     {
-      "name": "Oil, coconut",
-      "brand": null,
+      "name": "Coconut oil",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -322,11 +320,11 @@
           "toAmount": 218.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Fat"
     },
     {
       "name": "Shortening",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -334,11 +332,11 @@
           "toAmount": 191.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Fat"
     },
     {
       "name": "Lard",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -346,11 +344,11 @@
           "toAmount": 205.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Fat"
     },
     {
-      "name": "Milk, whole",
-      "brand": null,
+      "name": "Whole milk",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -364,11 +362,11 @@
           "toAmount": 15.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Dairy"
     },
     {
-      "name": "Cream, heavy",
-      "brand": null,
+      "name": "Heavy cream",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -382,11 +380,11 @@
           "toAmount": 15.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Dairy"
     },
     {
       "name": "Sour cream",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -394,11 +392,11 @@
           "toAmount": 230.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Dairy"
     },
     {
-      "name": "Yogurt, plain",
-      "brand": null,
+      "name": "Plain yogurt",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -406,11 +404,11 @@
           "toAmount": 245.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Dairy"
     },
     {
-      "name": "Yogurt, Greek",
-      "brand": null,
+      "name": "Greek yogurt",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -418,11 +416,11 @@
           "toAmount": 280.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Dairy"
     },
     {
       "name": "Buttermilk",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -430,11 +428,11 @@
           "toAmount": 245.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Dairy"
     },
     {
       "name": "Cream cheese",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -448,11 +446,11 @@
           "toAmount": 14.5,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Dairy"
     },
     {
       "name": "Ricotta cheese",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -460,11 +458,11 @@
           "toAmount": 246.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Dairy"
     },
     {
-      "name": "Parmesan, grated",
-      "brand": null,
+      "name": "Grated parmesan",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -472,11 +470,11 @@
           "toAmount": 100.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Dairy"
     },
     {
-      "name": "Cheddar, shredded",
-      "brand": null,
+      "name": "Shredded cheddar",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -484,11 +482,11 @@
           "toAmount": 113.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Dairy"
     },
     {
-      "name": "Mozzarella, shredded",
-      "brand": null,
+      "name": "Shredded mozzarella",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -496,11 +494,11 @@
           "toAmount": 112.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Dairy"
     },
     {
       "name": "Baking powder",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -514,11 +512,11 @@
           "toAmount": 5.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Baking"
     },
     {
       "name": "Baking soda",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -532,11 +530,11 @@
           "toAmount": 6.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Baking"
     },
     {
-      "name": "Yeast, active dry",
-      "brand": null,
+      "name": "Active dry yeast",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -544,11 +542,11 @@
           "toAmount": 9.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Baking"
     },
     {
       "name": "Cornstarch",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -562,11 +560,11 @@
           "toAmount": 8.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Baking"
     },
     {
       "name": "Vanilla extract",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -574,11 +572,11 @@
           "toAmount": 4.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Baking"
     },
     {
       "name": "Cream of tartar",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -586,11 +584,11 @@
           "toAmount": 3.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Baking"
     },
     {
-      "name": "Gelatin, powdered",
-      "brand": null,
+      "name": "Powdered gelatin",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -598,11 +596,11 @@
           "toAmount": 10.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Baking"
     },
     {
       "name": "Cocoa powder",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -616,11 +614,11 @@
           "toAmount": 6.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Chocolate"
     },
     {
       "name": "Chocolate chips",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -628,11 +626,11 @@
           "toAmount": 170.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Chocolate"
     },
     {
-      "name": "Chocolate, chopped",
-      "brand": null,
+      "name": "Chopped chocolate",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -640,11 +638,11 @@
           "toAmount": 150.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Chocolate"
     },
     {
-      "name": "Almonds, whole",
-      "brand": null,
+      "name": "Whole almonds",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -652,11 +650,11 @@
           "toAmount": 143.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Nut"
     },
     {
-      "name": "Almonds, sliced",
-      "brand": null,
+      "name": "Sliced almonds",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -664,11 +662,11 @@
           "toAmount": 92.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Nut"
     },
     {
-      "name": "Walnuts, chopped",
-      "brand": null,
+      "name": "Chopped walnuts",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -676,11 +674,11 @@
           "toAmount": 120.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Nut"
     },
     {
-      "name": "Walnuts, halves",
-      "brand": null,
+      "name": "Walnut halves",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -688,11 +686,11 @@
           "toAmount": 100.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Nut"
     },
     {
-      "name": "Pecans, chopped",
-      "brand": null,
+      "name": "Chopped pecans",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -700,11 +698,11 @@
           "toAmount": 120.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Nut"
     },
     {
       "name": "Cashews",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -712,11 +710,11 @@
           "toAmount": 130.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Nut"
     },
     {
       "name": "Peanuts",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -724,11 +722,11 @@
           "toAmount": 146.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Nut"
     },
     {
       "name": "Peanut butter",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -742,11 +740,11 @@
           "toAmount": 16.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Nut"
     },
     {
       "name": "Sunflower seeds",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -754,11 +752,11 @@
           "toAmount": 140.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Nut"
     },
     {
-      "name": "Rice, white, uncooked",
-      "brand": null,
+      "name": "White rice, uncooked",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -766,11 +764,11 @@
           "toAmount": 185.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Grain"
     },
     {
-      "name": "Rice, brown, uncooked",
-      "brand": null,
+      "name": "Brown rice, uncooked",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -778,11 +776,11 @@
           "toAmount": 190.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Grain"
     },
     {
-      "name": "Oats, rolled",
-      "brand": null,
+      "name": "Rolled oats",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -790,11 +788,11 @@
           "toAmount": 90.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Grain"
     },
     {
       "name": "Quinoa, uncooked",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -802,11 +800,11 @@
           "toAmount": 170.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Grain"
     },
     {
-      "name": "Breadcrumbs, dry",
-      "brand": null,
+      "name": "Dry breadcrumbs",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -814,11 +812,11 @@
           "toAmount": 108.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Grain"
     },
     {
-      "name": "Breadcrumbs, fresh",
-      "brand": null,
+      "name": "Fresh breadcrumbs",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -826,11 +824,11 @@
           "toAmount": 45.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Grain"
     },
     {
       "name": "Panko breadcrumbs",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -838,11 +836,11 @@
           "toAmount": 50.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Grain"
     },
     {
       "name": "Raisins",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -850,11 +848,11 @@
           "toAmount": 165.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Dried Fruit"
     },
     {
-      "name": "Dates, chopped",
-      "brand": null,
+      "name": "Chopped dates",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -862,11 +860,11 @@
           "toAmount": 147.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Dried Fruit"
     },
     {
-      "name": "Cranberries, dried",
-      "brand": null,
+      "name": "Dried cranberries",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -874,11 +872,11 @@
           "toAmount": 120.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Dried Fruit"
     },
     {
-      "name": "Apricots, dried",
-      "brand": null,
+      "name": "Dried apricots",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -886,11 +884,11 @@
           "toAmount": 130.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Dried Fruit"
     },
     {
-      "name": "Onion, chopped",
-      "brand": null,
+      "name": "Chopped onion",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -898,11 +896,11 @@
           "toAmount": 160.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Vegetable"
     },
     {
-      "name": "Garlic, minced",
-      "brand": null,
+      "name": "Minced garlic",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -910,11 +908,11 @@
           "toAmount": 10.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Vegetable"
     },
     {
       "name": "Garlic",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -927,11 +925,11 @@
           "toAmount": 3.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Vegetable"
     },
     {
-      "name": "Tomato, chopped",
-      "brand": null,
+      "name": "Chopped tomato",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -939,11 +937,11 @@
           "toAmount": 180.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Vegetable"
     },
     {
-      "name": "Potato, diced",
-      "brand": null,
+      "name": "Diced potato",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -951,11 +949,11 @@
           "toAmount": 150.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Vegetable"
     },
     {
-      "name": "Carrot, chopped",
-      "brand": null,
+      "name": "Chopped carrot",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -963,11 +961,11 @@
           "toAmount": 128.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Vegetable"
     },
     {
-      "name": "Bell pepper, chopped",
-      "brand": null,
+      "name": "Chopped bell pepper",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -975,11 +973,11 @@
           "toAmount": 149.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Vegetable"
     },
     {
-      "name": "Mushrooms, sliced",
-      "brand": null,
+      "name": "Sliced mushrooms",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -987,11 +985,11 @@
           "toAmount": 70.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Vegetable"
     },
     {
-      "name": "Spinach, fresh",
-      "brand": null,
+      "name": "Fresh spinach",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -999,11 +997,11 @@
           "toAmount": 30.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Vegetable"
     },
     {
-      "name": "Apple, medium",
-      "brand": null,
+      "name": "Medium apple",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1016,11 +1014,11 @@
           "toAmount": 182.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Fruit"
     },
     {
-      "name": "Banana, medium",
-      "brand": null,
+      "name": "Medium banana",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1033,11 +1031,11 @@
           "toAmount": 118.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Fruit"
     },
     {
-      "name": "Lemon, medium",
-      "brand": null,
+      "name": "Medium lemon",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1050,11 +1048,11 @@
           "toAmount": 58.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Fruit"
     },
     {
       "name": "Blueberries",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1062,11 +1060,11 @@
           "toAmount": 148.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Fruit"
     },
     {
-      "name": "Strawberries, sliced",
-      "brand": null,
+      "name": "Sliced strawberries",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1074,11 +1072,11 @@
           "toAmount": 166.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Fruit"
     },
     {
-      "name": "Salt, table",
-      "brand": null,
+      "name": "Table salt",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1086,11 +1084,11 @@
           "toAmount": 6.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Spice"
     },
     {
-      "name": "Salt, kosher",
-      "brand": null,
+      "name": "Kosher salt",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1098,11 +1096,11 @@
           "toAmount": 5.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Spice"
     },
     {
-      "name": "Pepper, black, ground",
-      "brand": null,
+      "name": "Ground black pepper",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1110,11 +1108,11 @@
           "toAmount": 2.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Spice"
     },
     {
-      "name": "Cinnamon, ground",
-      "brand": null,
+      "name": "Ground cinnamon",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1122,11 +1120,11 @@
           "toAmount": 3.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Spice"
     },
     {
-      "name": "Ginger, ground",
-      "brand": null,
+      "name": "Ground ginger",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1134,11 +1132,11 @@
           "toAmount": 2.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Spice"
     },
     {
-      "name": "Cumin, ground",
-      "brand": null,
+      "name": "Ground cumin",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1146,11 +1144,11 @@
           "toAmount": 2.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Spice"
     },
     {
       "name": "Paprika",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1158,11 +1156,11 @@
           "toAmount": 2.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Spice"
     },
     {
       "name": "Garlic powder",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1170,11 +1168,11 @@
           "toAmount": 3.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Spice"
     },
     {
       "name": "Onion powder",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1182,11 +1180,11 @@
           "toAmount": 2.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Spice"
     },
     {
       "name": "Chili powder",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1194,11 +1192,11 @@
           "toAmount": 3.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Spice"
     },
     {
-      "name": "Egg, large, whole",
-      "brand": null,
+      "name": "Large egg, whole",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1211,11 +1209,11 @@
           "toAmount": 50.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Egg"
     },
     {
-      "name": "Egg, medium, whole",
-      "brand": null,
+      "name": "Medium egg, whole",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1228,11 +1226,11 @@
           "toAmount": 44.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Egg"
     },
     {
-      "name": "Egg, extra large, whole",
-      "brand": null,
+      "name": "Extra large egg, whole",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1245,11 +1243,11 @@
           "toAmount": 56.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Egg"
     },
     {
-      "name": "Egg white, large",
-      "brand": null,
+      "name": "Large egg white",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1262,11 +1260,11 @@
           "toAmount": 33.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Egg"
     },
     {
-      "name": "Egg yolk, large",
-      "brand": null,
+      "name": "Large egg yolk",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1279,11 +1277,11 @@
           "toAmount": 17.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Egg"
     },
     {
       "name": "Water",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1291,11 +1289,11 @@
           "toAmount": 237.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Other"
     },
     {
       "name": "Graham crackers",
-      "brand": null,
       "conversions": [
         {
           "fromAmount": 8.0,
@@ -1308,11 +1306,11 @@
           "toAmount": 28.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Other"
     },
     {
-      "name": "Graham crackers, crushed",
-      "brand": null,
+      "name": "Crushed graham crackers",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1320,7 +1318,8 @@
           "toAmount": 84.0,
           "toUnit": "gram"
         }
-      ]
+      ],
+      "category": "Other"
     }
   ]
 }

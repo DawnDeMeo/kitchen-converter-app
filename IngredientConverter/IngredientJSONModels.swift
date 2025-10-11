@@ -14,6 +14,7 @@ struct IngredientsJSON: Codable {
 
 struct IngredientJSON: Codable {
     let name: String
+    let category: String?
     let brand: String?
     let conversions: [ConversionJSON]
 }

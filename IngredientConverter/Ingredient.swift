@@ -12,16 +12,18 @@ import SwiftData
 class Ingredient {
     @Attribute(.unique) var id: UUID
     var name: String
+    var category: String?
     var brand: String?
     var isFavorite: Bool
     var isCustom: Bool
     var lastUsedDate: Date?
-    
+
     @Relationship(deleteRule: .cascade) var conversions: [UnitConversion]
-    
-    init(name: String, brand: String? = nil, isFavorite: Bool = false, isCustom: Bool = false) {
+
+    init(name: String, category: String? = nil, brand: String? = nil, isFavorite: Bool = false, isCustom: Bool = false) {
         self.id = UUID()
         self.name = name
+        self.category = category
         self.brand = brand
         self.isFavorite = isFavorite
         self.isCustom = isCustom
