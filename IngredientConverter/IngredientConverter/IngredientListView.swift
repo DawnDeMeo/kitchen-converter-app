@@ -299,39 +299,58 @@ struct IngredientListView: View {
                                     .tag(option)
                             }
                         }
+                    } label: {
+                        Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
+                            .symbolVariant(filterOption == .all ? .none : .fill)
+                    }
+                }
+
+                ToolbarItem(placement: .topBarLeading) {
+                    Menu {
+                        Button {
+                            selectedCategory = nil
+                        } label: {
+                            HStack {
+                                Label("All Categories", systemImage: "square.stack.3d.up")
+                                if selectedCategory == nil {
+                                    Spacer()
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        }
 
                         Divider()
 
-                        Menu {
+                        ForEach(availableCategories, id: \.self) { category in
                             Button {
-                                selectedCategory = nil
+                                selectedCategory = category
                             } label: {
-                                Label("All Categories", systemImage: "square.stack.3d.up")
-                            }
-
-                            Divider()
-
-                            ForEach(availableCategories, id: \.self) { category in
-                                Button {
-                                    selectedCategory = category
-                                } label: {
-                                    HStack {
-                                        Text(category)
-                                        if selectedCategory == category {
-                                            Image(systemName: "checkmark")
-                                        }
+                                HStack {
+                                    Text(category)
+                                    if selectedCategory == category {
+                                        Spacer()
+                                        Image(systemName: "checkmark")
                                     }
                                 }
                             }
-                        } label: {
-                            Label(
-                                selectedCategory ?? "Category",
-                                systemImage: "tag"
-                            )
                         }
                     } label: {
-                        Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
-                            .symbolVariant(filterOption == .all && selectedCategory == nil ? .none : .fill)
+                        Label(
+                            selectedCategory ?? "Category",
+                            systemImage: "tag"
+                        )
+                        .symbolVariant(selectedCategory == nil ? .none : .fill)
+                    }
+                }
+
+                if filterOption != .all || selectedCategory != nil {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button {
+                            filterOption = .all
+                            selectedCategory = nil
+                        } label: {
+                            Label("Clear Filters", systemImage: "xmark.circle.fill")
+                        }
                     }
                 }
 
