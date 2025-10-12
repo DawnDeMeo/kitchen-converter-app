@@ -326,15 +326,15 @@ extension AppColorScheme {
         name: "Minimal",
         primary: adaptiveColor(
             light: Color(red: 0.2, green: 0.2, blue: 0.2),
-            dark: Color.white // Pure white for maximum contrast
+            dark: Color(red: 0.85, green: 0.85, blue: 0.85) // Light gray with white text
         ),
         secondary: adaptiveColor(
             light: Color(red: 0.4, green: 0.4, blue: 0.4),
-            dark: Color(red: 0.75, green: 0.75, blue: 0.75) // Lighter gray
+            dark: Color(red: 0.6, green: 0.6, blue: 0.6) // Medium gray
         ),
         accent: adaptiveColor(
             light: Color(red: 0.1, green: 0.1, blue: 0.1),
-            dark: Color(red: 0.9, green: 0.9, blue: 0.9) // Very light gray
+            dark: Color(red: 0.75, green: 0.75, blue: 0.75) // Medium-light gray
         ),
         background: adaptiveColor(
             light: Color(red: 1.0, green: 1.0, blue: 1.0),
@@ -358,15 +358,15 @@ extension AppColorScheme {
         ),
         success: adaptiveColor(
             light: Color(red: 0.3, green: 0.3, blue: 0.3),
-            dark: Color(red: 0.8, green: 0.8, blue: 0.8)
+            dark: Color(red: 0.7, green: 0.7, blue: 0.7)
         ),
         warning: adaptiveColor(
             light: Color(red: 0.4, green: 0.4, blue: 0.4),
-            dark: Color(red: 0.75, green: 0.75, blue: 0.75)
+            dark: Color(red: 0.65, green: 0.65, blue: 0.65)
         ),
         error: adaptiveColor(
             light: Color(red: 0.2, green: 0.2, blue: 0.2),
-            dark: Color(red: 0.85, green: 0.85, blue: 0.85)
+            dark: Color(red: 0.55, green: 0.55, blue: 0.55) // Darker so white text is readable
         ),
         cardBackground: adaptiveColor(
             light: Color(red: 0.99, green: 0.99, blue: 0.99),
