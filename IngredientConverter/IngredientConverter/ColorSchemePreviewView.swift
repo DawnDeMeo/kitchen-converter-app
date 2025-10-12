@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ColorSchemePreviewView: View {
+    @AppStorage("appearanceMode") private var appearanceMode: AppearanceMode = .system
     @State private var selectedScheme: AppColorScheme = .classic
 
     var body: some View {
@@ -51,6 +52,7 @@ struct ColorSchemePreviewView: View {
             .navigationTitle("Color Scheme Preview")
             .navigationBarTitleDisplayMode(.inline)
         }
+        .preferredColorScheme(appearanceMode.colorScheme)
     }
 }
 
