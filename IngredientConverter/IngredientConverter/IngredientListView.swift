@@ -336,15 +336,13 @@ struct IngredientListView: View {
                 }
 
                 ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
-                        Picker("Sort", selection: $sortOption) {
-                            ForEach(IngredientSortOption.allCases, id: \.self) { option in
-                                Label(option.rawValue, systemImage: option.systemImage)
-                                    .tag(option)
-                            }
-                        }
+                    Button {
+                        sortOption = sortOption == .alphabetical ? .lastUsed : .alphabetical
                     } label: {
-                        Label("Sort", systemImage: "arrow.up.arrow.down")
+                        Label(
+                            sortOption.rawValue,
+                            systemImage: sortOption.systemImage
+                        )
                     }
                 }
 
