@@ -296,6 +296,17 @@ struct IngredientListView: View {
             .searchable(text: $searchText, prompt: "Search ingredients")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        sortOption = sortOption == .alphabetical ? .lastUsed : .alphabetical
+                    } label: {
+                        Label(
+                            sortOption.rawValue,
+                            systemImage: sortOption.systemImage
+                        )
+                    }
+                }
+
+                ToolbarItem(placement: .topBarLeading) {
                     Menu {
                         Picker("Filter", selection: $filterOption) {
                             ForEach(IngredientFilterOption.allCases, id: \.self) { option in
@@ -363,17 +374,6 @@ struct IngredientListView: View {
                         showingSettings = true
                     } label: {
                         Label("Settings", systemImage: "gearshape")
-                    }
-                }
-
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        sortOption = sortOption == .alphabetical ? .lastUsed : .alphabetical
-                    } label: {
-                        Label(
-                            sortOption.rawValue,
-                            systemImage: sortOption.systemImage
-                        )
                     }
                 }
 
