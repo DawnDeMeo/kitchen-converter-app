@@ -34,9 +34,22 @@ struct ContentView: View {
         appearance.largeTitleTextAttributes = [.foregroundColor: UIColor(themeManager.currentScheme.primary)]
         appearance.titleTextAttributes = [.foregroundColor: UIColor(themeManager.currentScheme.primary)]
 
+        // Update the global appearance proxy (for future navigation bars)
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
         UINavigationBar.appearance().compactAppearance = appearance
+
+        // Force update all existing navigation bars immediately
+        for scene in UIApplication.shared.connectedScenes {
+            if let windowScene = scene as? UIWindowScene {
+                for window in windowScene.windows {
+                    for view in window.subviews {
+                        view.removeFromSuperview()
+                        window.addSubview(view)
+                    }
+                }
+            }
+        }
     }
 }
 
