@@ -47,17 +47,22 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 Section {
-                    Picker("Appearance", selection: $appearanceMode) {
-                        ForEach(AppearanceMode.allCases) { mode in
-                            Label(mode.rawValue, systemImage: mode.systemImage)
-                                .tag(mode)
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Appearance")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+
+                        Picker("Appearance", selection: $appearanceMode) {
+                            ForEach(AppearanceMode.allCases) { mode in
+                                Text(mode.rawValue).tag(mode)
+                            }
                         }
+                        .pickerStyle(.segmented)
                     }
-                    .pickerStyle(.inline)
                 } header: {
                     Text("Display")
                 } footer: {
-                    Text("Choose how the app should appear. System will follow your device settings.")
+                    Text("System will follow your device settings.")
                 }
 
                 Section {
