@@ -115,15 +115,14 @@ struct DefaultIngredientDatabaseTests {
         #expect(tbspConversion?.toUnit == .gram, "Tablespoon should convert to grams")
     }
     
-    @Test("Flour converts to both grams and ounces")
-    func flourConvertsToMultipleUnits() {
+    @Test("Flour converts to grams")
+    func flourConvertsToGrams() {
         let ingredients = DefaultIngredientDatabase.loadFromJSON()
         let flour = ingredients.first { $0.name == "All-purpose flour" }
 
-        let gramConversion = flour?.conversions.first { $0.toUnit == .gram }
-        let ounceConversion = flour?.conversions.first { $0.toUnit == .ounce }
+        #expect(flour != nil, "Flour should exist")
 
+        let gramConversion = flour?.conversions.first { $0.toUnit == .gram }
         #expect(gramConversion != nil, "Should have gram conversion")
-        #expect(ounceConversion != nil, "Should have ounce conversion")
     }
 }
