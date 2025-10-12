@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 enum AppearanceMode: String, CaseIterable, Identifiable {
     case system = "System"
@@ -33,7 +34,10 @@ enum AppearanceMode: String, CaseIterable, Identifiable {
 
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     @AppStorage("appearanceMode") private var appearanceMode: AppearanceMode = .system
+
+    @State private var showingResetConfirmation = false
 
     private var appVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
@@ -66,6 +70,21 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    Button(role: .destructive) {
+                        showingResetConfirmation = true
+                    } label: {
+                        HStack {
+                            Label("Reset to Default Ingredients", systemImage: "arrow.counterclockwise")
+                            Spacer()
+                        }
+                    }
+                } header: {
+                    Text("Data")
+                } footer: {
+                    Text("Remove all custom ingredients and reset the database to its default state. This action cannot be undone.")
+                }
+
+                Section {
                     HStack {
                         Text("Version")
                         Spacer()
@@ -95,6 +114,34 @@ struct SettingsView: View {
                     }
                 }
             }
+            .alert(
+                "Reset to Default Ingredients?",
+                isPresented: $showingResetConfirmation
+            ) {
+                Button("Reset Database", role: .destructive) {
+                    resetDatabase()
+                }
+                Button("Cancel", role: .cancel) { }
+            } message: {
+                Text("This will permanently delete all custom ingredients. Default ingredients will remain. This action cannot be undone.")
+            }
+        }
+    }
+
+    private func resetDatabase() {
+        let fetchDescriptor = FetchDescriptor<Ingredient>(
+            predicate: #Predicate { $0.isCustom == true }
+        )
+
+        do {
+            let customIngredients = try modelContext.fetch(fetchDescriptor)
+            for ingredient in customIngredients {
+                modelContext.delete(ingredient)
+            }
+            try modelContext.save()
+            print("✓ Deleted \(customIngredients.count) custom ingredients")
+        } catch {
+            print("❌ Error resetting database: \(error)")
         }
     }
 }
