@@ -37,6 +37,8 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @AppStorage("appearanceMode") private var appearanceMode: AppearanceMode = .system
+    @AppStorage("defaultFromUnit") private var defaultFromUnitKey: String = "cup"
+    @AppStorage("defaultToUnit") private var defaultToUnitKey: String = "gram"
 
     @State private var showingResetConfirmation = false
     @State private var showingShareSheet = false
@@ -44,6 +46,20 @@ struct SettingsView: View {
     @State private var exportURL: URL?
     @State private var showingImportAlert = false
     @State private var importMessage = ""
+
+    private var defaultFromUnitBinding: Binding<MeasurementUnit> {
+        Binding(
+            get: { MeasurementUnit.fromStorageKey(self.defaultFromUnitKey) ?? .cup },
+            set: { self.defaultFromUnitKey = $0.storageKey }
+        )
+    }
+
+    private var defaultToUnitBinding: Binding<MeasurementUnit> {
+        Binding(
+            get: { MeasurementUnit.fromStorageKey(self.defaultToUnitKey) ?? .gram },
+            set: { self.defaultToUnitKey = $0.storageKey }
+        )
+    }
 
     private var appVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
@@ -73,6 +89,24 @@ struct SettingsView: View {
                     Text("Display")
                 } footer: {
                     Text("System will follow your device settings.")
+                }
+
+                Section {
+                    Picker("From", selection: defaultFromUnitBinding) {
+                        ForEach(MeasurementUnit.standardUnits, id: \.self) { unit in
+                            Text(unit.fullDisplayName).tag(unit)
+                        }
+                    }
+
+                    Picker("To", selection: defaultToUnitBinding) {
+                        ForEach(MeasurementUnit.standardUnits, id: \.self) { unit in
+                            Text(unit.fullDisplayName).tag(unit)
+                        }
+                    }
+                } header: {
+                    Text("Unit Preferences")
+                } footer: {
+                    Text("Set default units for conversions. These will be pre-selected when available for an ingredient.")
                 }
 
                 Section {

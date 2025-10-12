@@ -151,4 +151,73 @@ enum MeasurementUnit: Codable, Hashable {
             return name
         }
     }
+
+    // MARK: - String Conversion for Storage
+
+    var storageKey: String {
+        switch self {
+        case .teaspoon: return "teaspoon"
+        case .tablespoon: return "tablespoon"
+        case .cup: return "cup"
+        case .pint: return "pint"
+        case .quart: return "quart"
+        case .gallon: return "gallon"
+        case .liter: return "liter"
+        case .centiliter: return "centiliter"
+        case .milliliter: return "milliliter"
+        case .fluidOunce: return "fluidOunce"
+        case .pound: return "pound"
+        case .ounce: return "ounce"
+        case .gram: return "gram"
+        case .milligram: return "milligram"
+        case .kilogram: return "kilogram"
+        case .count, .other:
+            return "" // Not supported for default preferences
+        }
+    }
+
+    static func fromStorageKey(_ key: String) -> MeasurementUnit? {
+        switch key {
+        case "teaspoon": return .teaspoon
+        case "tablespoon": return .tablespoon
+        case "cup": return .cup
+        case "pint": return .pint
+        case "quart": return .quart
+        case "gallon": return .gallon
+        case "liter": return .liter
+        case "centiliter": return .centiliter
+        case "milliliter": return .milliliter
+        case "fluidOunce": return .fluidOunce
+        case "pound": return .pound
+        case "ounce": return .ounce
+        case "gram": return .gram
+        case "milligram": return .milligram
+        case "kilogram": return .kilogram
+        default: return nil
+        }
+    }
+
+    // MARK: - Standard Units
+
+    static var standardUnits: [MeasurementUnit] {
+        [
+            // Volume
+            .teaspoon,
+            .tablespoon,
+            .cup,
+            .fluidOunce,
+            .pint,
+            .quart,
+            .gallon,
+            .milliliter,
+            .centiliter,
+            .liter,
+            // Weight
+            .milligram,
+            .gram,
+            .kilogram,
+            .ounce,
+            .pound
+        ]
+    }
 }

@@ -11,7 +11,9 @@ import SwiftData
 struct ConversionView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var ingredients: [Ingredient]
-    
+    @AppStorage("defaultFromUnit") private var defaultFromUnitKey: String = "cup"
+    @AppStorage("defaultToUnit") private var defaultToUnitKey: String = "gram"
+
     @State private var selectedIngredient: Ingredient?
     @State private var inputAmount: String = ""
     @State private var selectedFromUnit: MeasurementUnit?
@@ -22,6 +24,14 @@ struct ConversionView: View {
     @FocusState private var isInputFocused: Bool
 
     private let conversionEngine = ConversionEngine()
+
+    private var defaultFromUnit: MeasurementUnit? {
+        MeasurementUnit.fromStorageKey(defaultFromUnitKey)
+    }
+
+    private var defaultToUnit: MeasurementUnit? {
+        MeasurementUnit.fromStorageKey(defaultToUnitKey)
+    }
     
     // Add initializer to support preselected ingredient
     init(preselectedIngredient: Ingredient? = nil) {
@@ -198,6 +208,17 @@ struct ConversionView: View {
             // Compute and cache available units for new ingredient
             if let ingredient = newIngredient {
                 cachedAvailableUnits = computeAvailableUnits(for: ingredient)
+
+                // Apply default unit preferences if available
+                if let defaultFrom = defaultFromUnit,
+                   cachedAvailableUnits.contains(defaultFrom) {
+                    selectedFromUnit = defaultFrom
+                }
+
+                if let defaultTo = defaultToUnit,
+                   cachedAvailableUnits.contains(defaultTo) {
+                    selectedToUnit = defaultTo
+                }
             } else {
                 cachedAvailableUnits = []
             }
@@ -206,6 +227,17 @@ struct ConversionView: View {
             // Compute units on initial appearance if ingredient is preselected
             if let ingredient = selectedIngredient {
                 cachedAvailableUnits = computeAvailableUnits(for: ingredient)
+
+                // Apply default unit preferences if available
+                if let defaultFrom = defaultFromUnit,
+                   cachedAvailableUnits.contains(defaultFrom) {
+                    selectedFromUnit = defaultFrom
+                }
+
+                if let defaultTo = defaultToUnit,
+                   cachedAvailableUnits.contains(defaultTo) {
+                    selectedToUnit = defaultTo
+                }
             }
         }
         .animation(.easeInOut(duration: 0.3), value: isInputFocused)
