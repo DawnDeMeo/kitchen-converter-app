@@ -7,9 +7,19 @@
 
 import SwiftUI
 
-struct AppColorScheme: Identifiable {
+struct AppColorScheme: Identifiable, Equatable, Hashable {
     let id = UUID()
     let name: String
+
+    // Equatable conformance - compare by name
+    static func == (lhs: AppColorScheme, rhs: AppColorScheme) -> Bool {
+        lhs.name == rhs.name
+    }
+
+    // Hashable conformance - hash by name
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+    }
 
     // Core colors (adaptive)
     var primary: Color

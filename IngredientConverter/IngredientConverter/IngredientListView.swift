@@ -38,6 +38,7 @@ enum IngredientFilterOption: String, CaseIterable {
 
 struct IngredientListView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.appColorScheme) private var colorScheme
 
     @State private var ingredients: [Ingredient] = []
     @State private var searchText = ""
@@ -233,7 +234,7 @@ struct IngredientListView: View {
                                         systemImage: ingredient.isFavorite ? "star.slash" : "star.fill"
                                     )
                                 }
-                                .tint(ingredient.isFavorite ? .gray : .yellow)
+                                .tint(ingredient.isFavorite ? .gray : colorScheme.accent)
                             }
                             .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                                 if ingredient.isCustom {
@@ -249,7 +250,7 @@ struct IngredientListView: View {
                                     } label: {
                                         Label("Edit", systemImage: "pencil")
                                     }
-                                    .tint(.blue)
+                                    .tint(colorScheme.primary)
                                 }
                             }
                             .contextMenu {
@@ -463,24 +464,19 @@ struct IngredientListView: View {
 }
 
 struct IngredientRow: View {
+    @Environment(\.appColorScheme) private var colorScheme
     @Bindable var ingredient: Ingredient
-    
+
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 6) {
                 HStack {
                     Text(ingredient.name)
                         .font(.body)
-                    
-                    if ingredient.isFavorite {
-                        Image(systemName: "star.fill")
-                            .foregroundColor(.yellow)
-                            .font(.caption)
-                    }
-                    
+
                     if ingredient.isCustom {
                         Image(systemName: "person.fill")
-                            .foregroundColor(.blue)
+                            .foregroundColor(colorScheme.primary)
                             .font(.caption)
                     }
                 }
@@ -498,7 +494,7 @@ struct IngredientRow: View {
                 ingredient.isFavorite.toggle()
             } label: {
                 Image(systemName: ingredient.isFavorite ? "star.fill" : "star")
-                    .foregroundColor(ingredient.isFavorite ? .yellow : .gray)
+                    .foregroundColor(ingredient.isFavorite ? colorScheme.accent : .gray)
                     .font(.title3)
             }
             .buttonStyle(.plain)

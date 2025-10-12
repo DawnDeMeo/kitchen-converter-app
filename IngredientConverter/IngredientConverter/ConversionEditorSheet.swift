@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct ConversionEditorSheet: View {
+    @Environment(\.appColorScheme) private var colorScheme
     @FocusState private var fromAmountFocused: Bool
     @FocusState private var toAmountFocused: Bool
-    
+
     @Environment(\.dismiss) private var dismiss
     
     let onSave: (ConversionEditor) -> Void
@@ -123,7 +124,7 @@ struct ConversionEditorSheet: View {
                     if fromUnitType == toUnitType {
                         Section {
                             Label("Cannot convert between the same unit types", systemImage: "exclamationmark.triangle.fill")
-                                .foregroundColor(.orange)
+                                .foregroundColor(colorScheme.warning)
                                 .font(.callout)
                         }
                     }

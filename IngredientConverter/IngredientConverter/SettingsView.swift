@@ -36,6 +36,7 @@ enum AppearanceMode: String, CaseIterable, Identifiable {
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    @Environment(ThemeManager.self) private var themeManager
     @AppStorage("appearanceMode") private var appearanceMode: AppearanceMode = .system
     @AppStorage("defaultFromUnit") private var defaultFromUnitKey: String = "cup"
     @AppStorage("defaultToUnit") private var defaultToUnitKey: String = "gram"
@@ -91,17 +92,26 @@ struct SettingsView: View {
                     Text("System will follow your device settings.")
                 }
 
-                // MARK: - Color Scheme Preview (Development)
+                // MARK: - Color Scheme Selection
                 Section {
-                    NavigationLink {
-                        ColorSchemePreviewView()
-                    } label: {
-                        Label("Color Scheme Preview", systemImage: "paintpalette")
+                    Picker("Theme", selection: Binding(
+                        get: { themeManager.currentScheme },
+                        set: { themeManager.currentScheme = $0 }
+                    )) {
+                        ForEach(AppColorScheme.allSchemes) { scheme in
+                            HStack {
+                                Circle()
+                                    .fill(scheme.primary)
+                                    .frame(width: 16, height: 16)
+                                Text(scheme.name)
+                            }
+                            .tag(scheme)
+                        }
                     }
                 } header: {
-                    Text("Developer")
+                    Text("Color Scheme")
                 } footer: {
-                    Text("Preview and compare different color schemes for the app.")
+                    Text("Choose a color scheme for the app. Current theme: \(themeManager.currentScheme.name)")
                 }
 
                 Section {

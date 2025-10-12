@@ -11,7 +11,8 @@ import SwiftData
 struct IngredientEditorView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
-    
+    @Environment(\.appColorScheme) private var colorScheme
+
     let ingredientToEdit: Ingredient?
     
     @State private var name: String = ""
@@ -227,8 +228,9 @@ class ConversionEditor: Identifiable {
 }
 
 struct ConversionEditorRow: View {
+    @Environment(\.appColorScheme) private var colorScheme
     @Bindable var conversion: ConversionEditor
-    
+
     var body: some View {
         VStack(spacing: 8) {
             HStack {
@@ -249,7 +251,7 @@ struct ConversionEditorRow: View {
             }
             
             Image(systemName: "arrow.down")
-                .foregroundColor(.blue)
+                .foregroundColor(colorScheme.primary)
                 .font(.caption)
             
             HStack {

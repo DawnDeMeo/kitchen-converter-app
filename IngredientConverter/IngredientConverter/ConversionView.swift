@@ -10,6 +10,7 @@ import SwiftData
 
 struct ConversionView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.appColorScheme) private var colorScheme
     @Query private var ingredients: [Ingredient]
     @AppStorage("defaultFromUnit") private var defaultFromUnitKey: String = "cup"
     @AppStorage("defaultToUnit") private var defaultToUnitKey: String = "gram"
@@ -139,14 +140,14 @@ struct ConversionView: View {
                                 }
                                 
                                 Image(systemName: "equal")
-                                    .foregroundColor(.blue)
+                                    .foregroundColor(colorScheme.primary)
                                     .font(.title3)
-                                
+
                                 HStack {
                                     Text(formatAmount(result))
                                         .font(.system(.title, design: .rounded))
                                         .bold()
-                                        .foregroundColor(.blue)
+                                        .foregroundColor(colorScheme.accent)
                                     Text(unitDisplayText(toUnit, amount: result))
                                         .font(.title2)
                                         .foregroundColor(.secondary)
