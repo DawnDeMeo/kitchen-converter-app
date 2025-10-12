@@ -35,6 +35,14 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @AppStorage("appearanceMode") private var appearanceMode: AppearanceMode = .system
 
+    private var appVersion: String {
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+    }
+
+    private var buildNumber: String {
+        Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
+    }
+
     var body: some View {
         NavigationStack {
             Form {
@@ -50,6 +58,27 @@ struct SettingsView: View {
                     Text("Display")
                 } footer: {
                     Text("Choose how the app should appear. System will follow your device settings.")
+                }
+
+                Section {
+                    HStack {
+                        Text("Version")
+                        Spacer()
+                        Text("\(appVersion) (\(buildNumber))")
+                            .foregroundColor(.secondary)
+                    }
+                } header: {
+                    Text("About")
+                } footer: {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("© 2025 Dawn DeMeo. All rights reserved.")
+
+                        Text("Default ingredient conversions have been verified against authoritative sources including USDA FoodData Central and King Arthur Baking Company's ingredient weight chart.")
+
+                        Text("Built with Claude Code")
+                            .foregroundColor(.secondary)
+                    }
+                    .font(.caption)
                 }
             }
             .navigationTitle("Settings")
