@@ -392,7 +392,72 @@ extension AppColorScheme {
         )
     )
 
+    // Sage - earthy greens with warm accents
+    static let sage = AppColorScheme(
+        name: "Sage",
+        primary: adaptiveColor(
+            light: Color(red: 0.439, green: 0.541, blue: 0.384), // #708A62
+            dark: Color(red: 0.55, green: 0.65, blue: 0.50) // Brighter for dark mode
+        ),
+        secondary: adaptiveColor(
+            light: Color(red: 0.502, green: 0.608, blue: 0.4), // #809B66
+            dark: Color(red: 0.6, green: 0.7, blue: 0.5)
+        ),
+        accent: adaptiveColor(
+            light: Color(red: 0.784, green: 0.569, blue: 0.392), // #C89164
+            dark: Color(red: 0.85, green: 0.65, blue: 0.48)
+        ),
+        background: adaptiveColor(
+            light: Color(red: 0.98, green: 0.98, blue: 0.96),
+            dark: Color(red: 0.08, green: 0.09, blue: 0.08)
+        ),
+        secondaryBackground: adaptiveColor(
+            light: Color(red: 0.95, green: 0.96, blue: 0.94),
+            dark: Color(red: 0.12, green: 0.13, blue: 0.11)
+        ),
+        groupedBackground: adaptiveColor(
+            light: Color(red: 0.97, green: 0.97, blue: 0.95),
+            dark: Color(red: 0.1, green: 0.11, blue: 0.09)
+        ),
+        primaryText: adaptiveColor(
+            light: Color(red: 0.2, green: 0.25, blue: 0.18),
+            dark: Color(red: 0.92, green: 0.95, blue: 0.9)
+        ),
+        secondaryText: adaptiveColor(
+            light: Color(red: 0.45, green: 0.5, blue: 0.4),
+            dark: Color(red: 0.65, green: 0.7, blue: 0.6)
+        ),
+        buttonText: adaptiveColor(
+            light: Color.white,
+            dark: Color.white
+        ),
+        success: adaptiveColor(
+            light: Color(red: 0.596, green: 0.678, blue: 0.529), // #98AD87
+            dark: Color(red: 0.68, green: 0.75, blue: 0.62)
+        ),
+        warning: adaptiveColor(
+            light: Color(red: 0.788, green: 0.675, blue: 0.608), // #C9AC9B
+            dark: Color(red: 0.85, green: 0.75, blue: 0.68)
+        ),
+        error: adaptiveColor(
+            light: Color(red: 0.737, green: 0.404, blue: 0.498), // #BC677F
+            dark: Color(red: 0.85, green: 0.52, blue: 0.62)
+        ),
+        cardBackground: adaptiveColor(
+            light: Color(red: 0.99, green: 1.0, blue: 0.98),
+            dark: Color(red: 0.14, green: 0.15, blue: 0.13)
+        ),
+        divider: adaptiveColor(
+            light: Color(red: 0.82, green: 0.86, blue: 0.8),
+            dark: Color(red: 0.22, green: 0.24, blue: 0.2)
+        ),
+        shadow: adaptiveColor(
+            light: Color(red: 0.439, green: 0.541, blue: 0.384).opacity(0.15),
+            dark: Color.black.opacity(0.4)
+        )
+    )
+
     static let allSchemes: [AppColorScheme] = [
-        .classic, .ocean, .sunset, .forest, .lavender, .minimal
+        .classic, .ocean, .sunset, .forest, .lavender, .minimal, .sage
     ]
 }
