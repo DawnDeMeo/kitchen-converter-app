@@ -9,8 +9,11 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+    @AppStorage("appearanceMode") private var appearanceMode: AppearanceMode = .system
+
     var body: some View {
         IngredientListView()
+            .preferredColorScheme(appearanceMode.colorScheme)
     }
 }
 

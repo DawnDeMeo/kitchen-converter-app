@@ -49,6 +49,7 @@ struct IngredientListView: View {
 
     @State private var availableCategories: [String] = []
     @State private var showingAddIngredient = false
+    @State private var showingSettings = false
     @State private var ingredientToEdit: Ingredient?
     @State private var ingredientToDelete: Ingredient?
     @State private var showingDeleteConfirmation = false
@@ -359,6 +360,14 @@ struct IngredientListView: View {
 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
+                        showingSettings = true
+                    } label: {
+                        Label("Settings", systemImage: "gearshape")
+                    }
+                }
+
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
                         sortOption = sortOption == .alphabetical ? .lastUsed : .alphabetical
                     } label: {
                         Label(
@@ -397,6 +406,9 @@ struct IngredientListView: View {
                             }
                         }
                 }
+            }
+            .sheet(isPresented: $showingSettings) {
+                SettingsView()
             }
             .confirmationDialog(
                 "Delete \(ingredientToDelete?.name ?? "ingredient")?",
