@@ -41,9 +41,12 @@ struct IngredientListView: View {
 
     @State private var ingredients: [Ingredient] = []
     @State private var searchText = ""
-    @State private var sortOption: IngredientSortOption = .alphabetical
-    @State private var filterOption: IngredientFilterOption = .all
-    @State private var selectedCategory: String? = nil
+
+    // Persisted preferences
+    @AppStorage("sortOption") private var sortOption: IngredientSortOption = .alphabetical
+    @AppStorage("filterOption") private var filterOption: IngredientFilterOption = .all
+    @AppStorage("selectedCategory") private var selectedCategory: String?
+
     @State private var availableCategories: [String] = []
     @State private var showingAddIngredient = false
     @State private var ingredientToEdit: Ingredient?
