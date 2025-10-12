@@ -116,7 +116,7 @@ struct ButtonPreviewSection: View {
             VStack(spacing: 12) {
                 Button("Primary Button") { }
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(scheme.buttonText)
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(scheme.primary)
@@ -124,7 +124,7 @@ struct ButtonPreviewSection: View {
 
                 Button("Secondary Button") { }
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(scheme.buttonText)
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(scheme.secondary)
@@ -132,7 +132,7 @@ struct ButtonPreviewSection: View {
 
                 Button("Accent Button") { }
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(scheme.buttonText)
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(scheme.accent)
@@ -140,7 +140,7 @@ struct ButtonPreviewSection: View {
 
                 Button("Destructive Button") { }
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(scheme.buttonText)
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(scheme.error)

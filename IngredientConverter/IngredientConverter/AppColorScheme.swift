@@ -24,6 +24,7 @@ struct AppColorScheme: Identifiable {
     // Text colors (adaptive)
     var primaryText: Color
     var secondaryText: Color
+    var buttonText: Color // Text color for buttons
 
     // Semantic colors (adaptive)
     var success: Color
@@ -66,6 +67,7 @@ extension AppColorScheme {
         groupedBackground: Color(uiColor: .systemGroupedBackground),
         primaryText: Color(uiColor: .label),
         secondaryText: Color(uiColor: .secondaryLabel),
+        buttonText: Color.white,
         success: Color.green,
         warning: Color.orange,
         error: Color.red,
@@ -112,6 +114,7 @@ extension AppColorScheme {
             light: Color(red: 0.3, green: 0.4, blue: 0.5),
             dark: Color(red: 0.6, green: 0.7, blue: 0.8)
         ),
+        buttonText: Color.white,
         success: adaptiveColor(
             light: Color(red: 0.0, green: 0.7, blue: 0.6),
             dark: Color(red: 0.2, green: 0.8, blue: 0.7)
@@ -173,6 +176,7 @@ extension AppColorScheme {
             light: Color(red: 0.5, green: 0.35, blue: 0.25),
             dark: Color(red: 0.8, green: 0.7, blue: 0.6)
         ),
+        buttonText: Color.white,
         success: adaptiveColor(
             light: Color(red: 0.4, green: 0.75, blue: 0.4),
             dark: Color(red: 0.5, green: 0.85, blue: 0.5)
@@ -234,6 +238,7 @@ extension AppColorScheme {
             light: Color(red: 0.35, green: 0.4, blue: 0.35),
             dark: Color(red: 0.6, green: 0.7, blue: 0.6)
         ),
+        buttonText: Color.white,
         success: adaptiveColor(
             light: Color(red: 0.3, green: 0.7, blue: 0.4),
             dark: Color(red: 0.4, green: 0.8, blue: 0.5)
@@ -295,6 +300,7 @@ extension AppColorScheme {
             light: Color(red: 0.4, green: 0.35, blue: 0.5),
             dark: Color(red: 0.7, green: 0.6, blue: 0.8)
         ),
+        buttonText: Color.white,
         success: adaptiveColor(
             light: Color(red: 0.45, green: 0.7, blue: 0.55),
             dark: Color(red: 0.55, green: 0.8, blue: 0.65)
@@ -355,6 +361,10 @@ extension AppColorScheme {
         secondaryText: adaptiveColor(
             light: Color(red: 0.5, green: 0.5, blue: 0.5),
             dark: Color(red: 0.7, green: 0.7, blue: 0.7) // Lighter for readability
+        ),
+        buttonText: adaptiveColor(
+            light: Color.white,
+            dark: Color(red: 0.05, green: 0.05, blue: 0.05) // Almost black for high contrast on light buttons
         ),
         success: adaptiveColor(
             light: Color(red: 0.3, green: 0.3, blue: 0.3),
