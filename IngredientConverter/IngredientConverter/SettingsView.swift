@@ -91,6 +91,19 @@ struct SettingsView: View {
                     Text("System will follow your device settings.")
                 }
 
+                // MARK: - Color Scheme Preview (Development)
+                Section {
+                    NavigationLink {
+                        ColorSchemePreviewView()
+                    } label: {
+                        Label("Color Scheme Preview", systemImage: "paintpalette")
+                    }
+                } header: {
+                    Text("Developer")
+                } footer: {
+                    Text("Preview and compare different color schemes for the app.")
+                }
+
                 Section {
                     Picker("From", selection: defaultFromUnitBinding) {
                         ForEach(MeasurementUnit.standardUnits, id: \.self) { unit in
