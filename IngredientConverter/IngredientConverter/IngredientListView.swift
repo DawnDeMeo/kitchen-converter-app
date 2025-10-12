@@ -407,7 +407,10 @@ struct IngredientListView: View {
                         }
                 }
             }
-            .sheet(isPresented: $showingSettings) {
+            .sheet(isPresented: $showingSettings, onDismiss: {
+                fetchAvailableCategories()
+                fetchIngredients()
+            }) {
                 SettingsView()
             }
             .confirmationDialog(
