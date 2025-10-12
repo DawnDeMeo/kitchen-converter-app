@@ -157,7 +157,7 @@ struct SettingsView: View {
 
                         Text("Default ingredient conversions have been verified against authoritative sources including USDA FoodData Central and King Arthur Baking Company's ingredient weight chart.")
 
-                        Text("Built with Claude Code")
+                        Text("Built with assistance from Claude Code")
                             .foregroundColor(.secondary)
                     }
                     .font(.caption)
