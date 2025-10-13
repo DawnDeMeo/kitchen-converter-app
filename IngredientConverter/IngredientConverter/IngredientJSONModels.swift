@@ -9,6 +9,7 @@ import Foundation
 
 // JSON parsing structures
 struct IngredientsJSON: Codable {
+    let version: Int
     let ingredients: [IngredientJSON]
 }
 
