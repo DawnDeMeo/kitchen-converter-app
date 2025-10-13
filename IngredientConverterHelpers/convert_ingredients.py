@@ -24,6 +24,27 @@ import sys
 from pathlib import Path
 
 
+def get_current_version(output_file):
+    """Get the current version from an existing JSON file, or 0 if not present."""
+    output_path = Path(output_file)
+
+    if not output_path.exists():
+        return 0
+
+    try:
+        with open(output_path, 'r') as f:
+            data = json.load(f)
+            # Check if version exists in the JSON
+            if 'version' in data:
+                return data['version']
+            else:
+                # No version found, treat as version 0
+                return 0
+    except (json.JSONDecodeError, IOError):
+        # If file can't be read or parsed, start from version 0
+        return 0
+
+
 def parse_unit(unit_str, singular=None, plural=None):
     """Parse a unit string into the appropriate JSON format."""
     unit_str = str(unit_str).strip() if pd.notna(unit_str) else ""
@@ -43,6 +64,16 @@ def parse_unit(unit_str, singular=None, plural=None):
 
 def convert_to_json(input_file, output_file=None):
     """Convert Excel/CSV file to JSON format."""
+
+    # Determine output filename early (so we can check for existing version)
+    if output_file is None:
+        output_file = Path(input_file).stem + '.json'
+
+    # Get current version and increment it
+    current_version = get_current_version(output_file)
+    new_version = current_version + 1
+
+    print(f"📊 Version: {current_version} → {new_version}")
 
     # Read the file
     if input_file.endswith('.csv'):
@@ -105,14 +136,11 @@ def convert_to_json(input_file, output_file=None):
     # Convert to list
     ingredients_list = list(ingredients.values())
 
-    # Create output JSON
+    # Create output JSON with version
     output = {
+        "version": new_version,
         "ingredients": ingredients_list
     }
-
-    # Determine output filename
-    if output_file is None:
-        output_file = Path(input_file).stem + '.json'
 
     # Write to file
     with open(output_file, 'w') as f:
