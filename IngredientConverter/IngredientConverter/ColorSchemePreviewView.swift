@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ColorSchemePreviewView: View {
     @AppStorage("appearanceMode") private var appearanceMode: AppearanceMode = .system
-    @State private var selectedScheme: AppColorScheme = .classic
+    @State private var selectedScheme: AppColorScheme = .sage
 
     var body: some View {
         NavigationStack {
