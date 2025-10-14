@@ -9,8 +9,8 @@ import SwiftUI
 
 struct ConversionEditorSheet: View {
     @Environment(\.appColorScheme) private var colorScheme
-    @FocusState private var fromAmountFocused: Bool
-    @FocusState private var toAmountFocused: Bool
+    @State private var fromKeyboardVisible: Bool = false
+    @State private var toKeyboardVisible: Bool = false
 
     @Environment(\.dismiss) private var dismiss
     
@@ -64,10 +64,11 @@ struct ConversionEditorSheet: View {
                         }
                         .listRowBackground(colorScheme.cardBackground)
 
-                        AmountTextField(
+                        NoKeyboardTextField(
                             text: $fromAmount,
                             placeholder: "Enter from amount (e.g., 1 1/2)",
-                            isFocused: $fromAmountFocused
+                            isFocused: $fromKeyboardVisible,
+                            onChange: nil
                         )
                         .foregroundColor(colorScheme.primaryText)
                         .listRowBackground(colorScheme.cardBackground)
@@ -115,10 +116,11 @@ struct ConversionEditorSheet: View {
                         }
                         .listRowBackground(colorScheme.cardBackground)
 
-                        AmountTextField(
+                        NoKeyboardTextField(
                             text: $toAmount,
                             placeholder: "Enter to amount (e.g., 1 1/2)",
-                            isFocused: $toAmountFocused
+                            isFocused: $toKeyboardVisible,
+                            onChange: nil
                         )
                         .foregroundColor(colorScheme.primaryText)
                         .listRowBackground(colorScheme.cardBackground)
@@ -183,54 +185,24 @@ struct ConversionEditorSheet: View {
                 .scrollContentBackground(.hidden)
                 .background(colorScheme.background)
 
-                // Custom keyboard accessory view - consistent with ConversionView
-                if fromAmountFocused || toAmountFocused {
-                    VStack(spacing: 0) {
-                        Divider()
-                            .background(colorScheme.divider)
-
-                        HStack(spacing: 12) {
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 8) {
-                                    ForEach(FractionInputHelper.commonFractions, id: \.self) { fraction in
-                                        Button(fraction) {
-                                            // Add to whichever field is focused
-                                            if fromAmountFocused {
-                                                fromAmount = FractionInputHelper.appendFraction(fraction, to: fromAmount)
-                                            } else if toAmountFocused {
-                                                toAmount = FractionInputHelper.appendFraction(fraction, to: toAmount)
-                                            }
-                                        }
-                                        .font(.subheadline.weight(.medium))
-                                        .foregroundColor(colorScheme.primary)
-                                        .padding(.horizontal, 12)
-                                        .padding(.vertical, 8)
-                                        .background(colorScheme.primary.opacity(0.1))
-                                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 8)
-                                                .stroke(colorScheme.primary.opacity(0.3), lineWidth: 1)
-                                        )
-                                    }
-                                }
-                                .padding(.horizontal)
-                            }
-
-                            Button("Done") {
-                                fromAmountFocused = false
-                                toAmountFocused = false
-                            }
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundColor(colorScheme.buttonText)
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
-                            .background(colorScheme.primary)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                            .padding(.trailing)
-                        }
-                        .padding(.vertical, 8)
-                        .background(colorScheme.secondaryBackground)
-                    }
+                // Custom keyboard
+                if fromKeyboardVisible {
+                    CustomNumericKeyboard(
+                        text: $fromAmount,
+                        onDone: {
+                            fromKeyboardVisible = false
+                        },
+                        onChange: nil
+                    )
+                    .transition(.move(edge: .bottom))
+                } else if toKeyboardVisible {
+                    CustomNumericKeyboard(
+                        text: $toAmount,
+                        onDone: {
+                            toKeyboardVisible = false
+                        },
+                        onChange: nil
+                    )
                     .transition(.move(edge: .bottom))
                 }
             }
@@ -255,10 +227,20 @@ struct ConversionEditorSheet: View {
             } message: {
                 Text(errorMessage)
             }
-            .animation(.easeInOut(duration: 0.3), value: fromAmountFocused || toAmountFocused)
+            .animation(.easeInOut(duration: 0.3), value: fromKeyboardVisible || toKeyboardVisible)
+            .onChange(of: fromKeyboardVisible) { _, newValue in
+                if newValue {
+                    toKeyboardVisible = false
+                }
+            }
+            .onChange(of: toKeyboardVisible) { _, newValue in
+                if newValue {
+                    fromKeyboardVisible = false
+                }
+            }
         }
     }
-    
+
     // Available "To" unit types based on "From" selection
     private var allowedToUnitTypes: [UnitInputType] {
         UnitInputType.allCases.filter { $0 != fromUnitType }

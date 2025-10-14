@@ -23,6 +23,7 @@ struct ConversionView: View {
     @State private var cachedAvailableUnits: [MeasurementUnit] = []
 
     @FocusState private var isInputFocused: Bool
+    @State private var isKeyboardVisible: Bool = false
 
     private let conversionEngine = ConversionEngine()
 
@@ -64,9 +65,10 @@ struct ConversionView: View {
                                 .foregroundColor(colorScheme.secondary)
                                 .textCase(.uppercase)
 
-                            AmountTextField(
+                            NoKeyboardTextField(
                                 text: $inputAmount,
-                                isFocused: $isInputFocused,
+                                placeholder: "Enter amount (e.g., 1 1/2)",
+                                isFocused: $isKeyboardVisible,
                                 onChange: performConversion
                             )
                             .foregroundColor(colorScheme.primaryText)
@@ -95,7 +97,7 @@ struct ConversionView: View {
                                 // Swap Button
                                 if selectedFromUnit != nil && selectedToUnit != nil {
                                     Button {
-                                        isInputFocused = false
+                                        isKeyboardVisible = false
                                         swapUnits()
                                     } label: {
                                         Image(systemName: "arrow.left.arrow.right")
@@ -200,50 +202,25 @@ struct ConversionView: View {
                 .background(colorScheme.background)
             }
 
-            // Custom keyboard accessory view - reliable and consistent
-            if isInputFocused {
-                VStack(spacing: 0) {
-                    Divider()
-                        .background(colorScheme.divider)
-
-                    HStack(spacing: 12) {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 8) {
-                                ForEach(FractionInputHelper.commonFractions, id: \.self) { fraction in
-                                    Button(fraction) {
-                                        inputAmount = FractionInputHelper.appendFraction(fraction, to: inputAmount)
-                                        performConversion()
-                                    }
-                                    .font(.subheadline.weight(.medium))
-                                    .foregroundColor(colorScheme.primary)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 8)
-                                    .background(colorScheme.primary.opacity(0.1))
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 8)
-                                            .stroke(colorScheme.primary.opacity(0.3), lineWidth: 1)
-                                    )
-                                }
-                            }
-                            .padding(.horizontal)
-                        }
-
-                        Button("Done") {
-                            isInputFocused = false
-                        }
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundColor(colorScheme.buttonText)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
-                        .background(colorScheme.primary)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                        .padding(.trailing)
-                    }
-                    .padding(.vertical, 8)
-                    .background(colorScheme.secondaryBackground)
-                }
+            // Custom keyboard
+            if isKeyboardVisible {
+                CustomNumericKeyboard(
+                    text: $inputAmount,
+                    onDone: {
+                        isKeyboardVisible = false
+                    },
+                    onChange: performConversion
+                )
                 .transition(.move(edge: .bottom))
+                .onAppear {
+                    print("Custom keyboard appeared")
+                }
+            } else {
+                Color.clear
+                    .frame(height: 0)
+                    .onAppear {
+                        print("Custom keyboard hidden, isKeyboardVisible = \(isKeyboardVisible)")
+                    }
             }
         }
         .background(colorScheme.background)
@@ -289,7 +266,10 @@ struct ConversionView: View {
                 }
             }
         }
-        .animation(.easeInOut(duration: 0.3), value: isInputFocused)
+        .animation(.easeInOut(duration: 0.3), value: isKeyboardVisible)
+        .onChange(of: isKeyboardVisible) { oldValue, newValue in
+            print("isKeyboardVisible changed from \(oldValue) to \(newValue)")
+        }
     }
     
     // MARK: - Helper Functions
