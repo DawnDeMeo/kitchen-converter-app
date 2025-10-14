@@ -366,6 +366,33 @@ struct ConversionView: View {
 }
 
 #Preview {
-    ConversionView()
-        .modelContainer(for: Ingredient.self, inMemory: true)
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Ingredient.self, configurations: config)
+
+    // Create flour with conversions
+    let flour = Ingredient(name: "All-purpose flour", category: "Flour", brand: "King Arthur", isFavorite: true, isCustom: false)
+
+    // Add conversions
+    let cupToGram = UnitConversion(
+        fromAmount: 1,
+        fromUnit: .cup,
+        toAmount: 120,
+        toUnit: .gram
+    )
+    let tbspToGram = UnitConversion(
+        fromAmount: 1,
+        fromUnit: .tablespoon,
+        toAmount: 7.5,
+        toUnit: .gram
+    )
+
+    flour.conversions.append(cupToGram)
+    flour.conversions.append(tbspToGram)
+
+    container.mainContext.insert(flour)
+
+    return NavigationStack {
+        ConversionView(preselectedIngredient: flour)
+            .modelContainer(container)
+    }
 }
