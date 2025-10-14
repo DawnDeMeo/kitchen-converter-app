@@ -120,21 +120,21 @@ class ConversionEngine {
     private func findConversionPath(currentAmount: Double, currentUnit: MeasurementUnit,
                                      targetUnit: MeasurementUnit, ingredient: Ingredient,
                                      visited: inout Set<MeasurementUnit>) -> Double? {
-        
+
         // Mark current unit as visited
         visited.insert(currentUnit)
-        
+
         // Check if we can convert using Foundation's standard conversions
         if currentUnit.type == targetUnit.type,
            let standardConversion = UnitConversionHelper.convert(amount: currentAmount, from: currentUnit, to: targetUnit) {
             return standardConversion
         }
-        
-        // Try all conversions from current unit
+
+        // Try all ingredient-specific conversions from current unit
         for conversion in ingredient.conversions {
             var nextUnit: MeasurementUnit?
             var nextAmount: Double?
-            
+
             // Check if we can use this conversion (forward direction)
             if conversion.fromUnit == currentUnit && !visited.contains(conversion.toUnit) {
                 nextUnit = conversion.toUnit
@@ -145,20 +145,20 @@ class ConversionEngine {
                 nextUnit = conversion.fromUnit
                 nextAmount = (currentAmount / conversion.toAmount) * conversion.fromAmount
             }
-            
+
             // If we found a valid next step
             if let unit = nextUnit, let amount = nextAmount {
                 // Check if we reached the target
                 if unit == targetUnit {
                     return amount
                 }
-                
+
                 // Check if we can reach target via standard conversion
                 if unit.type == targetUnit.type,
                    let finalAmount = UnitConversionHelper.convert(amount: amount, from: unit, to: targetUnit) {
                     return finalAmount
                 }
-                
+
                 // Otherwise, continue searching recursively
                 if let result = findConversionPath(
                     currentAmount: amount,
@@ -171,7 +171,38 @@ class ConversionEngine {
                 }
             }
         }
-        
+
+        // Try Foundation conversions to same-type units as intermediate steps
+        // This enables paths like: cup → tablespoon (Foundation) → gram (ingredient)
+        if currentUnit.type == .volume || currentUnit.type == .weight {
+            let sameTypeUnits = UnitConversionHelper.allUnitsOfSameType(as: currentUnit)
+
+            for intermediateUnit in sameTypeUnits {
+                // Skip if already visited or is the current unit
+                guard !visited.contains(intermediateUnit), intermediateUnit != currentUnit else {
+                    continue
+                }
+
+                // Convert to intermediate unit using Foundation
+                if let intermediateAmount = UnitConversionHelper.convert(
+                    amount: currentAmount,
+                    from: currentUnit,
+                    to: intermediateUnit
+                ) {
+                    // Continue search from intermediate unit
+                    if let result = findConversionPath(
+                        currentAmount: intermediateAmount,
+                        currentUnit: intermediateUnit,
+                        targetUnit: targetUnit,
+                        ingredient: ingredient,
+                        visited: &visited
+                    ) {
+                        return result
+                    }
+                }
+            }
+        }
+
         return nil
     }
 
