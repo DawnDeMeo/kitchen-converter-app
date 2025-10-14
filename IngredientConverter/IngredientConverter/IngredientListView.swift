@@ -306,10 +306,9 @@ struct IngredientListView: View {
                     Button {
                         sortOption = sortOption == .alphabetical ? .lastUsed : .alphabetical
                     } label: {
-                        Label(
-                            sortOption.rawValue,
-                            systemImage: sortOption.systemImage
-                        )
+                        Image(systemName: sortOption.systemImage)
+                            .frame(width: 20, alignment: .center)
+                            .padding(.horizontal, 4)
                     }
                 }
 
