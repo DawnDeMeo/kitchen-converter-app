@@ -63,32 +63,6 @@ struct AppColorScheme: Identifiable, Equatable, Hashable {
 
 extension AppColorScheme {
 
-    // System default with slight customization
-//    static let classic = AppColorScheme(
-//        name: "Classic",
-//        primary: Color.blue,
-//        secondary: adaptiveColor(
-//            light: Color(red: 0.4, green: 0.6, blue: 0.9),
-//            dark: Color(red: 0.5, green: 0.7, blue: 1.0)
-//        ),
-//        accent: Color.orange,
-//        background: Color(uiColor: .systemBackground),
-//        secondaryBackground: Color(uiColor: .secondarySystemBackground),
-//        groupedBackground: Color(uiColor: .systemGroupedBackground),
-//        primaryText: Color(uiColor: .label),
-//        secondaryText: Color(uiColor: .secondaryLabel),
-//        buttonText: Color.white,
-//        success: Color.green,
-//        warning: Color.orange,
-//        error: Color.red,
-//        cardBackground: Color(uiColor: .secondarySystemGroupedBackground),
-//        divider: Color(uiColor: .separator),
-//        shadow: adaptiveColor(
-//            light: Color.black.opacity(0.1),
-//            dark: Color.black.opacity(0.3)
-//        )
-//    )
-
     // Ocean-inspired blues and teals
     static let blueCrab = AppColorScheme(
         name: "Blue Crab",
@@ -212,68 +186,6 @@ extension AppColorScheme {
             dark: Color.black.opacity(0.4)
         )
     )
-
-    // Forest greens and earthy tones
-//    static let forest = AppColorScheme(
-//        name: "Forest",
-//        primary: adaptiveColor(
-//            light: Color(red: 0.2, green: 0.55, blue: 0.35),
-//            dark: Color(red: 0.35, green: 0.7, blue: 0.5)
-//        ),
-//        secondary: adaptiveColor(
-//            light: Color(red: 0.35, green: 0.65, blue: 0.45),
-//            dark: Color(red: 0.5, green: 0.8, blue: 0.6)
-//        ),
-//        accent: adaptiveColor(
-//            light: Color(red: 0.7, green: 0.55, blue: 0.3),
-//            dark: Color(red: 0.85, green: 0.7, blue: 0.45)
-//        ),
-//        background: adaptiveColor(
-//            light: Color(red: 0.97, green: 0.98, blue: 0.96),
-//            dark: Color(red: 0.06, green: 0.08, blue: 0.06)
-//        ),
-//        secondaryBackground: adaptiveColor(
-//            light: Color(red: 0.94, green: 0.96, blue: 0.93),
-//            dark: Color(red: 0.1, green: 0.12, blue: 0.1)
-//        ),
-//        groupedBackground: adaptiveColor(
-//            light: Color(red: 0.96, green: 0.97, blue: 0.95),
-//            dark: Color(red: 0.08, green: 0.1, blue: 0.08)
-//        ),
-//        primaryText: adaptiveColor(
-//            light: Color(red: 0.15, green: 0.2, blue: 0.15),
-//            dark: Color(red: 0.9, green: 0.95, blue: 0.9)
-//        ),
-//        secondaryText: adaptiveColor(
-//            light: Color(red: 0.35, green: 0.4, blue: 0.35),
-//            dark: Color(red: 0.6, green: 0.7, blue: 0.6)
-//        ),
-//        buttonText: Color.white,
-//        success: adaptiveColor(
-//            light: Color(red: 0.3, green: 0.7, blue: 0.4),
-//            dark: Color(red: 0.4, green: 0.8, blue: 0.5)
-//        ),
-//        warning: adaptiveColor(
-//            light: Color(red: 0.85, green: 0.65, blue: 0.2),
-//            dark: Color(red: 0.95, green: 0.75, blue: 0.3)
-//        ),
-//        error: adaptiveColor(
-//            light: Color(red: 0.8, green: 0.3, blue: 0.25),
-//            dark: Color(red: 0.95, green: 0.45, blue: 0.4)
-//        ),
-//        cardBackground: adaptiveColor(
-//            light: Color(red: 0.99, green: 1.0, blue: 0.98),
-//            dark: Color(red: 0.12, green: 0.15, blue: 0.12)
-//        ),
-//        divider: adaptiveColor(
-//            light: Color(red: 0.8, green: 0.85, blue: 0.78),
-//            dark: Color(red: 0.18, green: 0.22, blue: 0.18)
-//        ),
-//        shadow: adaptiveColor(
-//            light: Color(red: 0.2, green: 0.55, blue: 0.35).opacity(0.15),
-//            dark: Color.black.opacity(0.4)
-//        )
-//    )
 
     // Lavender and purple tones
     static let lavender = AppColorScheme(
@@ -468,6 +380,6 @@ extension AppColorScheme {
     )
 
     static let allSchemes: [AppColorScheme] = [
-        .blueCrab, .cayenne, .lavender, .sage, .saltandpepper //, .classic, .forest
+        .blueCrab, .cayenne, .lavender, .sage, .saltandpepper
     ]
 }

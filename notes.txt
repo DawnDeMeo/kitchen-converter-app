@@ -2,27 +2,18 @@ help section or faq
 
 icon - outline of kitchen scale?
 
-think of changing name of app
-
 contact info
 
 companion website?
-
-add notes to .gitignore
-
-clock to Abc causes buttons to jump. need same size - can constraint to button size be added?
-
-convert screen should show category
 
 consider custom keyboard (new branch)
 decimal plus slash, and fractions on top
 
 from and to - segmented picker for wt/vol? or division in drop down? want to avoid scrolling. but keep in mind some are units
 
-alternative ideas from convert screen - more compact? don't like that results are so far down
+try adding spacers to center the drop downs in from and to
 
-improve convert and settings screens so they work well on ipad too, maybe navstack instead of sheet?
-
+clean up commented code
 
 ----
 * test main screen with custom, favorite
@@ -30,12 +21,16 @@ improve convert and settings screens so they work well on ipad too, maybe navsta
 * converted value
 * settings
 
-* active yeast won't convert from cup to grams, or even tsp to grams, but will convert grams to tsp. database provides tablespoon to gram, should be able to calculate that a teaspoon is 1/3 tablespoon. same for 1 cup. gram to cup works, not cup to gram. should know a cup is 16 tablespoons
-* in dark mode, S&P now has white text on light gray bg, still not contrasty enough...black text on active part of segment only?
-
 ___
-manual updates
-* updated preview in IngredientListView to include category and another custom example
-* updated IngredientRow to move custom tag after category tag
-* pulled VStack from IngredientListView to new IngredientRowView, called from IngredientListView and ConversionView. now tagging looks more consistent and code isn't duplicated
-* in ConversionView results equal sign was centered, but no from or to amounts. removed spacers around equal sign, then changed VStack alignment to .center instead
+
+git commit -m "Complete theme experiment with comprehensive UI theming
+
+- Enhanced all views with full theme support (backgrounds, text, badges)
+- Created ThemedSegmentedPickerBackground for proper picker theming
+- Fixed Salt & Pepper light mode readability with white text on selected segments
+- Created reusable IngredientRowView component
+- Updated previews with comprehensive test data
+- Reordered tags (category before custom badge)
+- Fixed result centering in ConversionView
+
+All themes now have dramatic visual impact across the entire app."
