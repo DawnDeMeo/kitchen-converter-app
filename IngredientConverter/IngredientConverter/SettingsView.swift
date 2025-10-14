@@ -36,6 +36,7 @@ enum AppearanceMode: String, CaseIterable, Identifiable {
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.appColorScheme) private var colorScheme
     @Environment(ThemeManager.self) private var themeManager
     @AppStorage("appearanceMode") private var appearanceMode: AppearanceMode = .system
     @AppStorage("defaultFromUnit") private var defaultFromUnitKey: String = "cup"
@@ -77,7 +78,7 @@ struct SettingsView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Appearance")
                             .font(.subheadline)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(colorScheme.secondaryText)
 
                         Picker("Appearance", selection: $appearanceMode) {
                             ForEach(AppearanceMode.allCases) { mode in
@@ -85,11 +86,17 @@ struct SettingsView: View {
                             }
                         }
                         .pickerStyle(.segmented)
+                        .background(
+                            ThemedSegmentedPickerBackground(color: colorScheme.primary)
+                        )
                     }
+                    .listRowBackground(colorScheme.cardBackground)
                 } header: {
                     Text("Display")
+                        .foregroundColor(colorScheme.secondary)
                 } footer: {
                     Text("System will follow your device settings.")
+                        .foregroundColor(colorScheme.secondaryText)
                 }
 
                 // MARK: - Color Scheme Selection
@@ -99,19 +106,38 @@ struct SettingsView: View {
                         set: { themeManager.currentScheme = $0 }
                     )) {
                         ForEach(AppColorScheme.allSchemes) { scheme in
-                            HStack {
+                            HStack(spacing: 12) {
                                 Circle()
-                                    .fill(scheme.primary)
-                                    .frame(width: 16, height: 16)
+                                    .fill(
+                                        LinearGradient(
+                                            colors: [scheme.primary, scheme.secondary],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        )
+                                    )
+                                    .frame(width: 20, height: 20)
+                                    .overlay(
+                                        Circle()
+                                            .stroke(scheme.accent, lineWidth: 2)
+                                    )
                                 Text(scheme.name)
+                                    .foregroundColor(colorScheme.primaryText)
                             }
                             .tag(scheme)
                         }
                     }
+                    .listRowBackground(colorScheme.cardBackground)
                 } header: {
                     Text("Color Scheme")
+                        .foregroundColor(colorScheme.secondary)
                 } footer: {
-                    Text("Choose a color scheme for the app. Current theme: \(themeManager.currentScheme.name)")
+                    HStack(spacing: 8) {
+                        Circle()
+                            .fill(themeManager.currentScheme.primary)
+                            .frame(width: 12, height: 12)
+                        Text("Current theme: \(themeManager.currentScheme.name)")
+                            .foregroundColor(colorScheme.secondaryText)
+                    }
                 }
 
                 Section {
@@ -120,16 +146,20 @@ struct SettingsView: View {
                             Text(unit.fullDisplayName).tag(unit)
                         }
                     }
+                    .listRowBackground(colorScheme.cardBackground)
 
                     Picker("To", selection: defaultToUnitBinding) {
                         ForEach(MeasurementUnit.standardUnits, id: \.self) { unit in
                             Text(unit.fullDisplayName).tag(unit)
                         }
                     }
+                    .listRowBackground(colorScheme.cardBackground)
                 } header: {
                     Text("Unit Preferences")
+                        .foregroundColor(colorScheme.secondary)
                 } footer: {
                     Text("Set default units for conversions. These will be pre-selected when available for an ingredient.")
+                        .foregroundColor(colorScheme.secondaryText)
                 }
 
                 Section {
@@ -138,54 +168,78 @@ struct SettingsView: View {
                     } label: {
                         HStack {
                             Label("Export Custom Ingredients", systemImage: "square.and.arrow.up")
+                                .foregroundColor(colorScheme.primary)
                             Spacer()
                         }
                     }
+                    .listRowBackground(colorScheme.cardBackground)
 
                     Button {
                         showingDocumentPicker = true
                     } label: {
                         HStack {
                             Label("Import Custom Ingredients", systemImage: "square.and.arrow.down")
+                                .foregroundColor(colorScheme.primary)
                             Spacer()
                         }
                     }
+                    .listRowBackground(colorScheme.cardBackground)
 
                     Button(role: .destructive) {
                         showingResetConfirmation = true
                     } label: {
                         HStack {
                             Label("Reset to Default Ingredients", systemImage: "arrow.counterclockwise")
+                                .foregroundColor(colorScheme.error)
                             Spacer()
                         }
                     }
+                    .listRowBackground(colorScheme.error.opacity(0.05))
                 } header: {
                     Text("Data")
+                        .foregroundColor(colorScheme.secondary)
                 } footer: {
                     Text("Export your custom ingredients to save a backup, or import ingredients from a JSON file.")
+                        .foregroundColor(colorScheme.secondaryText)
                 }
 
                 Section {
                     HStack {
                         Text("Version")
+                            .foregroundColor(colorScheme.primaryText)
                         Spacer()
                         Text("\(appVersion) (\(buildNumber))")
-                            .foregroundColor(.secondary)
+                            .foregroundColor(colorScheme.secondaryText)
+                            .font(.caption)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(colorScheme.secondary.opacity(0.1))
+                            .clipShape(Capsule())
                     }
+                    .listRowBackground(colorScheme.cardBackground)
                 } header: {
                     Text("About")
+                        .foregroundColor(colorScheme.secondary)
                 } footer: {
                     VStack(alignment: .leading, spacing: 12) {
                         Text("© 2025 Dawn DeMeo. All rights reserved.")
+                            .foregroundColor(colorScheme.primaryText)
 
                         Text("Default ingredient conversions have been verified against authoritative sources including USDA FoodData Central and King Arthur Baking Company's ingredient weight chart.")
+                            .foregroundColor(colorScheme.secondaryText)
 
-                        Text("Built with assistance from Claude Code")
-                            .foregroundColor(.secondary)
+                        HStack(spacing: 4) {
+                            Image(systemName: "sparkles")
+                                .font(.caption2)
+                            Text("Built with assistance from Claude Code")
+                        }
+                        .foregroundColor(colorScheme.accent)
                     }
                     .font(.caption)
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(colorScheme.background)
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -478,6 +532,44 @@ struct DocumentPicker: UIViewControllerRepresentable {
             guard let url = urls.first else { return }
             onPick(url)
         }
+    }
+}
+
+// Helper view to theme segmented pickers
+struct ThemedSegmentedPickerBackground: UIViewRepresentable {
+    let color: Color
+
+    func makeUIView(context: Context) -> UIView {
+        let view = UIView()
+        view.backgroundColor = .clear
+
+        // Configure segmented control appearance
+        DispatchQueue.main.async {
+            UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(self.color)
+            UISegmentedControl.appearance().setTitleTextAttributes(
+                [.foregroundColor: UIColor.white],
+                for: .selected
+            )
+            UISegmentedControl.appearance().setTitleTextAttributes(
+                [.foregroundColor: UIColor(self.color)],
+                for: .normal
+            )
+        }
+
+        return view
+    }
+
+    func updateUIView(_ uiView: UIView, context: Context) {
+        // Update appearance when color changes
+        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(color)
+        UISegmentedControl.appearance().setTitleTextAttributes(
+            [.foregroundColor: UIColor.white],
+            for: .selected
+        )
+        UISegmentedControl.appearance().setTitleTextAttributes(
+            [.foregroundColor: UIColor(color)],
+            for: .normal
+        )
     }
 }
 

@@ -216,6 +216,7 @@ struct IngredientListView: View {
                         systemImage: searchText.isEmpty ? "tray" : "magnifyingglass",
                         description: Text(searchText.isEmpty ? "Add ingredients to get started" : "Try adjusting your search or filters")
                     )
+                    .foregroundStyle(colorScheme.primaryText, colorScheme.secondaryText)
                 } else {
                     List {
                         ForEach(ingredients) { ingredient in
@@ -224,6 +225,7 @@ struct IngredientListView: View {
                             } label: {
                                 IngredientRow(ingredient: ingredient)
                             }
+                            .listRowBackground(colorScheme.cardBackground)
                             .buttonStyle(.plain)
                             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                                 Button {
@@ -234,7 +236,7 @@ struct IngredientListView: View {
                                         systemImage: ingredient.isFavorite ? "star.slash" : "star.fill"
                                     )
                                 }
-                                .tint(ingredient.isFavorite ? .gray : colorScheme.accent)
+                                .tint(ingredient.isFavorite ? colorScheme.secondary.opacity(0.6) : colorScheme.accent)
                             }
                             .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                                 if ingredient.isCustom {
@@ -244,7 +246,8 @@ struct IngredientListView: View {
                                     } label: {
                                         Label("Delete", systemImage: "trash")
                                     }
-                                    
+                                    .tint(colorScheme.error)
+
                                     Button {
                                         ingredientToEdit = ingredient
                                     } label: {
@@ -259,9 +262,9 @@ struct IngredientListView: View {
                                 } label: {
                                     Label("Convert", systemImage: "arrow.left.arrow.right")
                                 }
-                                
+
                                 Divider()
-                                
+
                                 Button {
                                     toggleFavorite(ingredient)
                                 } label: {
@@ -270,16 +273,16 @@ struct IngredientListView: View {
                                         systemImage: ingredient.isFavorite ? "star.slash.fill" : "star.fill"
                                     )
                                 }
-                                
+
                                 if ingredient.isCustom {
                                     Button {
                                         ingredientToEdit = ingredient
                                     } label: {
                                         Label("Edit", systemImage: "pencil")
                                     }
-                                    
+
                                     Divider()
-                                    
+
                                     Button(role: .destructive) {
                                         ingredientToDelete = ingredient
                                         showingDeleteConfirmation = true
@@ -291,8 +294,11 @@ struct IngredientListView: View {
                         }
                     }
                     .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
+                    .background(colorScheme.background)
                 }
             }
+            .background(colorScheme.background)
             .navigationTitle("Ingredients")
             .searchable(text: $searchText, prompt: "Search ingredients")
             .toolbar {
@@ -468,37 +474,61 @@ struct IngredientRow: View {
     @Bindable var ingredient: Ingredient
 
     var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 6) {
-                HStack {
-                    Text(ingredient.name)
-                        .font(.body)
+        HStack(spacing: 12) {
+//            VStack(alignment: .leading, spacing: 6) {
+//                Text(ingredient.name)
+//                    .font(.body)
+//                    .foregroundColor(colorScheme.primaryText)
+//
+//                HStack(spacing: 8) {
+//                    if let brand = ingredient.brand {
+//                        Text(brand)
+//                            .font(.caption)
+//                            .foregroundColor(colorScheme.secondaryText)
+//                    }
+//
+//                    if let category = ingredient.category {
+//                        HStack(spacing: 4) {
+//                            Image(systemName: "tag.fill")
+//                                .font(.caption2)
+//                            Text(category)
+//                                .font(.caption2)
+//                        }
+//                        .foregroundColor(colorScheme.secondary)
+//                        .padding(.horizontal, 6)
+//                        .padding(.vertical, 2)
+//                        .background(colorScheme.secondary.opacity(0.1))
+//                        .clipShape(Capsule())
+//                    }
+//                    
+//                    if ingredient.isCustom {
+//                        HStack(spacing: 4) {
+//                            Image(systemName: "person.fill")
+//                            Text("Custom")
+//                        }
+//                        .font(.caption2)
+//                        .foregroundColor(colorScheme.primary)
+//                        .padding(.horizontal, 6)
+//                        .padding(.vertical, 2)
+//                        .background(colorScheme.primary.opacity(0.1))
+//                        .clipShape(Capsule())
+//                    }
+//                }
+//            }
+            IngredientRowView(ingredient: ingredient)
 
-                    if ingredient.isCustom {
-                        Image(systemName: "person.fill")
-                            .foregroundColor(colorScheme.primary)
-                            .font(.caption)
-                    }
-                }
-                
-                if let brand = ingredient.brand {
-                    Text(brand)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-            }
-            
             Spacer()
-            
+
             Button {
                 ingredient.isFavorite.toggle()
             } label: {
                 Image(systemName: ingredient.isFavorite ? "star.fill" : "star")
-                    .foregroundColor(ingredient.isFavorite ? colorScheme.accent : .gray)
+                    .foregroundColor(ingredient.isFavorite ? colorScheme.accent : colorScheme.secondaryText.opacity(0.4))
                     .font(.title3)
             }
             .buttonStyle(.plain)
         }
+        .padding(.vertical, 4)
         .contentShape(Rectangle())
     }
 }
@@ -508,7 +538,7 @@ struct IngredientRow: View {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try! ModelContainer(for: Ingredient.self, configurations: config)
         
-        let flour = Ingredient(name: "Flour, all-purpose", brand: "King Arthur", isFavorite: true)
+        let flour = Ingredient(name: "All-purpose flour", category: "Flour", brand: "King Arthur", isFavorite: true, isCustom: true)
         flour.lastUsedDate = Date()
         
         let sugar = Ingredient(name: "Sugar, granulated", isFavorite: false)

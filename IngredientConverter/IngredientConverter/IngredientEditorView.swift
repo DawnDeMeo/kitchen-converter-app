@@ -54,37 +54,52 @@ struct IngredientEditorView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Basic Info") {
+                Section {
                     TextField("Name", text: $name)
+                        .foregroundColor(colorScheme.primaryText)
+                        .listRowBackground(colorScheme.cardBackground)
                     TextField("Brand (optional)", text: $brand)
+                        .foregroundColor(colorScheme.primaryText)
+                        .listRowBackground(colorScheme.cardBackground)
 
                     Picker("Category", selection: $category) {
                         ForEach(availableCategories, id: \.self) { category in
                             Text(category).tag(category)
                         }
                     }
+                    .listRowBackground(colorScheme.cardBackground)
+                } header: {
+                    Text("Basic Info")
+                        .foregroundColor(colorScheme.secondary)
                 }
-                
+
                 Section {
                     ForEach(conversions) { conversion in
                         ConversionEditorRow(conversion: conversion)
+                            .listRowBackground(colorScheme.cardBackground)
                     }
                     .onDelete(perform: deleteConversion)
                     .onMove(perform: moveConversion)
-                    
+
                     Button {
                         showingAddConversion = true
                     } label: {
                         Label("Add Conversion", systemImage: "plus.circle.fill")
+                            .foregroundColor(colorScheme.primary)
                     }
+                    .listRowBackground(colorScheme.primary.opacity(0.1))
                 } header: {
                     Text("Conversions")
+                        .foregroundColor(colorScheme.secondary)
                 } footer: {
                     if conversions.isEmpty {
                         Text("Add at least one conversion to save this ingredient")
+                            .foregroundColor(colorScheme.warning)
                     }
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(colorScheme.background)
             .navigationTitle(isEditing ? "Edit Ingredient" : "New Ingredient")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -232,46 +247,60 @@ struct ConversionEditorRow: View {
     @Bindable var conversion: ConversionEditor
 
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 12) {
             HStack {
                 Text("From:")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                    .font(.caption.weight(.medium))
+                    .foregroundColor(colorScheme.secondary)
                 Spacer()
             }
-            
-            HStack {
+
+            HStack(spacing: 12) {
                 TextField("Amount", value: $conversion.fromAmount, format: .number)
                     .keyboardType(.numbersAndPunctuation)
                     .textFieldStyle(.roundedBorder)
                     .frame(width: 80)
-                
+                    .foregroundColor(colorScheme.primaryText)
+
                 Text(conversion.fromUnit.displayName)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(colorScheme.secondaryText)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(colorScheme.primary.opacity(0.1))
+                    .clipShape(Capsule())
             }
-            
-            Image(systemName: "arrow.down")
-                .foregroundColor(colorScheme.primary)
-                .font(.caption)
-            
+
             HStack {
-                Text("To:")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                Spacer()
+                Image(systemName: "arrow.down.circle.fill")
+                    .foregroundColor(colorScheme.primary)
+                    .font(.title3)
                 Spacer()
             }
-            
+
             HStack {
+                Text("To:")
+                    .font(.caption.weight(.medium))
+                    .foregroundColor(colorScheme.secondary)
+                Spacer()
+            }
+
+            HStack(spacing: 12) {
                 TextField("Amount", value: $conversion.toAmount, format: .number)
                     .keyboardType(.numbersAndPunctuation)
                     .textFieldStyle(.roundedBorder)
                     .frame(width: 80)
-                
+                    .foregroundColor(colorScheme.primaryText)
+
                 Text(conversion.toUnit.displayName)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(colorScheme.secondaryText)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(colorScheme.accent.opacity(0.1))
+                    .clipShape(Capsule())
             }
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 8)
     }
 }
 

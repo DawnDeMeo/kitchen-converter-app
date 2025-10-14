@@ -49,23 +49,29 @@ struct ConversionEditorSheet: View {
         NavigationStack {
             VStack(spacing: 0) {
                 Form {
-                    Section("From") {
+                    Section {
                         Picker("Unit Type", selection: $fromUnitType) {
                             ForEach(UnitInputType.allCases, id: \.self) { type in
                                 Text(type.rawValue).tag(type)
                             }
                         }
                         .pickerStyle(.segmented)
+                        .background(
+                            ThemedSegmentedPickerBackground(color: colorScheme.primary)
+                        )
                         .onChange(of: fromUnitType) { oldValue, newValue in
                             handleFromUnitTypeChange(from: oldValue, to: newValue)
                         }
-                        
+                        .listRowBackground(colorScheme.cardBackground)
+
                         AmountTextField(
                             text: $fromAmount,
                             placeholder: "Enter from amount (e.g., 1 1/2)",
                             isFocused: $fromAmountFocused
                         )
-                        
+                        .foregroundColor(colorScheme.primaryText)
+                        .listRowBackground(colorScheme.cardBackground)
+
                         switch fromUnitType {
                         case .volume:
                             Picker("Unit", selection: $fromUnit) {
@@ -73,35 +79,50 @@ struct ConversionEditorSheet: View {
                                     Text(unit.displayName).tag(unit)
                                 }
                             }
+                            .listRowBackground(colorScheme.cardBackground)
                         case .weight:
                             Picker("Unit", selection: $fromUnit) {
                                 ForEach(weightUnits, id: \.self) { unit in
                                     Text(unit.displayName).tag(unit)
                                 }
                             }
+                            .listRowBackground(colorScheme.cardBackground)
                         case .count:
                             TextField("Singular (e.g., egg)", text: $countSingular)
+                                .foregroundColor(colorScheme.primaryText)
+                                .listRowBackground(colorScheme.cardBackground)
                             TextField("Plural (e.g., eggs)", text: $countPlural)
+                                .foregroundColor(colorScheme.primaryText)
+                                .listRowBackground(colorScheme.cardBackground)
                         }
+                    } header: {
+                        Text("From")
+                            .foregroundColor(colorScheme.secondary)
                     }
-                    
-                    Section("To") {
+
+                    Section {
                         Picker("Unit Type", selection: $toUnitType) {
                             ForEach(allowedToUnitTypes, id: \.self) { type in
                                 Text(type.rawValue).tag(type)
                             }
                         }
                         .pickerStyle(.segmented)
+                        .background(
+                            ThemedSegmentedPickerBackground(color: colorScheme.accent)
+                        )
                         .onChange(of: toUnitType) { oldValue, newValue in
                             handleToUnitTypeChange(from: oldValue, to: newValue)
                         }
-                        
+                        .listRowBackground(colorScheme.cardBackground)
+
                         AmountTextField(
                             text: $toAmount,
                             placeholder: "Enter to amount (e.g., 1 1/2)",
                             isFocused: $toAmountFocused
                         )
-                        
+                        .foregroundColor(colorScheme.primaryText)
+                        .listRowBackground(colorScheme.cardBackground)
+
                         switch toUnitType {
                         case .volume:
                             Picker("Unit", selection: $toUnit) {
@@ -109,43 +130,66 @@ struct ConversionEditorSheet: View {
                                     Text(unit.displayName).tag(unit)
                                 }
                             }
+                            .listRowBackground(colorScheme.cardBackground)
                         case .weight:
                             Picker("Unit", selection: $toUnit) {
                                 ForEach(weightUnits, id: \.self) { unit in
                                     Text(unit.displayName).tag(unit)
                                 }
                             }
+                            .listRowBackground(colorScheme.cardBackground)
                         case .count:
                             TextField("Singular (e.g., piece)", text: $toCountSingular)
+                                .foregroundColor(colorScheme.primaryText)
+                                .listRowBackground(colorScheme.cardBackground)
                             TextField("Plural (e.g., pieces)", text: $toCountPlural)
+                                .foregroundColor(colorScheme.primaryText)
+                                .listRowBackground(colorScheme.cardBackground)
                         }
+                    } header: {
+                        Text("To")
+                            .foregroundColor(colorScheme.secondary)
                     }
-                    
+
                     if fromUnitType == toUnitType {
                         Section {
-                            Label("Cannot convert between the same unit types", systemImage: "exclamationmark.triangle.fill")
-                                .foregroundColor(colorScheme.warning)
-                                .font(.callout)
+                            HStack(spacing: 12) {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundColor(colorScheme.warning)
+                                Text("Cannot convert between the same unit types")
+                                    .font(.callout)
+                                    .foregroundColor(colorScheme.primaryText)
+                            }
+                            .listRowBackground(colorScheme.warning.opacity(0.1))
                         }
                     }
-                    
+
                     Section {
                         if let preview = previewText {
-                            Text(preview)
-                                .font(.callout)
-                                .foregroundColor(.secondary)
+                            HStack {
+                                Image(systemName: "eye.fill")
+                                    .foregroundColor(colorScheme.accent)
+                                Text(preview)
+                                    .font(.callout)
+                                    .foregroundColor(colorScheme.primaryText)
+                            }
+                            .listRowBackground(colorScheme.accent.opacity(0.05))
                         }
                     } header: {
                         Text("Preview")
+                            .foregroundColor(colorScheme.accent)
                     }
                 }
-                
+                .scrollContentBackground(.hidden)
+                .background(colorScheme.background)
+
                 // Custom keyboard accessory view - consistent with ConversionView
                 if fromAmountFocused || toAmountFocused {
                     VStack(spacing: 0) {
                         Divider()
-                        
-                        HStack {
+                            .background(colorScheme.divider)
+
+                        HStack(spacing: 12) {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 8) {
                                     ForEach(FractionInputHelper.commonFractions, id: \.self) { fraction in
@@ -157,25 +201,40 @@ struct ConversionEditorSheet: View {
                                                 toAmount = FractionInputHelper.appendFraction(fraction, to: toAmount)
                                             }
                                         }
-                                        .buttonStyle(.bordered)
-                                        .font(.subheadline)
+                                        .font(.subheadline.weight(.medium))
+                                        .foregroundColor(colorScheme.primary)
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 8)
+                                        .background(colorScheme.primary.opacity(0.1))
+                                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 8)
+                                                .stroke(colorScheme.primary.opacity(0.3), lineWidth: 1)
+                                        )
                                     }
                                 }
                                 .padding(.horizontal)
                             }
-                            
+
                             Button("Done") {
                                 fromAmountFocused = false
                                 toAmountFocused = false
                             }
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundColor(colorScheme.buttonText)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(colorScheme.primary)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
                             .padding(.trailing)
                         }
                         .padding(.vertical, 8)
-                        .background(.regularMaterial)
+                        .background(colorScheme.secondaryBackground)
                     }
                     .transition(.move(edge: .bottom))
                 }
             }
+            .background(colorScheme.background)
             .navigationTitle("Add Conversion")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
