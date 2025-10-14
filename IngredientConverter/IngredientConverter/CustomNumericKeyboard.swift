@@ -13,8 +13,6 @@ struct CustomNumericKeyboard: View {
     var onDone: () -> Void
     var onChange: (() -> Void)?
 
-    private let fractions = ["1/8", "1/4", "1/3", "1/2", "2/3", "3/4"]
-
     var body: some View {
         VStack(spacing: 0) {
             // Divider
@@ -22,28 +20,23 @@ struct CustomNumericKeyboard: View {
                 .background(colorScheme.divider)
 
             VStack(spacing: 8) {
-                // Fraction row
-                ScrollView(.horizontal, showsIndicators: false) {
+                // Fraction grid (2 rows x 3 columns)
+                VStack(spacing: 8) {
+                    // Row 1: 1/8 1/4 1/3
                     HStack(spacing: 8) {
-                        ForEach(fractions, id: \.self) { fraction in
-                            Button(fraction) {
-                                appendFraction(fraction)
-                            }
-                            .font(.subheadline.weight(.medium))
-                            .foregroundColor(colorScheme.primary)
-                            .frame(height: 36)
-                            .padding(.horizontal, 12)
-                            .background(colorScheme.primary.opacity(0.1))
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(colorScheme.primary.opacity(0.3), lineWidth: 1)
-                            )
-                        }
+                        fractionButton("1/8")
+                        fractionButton("1/4")
+                        fractionButton("1/3")
                     }
-                    .padding(.horizontal)
+
+                    // Row 2: 1/2 2/3 3/4
+                    HStack(spacing: 8) {
+                        fractionButton("1/2")
+                        fractionButton("2/3")
+                        fractionButton("3/4")
+                    }
                 }
-                .frame(height: 44)
+                .padding(.horizontal)
 
                 // Number pad
                 VStack(spacing: 8) {
@@ -133,6 +126,24 @@ struct CustomNumericKeyboard: View {
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(colorScheme.divider.opacity(0.3), lineWidth: 1)
+                )
+        }
+    }
+
+    private func fractionButton(_ fraction: String) -> some View {
+        Button {
+            appendFraction(fraction)
+        } label: {
+            Text(fraction)
+                .font(.subheadline.weight(.medium))
+                .foregroundColor(colorScheme.primary)
+                .frame(maxWidth: .infinity)
+                .frame(height: 36)
+                .background(colorScheme.primary.opacity(0.1))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(colorScheme.primary.opacity(0.3), lineWidth: 1)
                 )
         }
     }
