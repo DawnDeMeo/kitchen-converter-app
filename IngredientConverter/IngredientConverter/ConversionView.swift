@@ -272,7 +272,7 @@ struct ConversionView: View {
                 cachedAvailableUnits = []
             }
         }
-        .onAppear {
+        .task(id: selectedIngredient?.id) {
             // Compute units on initial appearance if ingredient is preselected
             if let ingredient = selectedIngredient {
                 cachedAvailableUnits = computeAvailableUnits(for: ingredient)
