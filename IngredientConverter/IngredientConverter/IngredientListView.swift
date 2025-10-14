@@ -401,17 +401,8 @@ struct IngredientListView: View {
             }) { ingredient in
                 IngredientEditorView(ingredient: ingredient)
             }
-            .sheet(item: $ingredientToConvert) { ingredient in
-                NavigationStack {
-                    ConversionView(preselectedIngredient: ingredient)
-                        .toolbar {
-                            ToolbarItem(placement: .cancellationAction) {
-                                Button("Done") {
-                                    ingredientToConvert = nil
-                                }
-                            }
-                        }
-                }
+            .navigationDestination(item: $ingredientToConvert) { ingredient in
+                ConversionView(preselectedIngredient: ingredient)
             }
             .sheet(isPresented: $showingSettings, onDismiss: {
                 fetchAvailableCategories()
