@@ -12,8 +12,6 @@ struct ConversionEditorSheet: View {
     @State private var fromKeyboardVisible: Bool = false
     @State private var toKeyboardVisible: Bool = false
 
-    @Environment(\.dismiss) private var dismiss
-    
     let onSave: (ConversionEditor) -> Void
     
     @State private var fromAmount: String = ""
@@ -46,8 +44,7 @@ struct ConversionEditorSheet: View {
     }
     
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
+        VStack(spacing: 0) {
                 Form {
                     Section {
                         Picker("Unit Type", selection: $fromUnitType) {
@@ -210,14 +207,8 @@ struct ConversionEditorSheet: View {
             .navigationTitle("Add Conversion")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                }
-                
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Add") {
+                    Button("Save") {
                         saveConversion()
                     }
                 }
@@ -239,7 +230,6 @@ struct ConversionEditorSheet: View {
                 }
             }
         }
-    }
 
     // Available "To" unit types based on "From" selection
     private var allowedToUnitTypes: [UnitInputType] {
@@ -371,9 +361,8 @@ struct ConversionEditorSheet: View {
             toAmount: toAmt,
             toUnit: finalToUnit
         )
-        
+
         onSave(conversion)
-        dismiss()
     }
 }
 

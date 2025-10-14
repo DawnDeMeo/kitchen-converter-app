@@ -391,15 +391,11 @@ struct IngredientListView: View {
                     }
                 }
             }
-            .sheet(isPresented: $showingAddIngredient, onDismiss: {
-                fetchIngredients()
-            }) {
-                IngredientEditorView()
+            .navigationDestination(isPresented: $showingAddIngredient) {
+                IngredientEditorView(onDismiss: fetchIngredients)
             }
-            .sheet(item: $ingredientToEdit, onDismiss: {
-                fetchIngredients()
-            }) { ingredient in
-                IngredientEditorView(ingredient: ingredient)
+            .navigationDestination(item: $ingredientToEdit) { ingredient in
+                IngredientEditorView(ingredient: ingredient, onDismiss: fetchIngredients)
             }
             .navigationDestination(item: $ingredientToConvert) { ingredient in
                 ConversionView(preselectedIngredient: ingredient)

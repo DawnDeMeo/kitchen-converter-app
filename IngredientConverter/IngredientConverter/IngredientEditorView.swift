@@ -14,6 +14,7 @@ struct IngredientEditorView: View {
     @Environment(\.appColorScheme) private var colorScheme
 
     let ingredientToEdit: Ingredient?
+    let onDismiss: (() -> Void)?
     
     @State private var name: String = ""
     @State private var brand: String = ""
@@ -46,14 +47,14 @@ struct IngredientEditorView: View {
     var isEditing: Bool {
         ingredientToEdit != nil
     }
-    
-    init(ingredient: Ingredient? = nil) {
+
+    init(ingredient: Ingredient? = nil, onDismiss: (() -> Void)? = nil) {
         self.ingredientToEdit = ingredient
+        self.onDismiss = onDismiss
     }
     
     var body: some View {
-        NavigationStack {
-            Form {
+        Form {
                 Section {
                     TextField("Name", text: $name)
                         .foregroundColor(colorScheme.primaryText)
@@ -103,28 +104,23 @@ struct IngredientEditorView: View {
             .navigationTitle(isEditing ? "Edit Ingredient" : "New Ingredient")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                }
-                
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
                         saveIngredient()
                     }
                     .disabled(!isValid)
                 }
-                
+
                 if !conversions.isEmpty {
                     ToolbarItem(placement: .topBarTrailing) {
                         EditButton()
                     }
                 }
             }
-            .sheet(isPresented: $showingAddConversion) {
+            .navigationDestination(isPresented: $showingAddConversion) {
                 ConversionEditorSheet { newConversion in
                     conversions.append(newConversion)
+                    showingAddConversion = false
                 }
             }
             .alert("Error", isPresented: $showingError) {
@@ -135,7 +131,6 @@ struct IngredientEditorView: View {
             .onAppear {
                 loadIngredient()
             }
-        }
     }
     
     private var isValid: Bool {
@@ -212,7 +207,8 @@ struct IngredientEditorView: View {
 
             modelContext.insert(newIngredient)
         }
-        
+
+        onDismiss?()
         dismiss()
     }
     
@@ -305,6 +301,8 @@ struct ConversionEditorRow: View {
 }
 
 #Preview {
-    IngredientEditorView()
-        .modelContainer(for: Ingredient.self, inMemory: true)
+    NavigationStack {
+        IngredientEditorView()
+            .modelContainer(for: Ingredient.self, inMemory: true)
+    }
 }
