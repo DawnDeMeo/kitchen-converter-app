@@ -95,84 +95,76 @@ struct ConversionView: View {
                         }
                     }
 
-                    // Input Amount
+                    // Conversion Controls
                     Section {
-                        AmountTextField(
-                            text: $inputAmount,
-                            isFocused: $isInputFocused,
-                            onChange: performConversion
-                        )
-                        .foregroundColor(colorScheme.primaryText)
+                        // Amount Input
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Amount")
+                                .font(.caption)
+                                .foregroundColor(colorScheme.secondary)
+                                .textCase(.uppercase)
+
+                            AmountTextField(
+                                text: $inputAmount,
+                                isFocused: $isInputFocused,
+                                onChange: performConversion
+                            )
+                            .foregroundColor(colorScheme.primaryText)
+                        }
                         .listRowBackground(colorScheme.cardBackground)
-                    } header: {
-                        Text("Amount")
-                            .foregroundColor(colorScheme.secondary)
-                    }
 
-                    // From Unit
-                    Section {
+                        // From, Swap, To in horizontal layout
                         if selectedIngredient != nil {
-                            Picker("Unit", selection: $selectedFromUnit) {
-                                Text("Select unit").tag(nil as MeasurementUnit?)
-                                ForEach(cachedAvailableUnits, id: \.self) { unit in
-                                    Text(unit.fullDisplayName).tag(unit as MeasurementUnit?)
+                            HStack(spacing: 8) {
+                                // From Unit
+                                Picker("From", selection: $selectedFromUnit) {
+                                    Text("Select").tag(nil as MeasurementUnit?)
+                                    ForEach(cachedAvailableUnits, id: \.self) { unit in
+                                        Text(unit.fullDisplayName).tag(unit as MeasurementUnit?)
+                                    }
                                 }
-                            }
-                            .pickerStyle(.menu)
-                            .onChange(of: selectedFromUnit) { _, _ in
-                                performConversion()
-                                withAnimation {
-                                    proxy.scrollTo("result", anchor: .bottom)
+                                .pickerStyle(.menu)
+                                .onChange(of: selectedFromUnit) { _, _ in
+                                    performConversion()
+                                    withAnimation {
+                                        proxy.scrollTo("result", anchor: .bottom)
+                                    }
                                 }
+                                .frame(maxWidth: .infinity)
+
+                                // Swap Button
+                                if selectedFromUnit != nil && selectedToUnit != nil {
+                                    Button {
+                                        isInputFocused = false
+                                        swapUnits()
+                                    } label: {
+                                        Image(systemName: "arrow.left.arrow.right")
+                                            .foregroundColor(colorScheme.primary)
+                                            .font(.title3)
+                                    }
+                                    .padding(8)
+                                    .background(colorScheme.primary.opacity(0.1))
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                }
+
+                                // To Unit
+                                Picker("To", selection: $selectedToUnit) {
+                                    Text("Select").tag(nil as MeasurementUnit?)
+                                    ForEach(cachedAvailableUnits, id: \.self) { unit in
+                                        Text(unit.fullDisplayName).tag(unit as MeasurementUnit?)
+                                    }
+                                }
+                                .pickerStyle(.menu)
+                                .onChange(of: selectedToUnit) { _, _ in
+                                    performConversion()
+                                    withAnimation {
+                                        proxy.scrollTo("result", anchor: .bottom)
+                                    }
+                                }
+                                .frame(maxWidth: .infinity)
                             }
                             .listRowBackground(colorScheme.cardBackground)
                         }
-                    } header: {
-                        Text("From")
-                            .foregroundColor(colorScheme.secondary)
-                    }
-
-                    // Swap Button
-                    if selectedFromUnit != nil && selectedToUnit != nil {
-                        Section {
-                            Button {
-                                isInputFocused = false
-                                swapUnits()
-                            } label: {
-                                HStack {
-                                    Spacer()
-                                    Image(systemName: "arrow.up.arrow.down")
-                                        .foregroundColor(colorScheme.primary)
-                                    Text("Swap Units")
-                                        .foregroundColor(colorScheme.primary)
-                                    Spacer()
-                                }
-                            }
-                            .listRowBackground(colorScheme.primary.opacity(0.1))
-                        }
-                    }
-
-                    // To Unit
-                    Section {
-                        if selectedIngredient != nil {
-                            Picker("Unit", selection: $selectedToUnit) {
-                                Text("Select unit").tag(nil as MeasurementUnit?)
-                                ForEach(cachedAvailableUnits, id: \.self) { unit in
-                                    Text(unit.fullDisplayName).tag(unit as MeasurementUnit?)
-                                }
-                            }
-                            .pickerStyle(.menu)
-                            .onChange(of: selectedToUnit) { _, _ in
-                                performConversion()
-                                withAnimation {
-                                    proxy.scrollTo("result", anchor: .bottom)
-                                }
-                            }
-                            .listRowBackground(colorScheme.cardBackground)
-                        }
-                    } header: {
-                        Text("To")
-                            .foregroundColor(colorScheme.secondary)
                     }
 
                     // Result
