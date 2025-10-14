@@ -87,7 +87,7 @@ struct SettingsView: View {
                         }
                         .pickerStyle(.segmented)
                         .background(
-                            ThemedSegmentedPickerBackground(color: colorScheme.primary)
+                            ThemedSegmentedPickerBackground(color: colorScheme.primary, textColor: colorScheme.buttonText)
                         )
                     }
                     .listRowBackground(colorScheme.cardBackground)
@@ -538,6 +538,7 @@ struct DocumentPicker: UIViewControllerRepresentable {
 // Helper view to theme segmented pickers
 struct ThemedSegmentedPickerBackground: UIViewRepresentable {
     let color: Color
+    let textColor: Color
 
     func makeUIView(context: Context) -> UIView {
         let view = UIView()
@@ -547,7 +548,7 @@ struct ThemedSegmentedPickerBackground: UIViewRepresentable {
         DispatchQueue.main.async {
             UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(self.color)
             UISegmentedControl.appearance().setTitleTextAttributes(
-                [.foregroundColor: UIColor.white],
+                [.foregroundColor: UIColor(self.textColor)],
                 for: .selected
             )
             UISegmentedControl.appearance().setTitleTextAttributes(
@@ -563,7 +564,7 @@ struct ThemedSegmentedPickerBackground: UIViewRepresentable {
         // Update appearance when color changes
         UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(color)
         UISegmentedControl.appearance().setTitleTextAttributes(
-            [.foregroundColor: UIColor.white],
+            [.foregroundColor: UIColor(textColor)],
             for: .selected
         )
         UISegmentedControl.appearance().setTitleTextAttributes(

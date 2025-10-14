@@ -57,7 +57,7 @@ struct ConversionEditorSheet: View {
                         }
                         .pickerStyle(.segmented)
                         .background(
-                            ThemedSegmentedPickerBackground(color: colorScheme.primary)
+                            ThemedSegmentedPickerBackground(color: colorScheme.primary, textColor: colorScheme.buttonText)
                         )
                         .onChange(of: fromUnitType) { oldValue, newValue in
                             handleFromUnitTypeChange(from: oldValue, to: newValue)
@@ -108,7 +108,7 @@ struct ConversionEditorSheet: View {
                         }
                         .pickerStyle(.segmented)
                         .background(
-                            ThemedSegmentedPickerBackground(color: colorScheme.accent)
+                            ThemedSegmentedPickerBackground(color: colorScheme.accent, textColor: colorScheme.buttonText)
                         )
                         .onChange(of: toUnitType) { oldValue, newValue in
                             handleToUnitTypeChange(from: oldValue, to: newValue)
