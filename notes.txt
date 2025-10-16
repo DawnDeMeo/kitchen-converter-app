@@ -1,3 +1,6 @@
+
+*** CHECK NOTES APP!! ***
+
 help section or faq
 
 icon - outline of kitchen scale?
@@ -6,14 +9,9 @@ contact info
 
 companion website?
 
-consider custom keyboard (new branch)
-decimal plus slash, and fractions on top
+sync custom db between devices
 
-from and to - segmented picker for wt/vol? or division in drop down? want to avoid scrolling. but keep in mind some are units
-
-try adding spacers to center the drop downs in from and to
-
-clean up commented code
+family sharing
 
 ----
 * test main screen with custom, favorite
