@@ -204,6 +204,26 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    Link(destination: URL(string: "mailto:feedback@ingredientconverter.app?subject=Ingredient%20Converter%20Feedback")!) {
+                        HStack {
+                            Label("Send Feedback", systemImage: "envelope")
+                                .foregroundColor(colorScheme.primary)
+                            Spacer()
+                            Image(systemName: "arrow.up.right")
+                                .font(.caption)
+                                .foregroundColor(colorScheme.secondaryText)
+                        }
+                    }
+                    .listRowBackground(colorScheme.cardBackground)
+                } header: {
+                    Text("Support")
+                        .foregroundColor(colorScheme.secondary)
+                } footer: {
+                    Text("Report bugs, suggest features, or share your feedback.")
+                        .foregroundColor(colorScheme.secondaryText)
+                }
+
+                Section {
                     HStack {
                         Text("Version")
                             .foregroundColor(colorScheme.primaryText)
@@ -575,5 +595,10 @@ struct ThemedSegmentedPickerBackground: UIViewRepresentable {
 }
 
 #Preview {
-    SettingsView()
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Ingredient.self, configurations: config)
+
+    return SettingsView()
+        .modelContainer(container)
+        .environment(ThemeManager())
 }

@@ -30,12 +30,12 @@ class ThemeManager {
     }
 
     init() {
-        // Load saved scheme or default to Sage
+        // Load saved scheme or default to Lavender
         if let savedName = UserDefaults.standard.string(forKey: "selectedColorScheme"),
            let scheme = AppColorScheme.allSchemes.first(where: { $0.name == savedName }) {
             self.currentScheme = scheme
         } else {
-            self.currentScheme = .sage
+            self.currentScheme = .lavender
         }
     }
 }

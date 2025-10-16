@@ -77,19 +77,26 @@ struct ConversionView: View {
 
                         // From, Swap, To in horizontal layout
                         if selectedIngredient != nil {
-                            HStack(spacing: 8) {
+                            HStack(alignment: .bottom, spacing: 8) {
                                 // From Unit
-                                Picker("From", selection: $selectedFromUnit) {
-                                    Text("Select").tag(nil as MeasurementUnit?)
-                                    ForEach(cachedAvailableUnits, id: \.self) { unit in
-                                        Text(unit.fullDisplayName).tag(unit as MeasurementUnit?)
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text("From")
+                                        .font(.caption)
+                                        .foregroundColor(colorScheme.secondary)
+                                        .textCase(.uppercase)
+
+                                    Picker("", selection: $selectedFromUnit) {
+                                        Text("Select").tag(nil as MeasurementUnit?)
+                                        ForEach(cachedAvailableUnits, id: \.self) { unit in
+                                            Text(unit.fullDisplayName).tag(unit as MeasurementUnit?)
+                                        }
                                     }
-                                }
-                                .pickerStyle(.menu)
-                                .onChange(of: selectedFromUnit) { _, _ in
-                                    performConversion()
-                                    withAnimation {
-                                        proxy.scrollTo("result", anchor: .bottom)
+                                    .pickerStyle(.menu)
+                                    .onChange(of: selectedFromUnit) { _, _ in
+                                        performConversion()
+                                        withAnimation {
+                                            proxy.scrollTo("result", anchor: .bottom)
+                                        }
                                     }
                                 }
                                 .frame(maxWidth: .infinity)
@@ -110,17 +117,24 @@ struct ConversionView: View {
                                 }
 
                                 // To Unit
-                                Picker("To", selection: $selectedToUnit) {
-                                    Text("Select").tag(nil as MeasurementUnit?)
-                                    ForEach(cachedAvailableUnits, id: \.self) { unit in
-                                        Text(unit.fullDisplayName).tag(unit as MeasurementUnit?)
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text("To")
+                                        .font(.caption)
+                                        .foregroundColor(colorScheme.secondary)
+                                        .textCase(.uppercase)
+
+                                    Picker("", selection: $selectedToUnit) {
+                                        Text("Select").tag(nil as MeasurementUnit?)
+                                        ForEach(cachedAvailableUnits, id: \.self) { unit in
+                                            Text(unit.fullDisplayName).tag(unit as MeasurementUnit?)
+                                        }
                                     }
-                                }
-                                .pickerStyle(.menu)
-                                .onChange(of: selectedToUnit) { _, _ in
-                                    performConversion()
-                                    withAnimation {
-                                        proxy.scrollTo("result", anchor: .bottom)
+                                    .pickerStyle(.menu)
+                                    .onChange(of: selectedToUnit) { _, _ in
+                                        performConversion()
+                                        withAnimation {
+                                            proxy.scrollTo("result", anchor: .bottom)
+                                        }
                                     }
                                 }
                                 .frame(maxWidth: .infinity)
