@@ -132,17 +132,23 @@ class ConversionEngine {
 
         // Try all ingredient-specific conversions from current unit
         for conversion in ingredient.conversions ?? [] {
+            // Skip conversions with missing units
+            guard let convFromUnit = conversion.fromUnit,
+                  let convToUnit = conversion.toUnit else {
+                continue
+            }
+
             var nextUnit: MeasurementUnit?
             var nextAmount: Double?
 
             // Check if we can use this conversion (forward direction)
-            if conversion.fromUnit == currentUnit && !visited.contains(conversion.toUnit) {
-                nextUnit = conversion.toUnit
+            if convFromUnit == currentUnit && !visited.contains(convToUnit) {
+                nextUnit = convToUnit
                 nextAmount = (currentAmount / conversion.fromAmount) * conversion.toAmount
             }
             // Check if we can use this conversion (reverse direction)
-            else if conversion.toUnit == currentUnit && !visited.contains(conversion.fromUnit) {
-                nextUnit = conversion.fromUnit
+            else if convToUnit == currentUnit && !visited.contains(convFromUnit) {
+                nextUnit = convFromUnit
                 nextAmount = (currentAmount / conversion.toAmount) * conversion.fromAmount
             }
 

@@ -15,10 +15,10 @@ class UnitConversion {
     var ingredient: Ingredient?
 
     var fromAmount: Double = 0.0
-    var fromUnit: MeasurementUnit = .cup
+    var fromUnit: MeasurementUnit?
 
     var toAmount: Double = 0.0
-    var toUnit: MeasurementUnit = .gram
+    var toUnit: MeasurementUnit?
 
     init(fromAmount: Double, fromUnit: MeasurementUnit, toAmount: Double, toUnit: MeasurementUnit) {
         self.id = UUID()

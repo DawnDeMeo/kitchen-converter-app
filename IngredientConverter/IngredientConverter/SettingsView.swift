@@ -350,15 +350,21 @@ struct SettingsView: View {
                     dict["brand"] = brand
                 }
 
-                let conversions = (ingredient.conversions ?? []).map { conversion -> [String: Any] in
+                let conversions = (ingredient.conversions ?? []).compactMap { conversion -> [String: Any]? in
+                    // Skip conversions with missing units
+                    guard let fromUnit = conversion.fromUnit,
+                          let toUnit = conversion.toUnit else {
+                        return nil
+                    }
+
                     var convDict: [String: Any] = [
                         "fromAmount": conversion.fromAmount,
                         "toAmount": conversion.toAmount
                     ]
 
                     // Convert fromUnit
-                    convDict["fromUnit"] = unitToJSON(conversion.fromUnit)
-                    convDict["toUnit"] = unitToJSON(conversion.toUnit)
+                    convDict["fromUnit"] = unitToJSON(fromUnit)
+                    convDict["toUnit"] = unitToJSON(toUnit)
 
                     return convDict
                 }

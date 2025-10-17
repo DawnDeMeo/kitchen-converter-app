@@ -293,14 +293,20 @@ struct ConversionView: View {
 
         // Add all units from conversions
         for conversion in ingredient.conversions ?? [] {
-            units.insert(conversion.fromUnit)
-            units.insert(conversion.toUnit)
+            // Skip conversions with missing units
+            guard let fromUnit = conversion.fromUnit,
+                  let toUnit = conversion.toUnit else {
+                continue
+            }
+
+            units.insert(fromUnit)
+            units.insert(toUnit)
 
             // Add all units of the same type
-            let fromSameType = UnitConversionHelper.allUnitsOfSameType(as: conversion.fromUnit)
+            let fromSameType = UnitConversionHelper.allUnitsOfSameType(as: fromUnit)
             units.formUnion(fromSameType)
 
-            let toSameType = UnitConversionHelper.allUnitsOfSameType(as: conversion.toUnit)
+            let toSameType = UnitConversionHelper.allUnitsOfSameType(as: toUnit)
             units.formUnion(toSameType)
         }
 
