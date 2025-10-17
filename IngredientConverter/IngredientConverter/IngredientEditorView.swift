@@ -143,12 +143,18 @@ struct IngredientEditorView: View {
         name = ingredient.name
         brand = ingredient.brand ?? ""
         category = ingredient.category ?? "Other"
-        conversions = (ingredient.conversions ?? []).map { conversion in
-            ConversionEditor(
+        conversions = (ingredient.conversions ?? []).compactMap { conversion in
+            // Skip conversions with missing units
+            guard let fromUnit = conversion.fromUnit,
+                  let toUnit = conversion.toUnit else {
+                return nil
+            }
+
+            return ConversionEditor(
                 fromAmount: conversion.fromAmount,
-                fromUnit: conversion.fromUnit,
+                fromUnit: fromUnit,
                 toAmount: conversion.toAmount,
-                toUnit: conversion.toUnit
+                toUnit: toUnit
             )
         }
     }
