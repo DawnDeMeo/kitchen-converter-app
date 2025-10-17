@@ -393,8 +393,11 @@ struct ConversionView: View {
             return fractionToWords(trimmed)
         }
 
-        // Check if it's a decimal - replace any "dot" mentions with "point"
-        // VoiceOver should naturally say "point" for decimals, but we'll ensure it
+        // Check if it's a decimal - replace "." with " point " for VoiceOver
+        if trimmed.contains(".") {
+            return trimmed.replacingOccurrences(of: ".", with: " point ")
+        }
+
         return trimmed
     }
 
