@@ -48,6 +48,7 @@ struct SettingsView: View {
     @State private var exportURL: URL?
     @State private var showingImportAlert = false
     @State private var importMessage = ""
+    @State private var cloudKitHelper = CloudKitHelper()
 
     private var defaultFromUnitBinding: Binding<MeasurementUnit> {
         Binding(
@@ -201,6 +202,28 @@ struct SettingsView: View {
                 } footer: {
                     Text("Export your custom ingredients to save a backup, or import ingredients from a JSON file.")
                         .foregroundColor(colorScheme.secondaryText)
+                }
+
+                Section {
+                    HStack {
+                        Label("iCloud Sync", systemImage: cloudKitHelper.iCloudAvailable ? "icloud.fill" : "icloud.slash")
+                            .foregroundColor(colorScheme.primaryText)
+                        Spacer()
+                        if cloudKitHelper.iCloudAvailable {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(colorScheme.accent)
+                        } else {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .foregroundColor(colorScheme.warning)
+                        }
+                    }
+                    .listRowBackground(colorScheme.cardBackground)
+                } header: {
+                    Text("iCloud")
+                        .foregroundColor(colorScheme.secondary)
+                } footer: {
+                    Text(cloudKitHelper.statusMessage)
+                        .foregroundColor(cloudKitHelper.iCloudAvailable ? colorScheme.secondaryText : colorScheme.warning)
                 }
 
                 Section {

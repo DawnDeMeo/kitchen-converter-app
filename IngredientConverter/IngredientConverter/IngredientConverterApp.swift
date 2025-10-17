@@ -15,7 +15,13 @@ struct IngredientConverterApp: App {
             Ingredient.self,
             UnitConversion.self
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
+        // Enable CloudKit syncing for automatic iCloud sync across devices
+        let modelConfiguration = ModelConfiguration(
+            schema: schema,
+            isStoredInMemoryOnly: false,
+            cloudKitDatabase: .automatic
+        )
 
         do {
             let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
