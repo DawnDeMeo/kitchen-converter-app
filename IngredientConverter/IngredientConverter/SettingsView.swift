@@ -442,10 +442,28 @@ struct SettingsView: View {
                 throw NSError(domain: "Import", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid JSON format"])
             }
 
+            // Fetch existing ingredients to check for duplicates
+            let fetchDescriptor = FetchDescriptor<Ingredient>()
+            let existingIngredients = try modelContext.fetch(fetchDescriptor)
+
+            // Create a map of existing ingredient names (case-insensitive) for quick lookup
+            var existingNames = Set<String>()
+            for ingredient in existingIngredients {
+                existingNames.insert(ingredient.name.lowercased())
+            }
+
             var importedCount = 0
+            var skippedCount = 0
 
             for ingredientDict in ingredientsArray {
                 guard let name = ingredientDict["name"] as? String else { continue }
+
+                // Check if ingredient already exists (case-insensitive)
+                if existingNames.contains(name.lowercased()) {
+                    skippedCount += 1
+                    print("⏭️ Skipping duplicate: \(name)")
+                    continue
+                }
 
                 let category = ingredientDict["category"] as? String
                 let brand = ingredientDict["brand"] as? String
@@ -482,16 +500,23 @@ struct SettingsView: View {
 
                 if !(newIngredient.conversions ?? []).isEmpty {
                     modelContext.insert(newIngredient)
+                    existingNames.insert(name.lowercased()) // Add to set for subsequent checks
                     importedCount += 1
                 }
             }
 
             try modelContext.save()
 
-            importMessage = "Successfully imported \(importedCount) ingredient\(importedCount == 1 ? "" : "s")."
+            // Build result message
+            var message = "Successfully imported \(importedCount) ingredient\(importedCount == 1 ? "" : "s")."
+            if skippedCount > 0 {
+                message += " Skipped \(skippedCount) duplicate\(skippedCount == 1 ? "" : "s")."
+            }
+
+            importMessage = message
             showingImportAlert = true
 
-            print("✓ Imported \(importedCount) custom ingredients")
+            print("✓ Imported \(importedCount) custom ingredients, skipped \(skippedCount) duplicates")
         } catch {
             print("❌ Error importing ingredients: \(error)")
             importMessage = "Failed to import ingredients: \(error.localizedDescription)"
