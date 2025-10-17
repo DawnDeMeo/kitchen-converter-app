@@ -16,6 +16,16 @@ struct IngredientConverterApp: App {
             UnitConversion.self
         ])
 
+        // Ensure Application Support directory exists before CloudKit setup
+        let applicationSupportURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        if !FileManager.default.fileExists(atPath: applicationSupportURL.path) {
+            do {
+                try FileManager.default.createDirectory(at: applicationSupportURL, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                print("⚠️ Failed to create Application Support directory: \(error)")
+            }
+        }
+
         // Enable CloudKit syncing for automatic iCloud sync across devices
         let modelConfiguration = ModelConfiguration(
             schema: schema,
