@@ -227,7 +227,11 @@ struct IngredientListView: View {
                             }
                             .listRowBackground(colorScheme.cardBackground)
                             .buttonStyle(.plain)
-                            .accessibilityLabel("Convert \(ingredient.name)")
+                            .accessibilityLabel(ingredientAccessibilityLabel(ingredient))
+                            .accessibilityHint("Double tap to convert this ingredient")
+                            .accessibilityAction(named: Text(ingredient.isFavorite ? "Remove from favorites" : "Add to favorites")) {
+                                toggleFavorite(ingredient)
+                            }
                             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                                 Button {
                                     toggleFavorite(ingredient)
@@ -461,6 +465,28 @@ struct IngredientListView: View {
             modelContext.delete(ingredient)
             fetchIngredients()
         }
+    }
+
+    private func ingredientAccessibilityLabel(_ ingredient: Ingredient) -> String {
+        var parts: [String] = [ingredient.name]
+
+        if let brand = ingredient.brand {
+            parts.append("Brand: \(brand)")
+        }
+
+        if let category = ingredient.category {
+            parts.append("Category: \(category)")
+        }
+
+        if ingredient.isCustom {
+            parts.append("Custom ingredient")
+        }
+
+        if ingredient.isFavorite {
+            parts.append("Favorite")
+        }
+
+        return parts.joined(separator: ", ")
     }
 }
 
