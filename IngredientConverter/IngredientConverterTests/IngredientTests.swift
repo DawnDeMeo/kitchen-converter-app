@@ -15,12 +15,12 @@ struct IngredientTests {
     @Test("Create ingredient with default values")
     func createIngredientWithDefaults() {
         let ingredient = Ingredient(name: "Flour")
-        
+
         #expect(ingredient.name == "Flour")
         #expect(ingredient.brand == nil)
         #expect(ingredient.isFavorite == false)
         #expect(ingredient.isCustom == false)
-        #expect(ingredient.conversions.isEmpty)
+        #expect((ingredient.conversions ?? []).isEmpty)
     }
     
     @Test("Create ingredient with custom values")
@@ -47,13 +47,16 @@ struct IngredientTests {
             toAmount: 200,
             toUnit: .gram
         )
-        
-        ingredient.conversions.append(conversion)
-        
-        #expect(ingredient.conversions.count == 1)
-        #expect(ingredient.conversions.first?.fromAmount == 1)
-        #expect(ingredient.conversions.first?.fromUnit == .cup)
-        #expect(ingredient.conversions.first?.toAmount == 200)
-        #expect(ingredient.conversions.first?.toUnit == .gram)
+
+        if ingredient.conversions == nil {
+            ingredient.conversions = []
+        }
+        ingredient.conversions?.append(conversion)
+
+        #expect((ingredient.conversions ?? []).count == 1)
+        #expect((ingredient.conversions ?? []).first?.fromAmount == 1)
+        #expect((ingredient.conversions ?? []).first?.fromUnit == .cup)
+        #expect((ingredient.conversions ?? []).first?.toAmount == 200)
+        #expect((ingredient.conversions ?? []).first?.toUnit == .gram)
     }
 }

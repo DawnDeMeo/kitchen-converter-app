@@ -15,49 +15,58 @@ struct ConversionEdgeCaseTests {
     func zeroAmountConversion() {
         let engine = ConversionEngine()
         let ingredient = Ingredient(name: "Flour")
-        
+
         let conversion = UnitConversion(
             fromAmount: 1,
             fromUnit: .cup,
             toAmount: 120,
             toUnit: .gram
         )
-        ingredient.conversions.append(conversion)
-        
+        if ingredient.conversions == nil {
+            ingredient.conversions = []
+        }
+        ingredient.conversions?.append(conversion)
+
         let result = engine.convert(amount: 0, from: .cup, to: .gram, for: ingredient)
         #expect(result == 0)
     }
-    
+
     @Test("Very large amount conversion")
     func largeAmountConversion() {
         let engine = ConversionEngine()
         let ingredient = Ingredient(name: "Flour")
-        
+
         let conversion = UnitConversion(
             fromAmount: 1,
             fromUnit: .cup,
             toAmount: 120,
             toUnit: .gram
         )
-        ingredient.conversions.append(conversion)
-        
+        if ingredient.conversions == nil {
+            ingredient.conversions = []
+        }
+        ingredient.conversions?.append(conversion)
+
         let result = engine.convert(amount: 1000, from: .cup, to: .gram, for: ingredient)
         #expect(result == 120000)
     }
-    
+
     @Test("Very small fractional amount")
     func smallFractionalAmount() {
         let engine = ConversionEngine()
         let ingredient = Ingredient(name: "Salt")
-        
+
         let conversion = UnitConversion(
             fromAmount: 1,
             fromUnit: .teaspoon,
             toAmount: 6,
             toUnit: .gram
         )
-        ingredient.conversions.append(conversion)
-        
+        if ingredient.conversions == nil {
+            ingredient.conversions = []
+        }
+        ingredient.conversions?.append(conversion)
+
         let result = engine.convert(amount: 0.125, from: .teaspoon, to: .gram, for: ingredient)
         #expect(result == 0.75)
     }
@@ -75,15 +84,18 @@ struct ConversionEdgeCaseTests {
     func negativeAmountConversion() {
         let engine = ConversionEngine()
         let ingredient = Ingredient(name: "Flour")
-        
+
         let conversion = UnitConversion(
             fromAmount: 1,
             fromUnit: .cup,
             toAmount: 120,
             toUnit: .gram
         )
-        ingredient.conversions.append(conversion)
-        
+        if ingredient.conversions == nil {
+            ingredient.conversions = []
+        }
+        ingredient.conversions?.append(conversion)
+
         // Negative amounts don't make physical sense, but mathematically should work
         let result = engine.convert(amount: -2, from: .cup, to: .gram, for: ingredient)
         #expect(result == -240)
@@ -129,7 +141,7 @@ struct ConversionEdgeCaseTests {
     func incompatibleUnitsReturnsNil() {
         let engine = ConversionEngine()
         let ingredient = Ingredient(name: "Flour")
-        
+
         // Only has cup to gram conversion
         let conversion = UnitConversion(
             fromAmount: 1,
@@ -137,8 +149,11 @@ struct ConversionEdgeCaseTests {
             toAmount: 120,
             toUnit: .gram
         )
-        ingredient.conversions.append(conversion)
-        
+        if ingredient.conversions == nil {
+            ingredient.conversions = []
+        }
+        ingredient.conversions?.append(conversion)
+
         // Try to convert between count units (truly incompatible - no path available)
         let result = engine.convert(
             amount: 1,

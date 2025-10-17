@@ -36,7 +36,7 @@ struct DefaultIngredientDatabaseTests {
         let flour = ingredients.first { $0.name == "All-purpose flour" }
 
         #expect(flour != nil, "Flour should exist in database")
-        #expect(flour!.conversions.count >= 2, "Flour should have at least 2 conversions")
+        #expect((flour?.conversions ?? []).count >= 2, "Flour should have at least 2 conversions")
     }
     
     @Test("Flour brand is optional")
@@ -71,9 +71,9 @@ struct DefaultIngredientDatabaseTests {
         let eggs = ingredients.first { $0.name == "Egg, large, no shell" }
 
         #expect(eggs != nil, "Eggs should exist in database")
-        #expect(eggs!.conversions.count >= 1, "Eggs should have at least 1 conversion")
+        #expect((eggs?.conversions ?? []).count >= 1, "Eggs should have at least 1 conversion")
 
-        let conversion = eggs?.conversions.first
+        let conversion = (eggs?.conversions ?? []).first
         if case .count(let singular, let plural) = conversion?.fromUnit {
             #expect(singular == "egg")
             #expect(plural == "eggs")
@@ -89,7 +89,7 @@ struct DefaultIngredientDatabaseTests {
 
         #expect(crackers != nil, "Graham crackers should exist")
 
-        let conversion = crackers?.conversions.first
+        let conversion = (crackers?.conversions ?? []).first
         if case .count(let singular, let plural) = conversion?.fromUnit {
             #expect(singular == "cracker")
             #expect(plural == "crackers")
@@ -106,11 +106,11 @@ struct DefaultIngredientDatabaseTests {
         let ingredients = DefaultIngredientDatabase.loadFromJSON()
         let flour = ingredients.first { $0.name == "All-purpose flour" }
 
-        let cupConversion = flour?.conversions.first { $0.fromUnit == .cup }
+        let cupConversion = (flour?.conversions ?? []).first { $0.fromUnit == .cup }
         #expect(cupConversion != nil, "Should have cup conversion")
         #expect(cupConversion?.toUnit == .gram, "Cup should convert to grams")
 
-        let tbspConversion = flour?.conversions.first { $0.fromUnit == .tablespoon }
+        let tbspConversion = (flour?.conversions ?? []).first { $0.fromUnit == .tablespoon }
         #expect(tbspConversion != nil, "Should have tablespoon conversion")
         #expect(tbspConversion?.toUnit == .gram, "Tablespoon should convert to grams")
     }
@@ -122,7 +122,7 @@ struct DefaultIngredientDatabaseTests {
 
         #expect(flour != nil, "Flour should exist")
 
-        let gramConversion = flour?.conversions.first { $0.toUnit == .gram }
+        let gramConversion = (flour?.conversions ?? []).first { $0.toUnit == .gram }
         #expect(gramConversion != nil, "Should have gram conversion")
     }
 }

@@ -15,7 +15,7 @@ struct ConversionEngineTests {
     func directConversionCupToGram() {
         let engine = ConversionEngine()
         let ingredient = Ingredient(name: "Flour")
-        
+
         // 1 cup = 120 grams
         let conversion = UnitConversion(
             fromAmount: 1,
@@ -23,7 +23,10 @@ struct ConversionEngineTests {
             toAmount: 120,
             toUnit: .gram
         )
-        ingredient.conversions.append(conversion)
+        if ingredient.conversions == nil {
+            ingredient.conversions = []
+        }
+        ingredient.conversions?.append(conversion)
         
         // Convert 2 cups to grams
         let result = engine.convert(amount: 2, from: .cup, to: .gram, for: ingredient)
@@ -35,7 +38,7 @@ struct ConversionEngineTests {
     func reverseConversionGramToCup() {
         let engine = ConversionEngine()
         let ingredient = Ingredient(name: "Flour")
-        
+
         // Only define cup -> gram conversion
         let conversion = UnitConversion(
             fromAmount: 1,
@@ -43,7 +46,10 @@ struct ConversionEngineTests {
             toAmount: 120,
             toUnit: .gram
         )
-        ingredient.conversions.append(conversion)
+        if ingredient.conversions == nil {
+            ingredient.conversions = []
+        }
+        ingredient.conversions?.append(conversion)
         
         // Should automatically work in reverse: 240 grams to cups
         let result = engine.convert(amount: 240, from: .gram, to: .cup, for: ingredient)
@@ -55,7 +61,7 @@ struct ConversionEngineTests {
     func conversionWithCountUnits() {
         let engine = ConversionEngine()
         let ingredient = Ingredient(name: "Graham Crackers")
-        
+
         // 8 crackers = 30 grams
         let conversion = UnitConversion(
             fromAmount: 8,
@@ -63,7 +69,10 @@ struct ConversionEngineTests {
             toAmount: 30,
             toUnit: .gram
         )
-        ingredient.conversions.append(conversion)
+        if ingredient.conversions == nil {
+            ingredient.conversions = []
+        }
+        ingredient.conversions?.append(conversion)
         
         // Convert 16 crackers to grams
         let result = engine.convert(
@@ -80,7 +89,7 @@ struct ConversionEngineTests {
     func chainedConversion() {
         let engine = ConversionEngine()
         let ingredient = Ingredient(name: "Sugar")
-        
+
         // Define: 1 cup = 200 grams
         let conversion1 = UnitConversion(
             fromAmount: 1,
@@ -88,7 +97,7 @@ struct ConversionEngineTests {
             toAmount: 200,
             toUnit: .gram
         )
-        
+
         // Define: 16 tablespoons = 1 cup
         let conversion2 = UnitConversion(
             fromAmount: 16,
@@ -96,9 +105,12 @@ struct ConversionEngineTests {
             toAmount: 1,
             toUnit: .cup
         )
-        
-        ingredient.conversions.append(conversion1)
-        ingredient.conversions.append(conversion2)
+
+        if ingredient.conversions == nil {
+            ingredient.conversions = []
+        }
+        ingredient.conversions?.append(conversion1)
+        ingredient.conversions?.append(conversion2)
         
         // Should chain: 8 tbsp -> 0.5 cup -> 100 grams
         let result = engine.convert(amount: 8, from: .tablespoon, to: .gram, for: ingredient)
@@ -129,7 +141,10 @@ struct ConversionEngineTests {
             toAmount: 120,
             toUnit: .gram
         )
-        ingredient.conversions.append(conversion)
+        if ingredient.conversions == nil {
+            ingredient.conversions = []
+        }
+        ingredient.conversions?.append(conversion)
 
         // Convert 0.5 cups (1/2 cup) to grams
         let result = engine.convert(amount: 0.5, from: .cup, to: .gram, for: ingredient)
@@ -149,7 +164,10 @@ struct ConversionEngineTests {
             toAmount: 9,
             toUnit: .gram
         )
-        ingredient.conversions.append(conversion)
+        if ingredient.conversions == nil {
+            ingredient.conversions = []
+        }
+        ingredient.conversions?.append(conversion)
 
         // Should convert: 1 cup → tablespoons (Foundation) → grams (ingredient)
         let result = engine.convert(amount: 1, from: .cup, to: .gram, for: ingredient)
@@ -171,7 +189,10 @@ struct ConversionEngineTests {
             toAmount: 9,
             toUnit: .gram
         )
-        ingredient.conversions.append(conversion)
+        if ingredient.conversions == nil {
+            ingredient.conversions = []
+        }
+        ingredient.conversions?.append(conversion)
 
         // Should convert: 1 tsp → 0.333... tbsp (Foundation) → ~3 grams (ingredient)
         let result = engine.convert(amount: 1, from: .teaspoon, to: .gram, for: ingredient)
@@ -193,7 +214,10 @@ struct ConversionEngineTests {
             toAmount: 9,
             toUnit: .gram
         )
-        ingredient.conversions.append(conversion)
+        if ingredient.conversions == nil {
+            ingredient.conversions = []
+        }
+        ingredient.conversions?.append(conversion)
 
         // Should convert: 144 grams → 16 tbsp (ingredient reverse) → ~1 cup (Foundation)
         let result = engine.convert(amount: 144, from: .gram, to: .cup, for: ingredient)
@@ -214,7 +238,10 @@ struct ConversionEngineTests {
             toAmount: 9,
             toUnit: .gram
         )
-        ingredient.conversions.append(conversion)
+        if ingredient.conversions == nil {
+            ingredient.conversions = []
+        }
+        ingredient.conversions?.append(conversion)
 
         // Should convert: 9 grams → 1 tbsp (ingredient reverse) → ~3 tsp (Foundation)
         let result = engine.convert(amount: 9, from: .gram, to: .teaspoon, for: ingredient)
