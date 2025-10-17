@@ -160,8 +160,20 @@ struct CustomNumericKeyboard: View {
                         .stroke(colorScheme.primary.opacity(0.3), lineWidth: 1)
                 )
         }
-        .accessibilityLabel("Fraction \(fraction)")
-        .accessibilityHint("Adds the fraction \(fraction) to the input")
+        .accessibilityLabel(fractionToWords(fraction))
+        .accessibilityHint("Adds \(fractionToWords(fraction)) to the input")
+    }
+
+    private func fractionToWords(_ fraction: String) -> String {
+        switch fraction {
+        case "1/8": return "one eighth"
+        case "1/4": return "one quarter"
+        case "1/3": return "one third"
+        case "1/2": return "one half"
+        case "2/3": return "two thirds"
+        case "3/4": return "three quarters"
+        default: return fraction
+        }
     }
 
     private func appendFraction(_ fraction: String) {

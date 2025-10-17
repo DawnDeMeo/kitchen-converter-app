@@ -11,16 +11,11 @@ add more categories - fetched automatically from db, so add new ingredients to n
   catch-all)
 
 
+---
 contact info - currently placeholder email address
 
 
-does import overwrite other custom, or add to?
-
-pull to refresh or only kill app to refresh?
-
-
-
-help section or faq
+help section or faq - tutorial on first lauch?...with option to skip?
 
 icon - outline of kitchen scale?
 
@@ -28,11 +23,6 @@ companion website?
 
 family sharing
 
-----
-* test main screen with custom, favorite
-* new ingredient, add conversion, keyboard accessory
-* converted value
-* settings
 
 ___
 
@@ -52,5 +42,9 @@ All themes now have dramatic visual impact across the entire app."
 
 ---
 
-changes since last commit:
-* set default to lavender
+wrap up:
+* optimization/improvement
+* edit email address in contact section
+* remove extraneous comments/code pertaining to debugging
+* thorough testing before and after code cleanup
+* find beta testers! (test flight)
