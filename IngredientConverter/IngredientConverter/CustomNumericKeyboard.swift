@@ -83,6 +83,8 @@ struct CustomNumericKeyboard: View {
                         .background(colorScheme.primary)
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
+                .accessibilityLabel("Done")
+                .accessibilityHint("Closes the keyboard")
                 .padding(.horizontal)
             }
             .padding(.vertical, 12)
@@ -107,6 +109,16 @@ struct CustomNumericKeyboard: View {
                         .stroke(colorScheme.divider.opacity(0.3), lineWidth: 1)
                 )
         }
+        .accessibilityLabel(accessibilityLabelForKey(value))
+        .accessibilityHint("Adds \(value) to the input")
+    }
+
+    private func accessibilityLabelForKey(_ value: String) -> String {
+        switch value {
+        case ".": return "Decimal point"
+        case "/": return "Fraction slash"
+        default: return value
+        }
     }
 
     private func deleteButton() -> some View {
@@ -128,6 +140,8 @@ struct CustomNumericKeyboard: View {
                         .stroke(colorScheme.divider.opacity(0.3), lineWidth: 1)
                 )
         }
+        .accessibilityLabel("Delete")
+        .accessibilityHint("Removes the last character from the input")
     }
 
     private func fractionButton(_ fraction: String) -> some View {
@@ -146,6 +160,8 @@ struct CustomNumericKeyboard: View {
                         .stroke(colorScheme.primary.opacity(0.3), lineWidth: 1)
                 )
         }
+        .accessibilityLabel("Fraction \(fraction)")
+        .accessibilityHint("Adds the fraction \(fraction) to the input")
     }
 
     private func appendFraction(_ fraction: String) {

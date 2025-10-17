@@ -72,6 +72,8 @@ struct ConversionView: View {
                                 onChange: performConversion
                             )
                             .foregroundColor(colorScheme.primaryText)
+                            .accessibilityLabel("Amount to convert")
+                            .accessibilityHint("Enter the quantity you want to convert")
                         }
                         .listRowBackground(colorScheme.cardBackground)
 
@@ -92,6 +94,7 @@ struct ConversionView: View {
                                         }
                                     }
                                     .pickerStyle(.menu)
+                                    .accessibilityLabel("From unit")
                                     .onChange(of: selectedFromUnit) { _, _ in
                                         performConversion()
                                         withAnimation {
@@ -114,6 +117,8 @@ struct ConversionView: View {
                                     .padding(8)
                                     .background(colorScheme.primary.opacity(0.1))
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    .accessibilityLabel("Swap units")
+                                    .accessibilityHint("Swaps the from and to units")
                                 }
 
                                 // To Unit
@@ -130,6 +135,7 @@ struct ConversionView: View {
                                         }
                                     }
                                     .pickerStyle(.menu)
+                                    .accessibilityLabel("To unit")
                                     .onChange(of: selectedToUnit) { _, _ in
                                         performConversion()
                                         withAnimation {
@@ -190,6 +196,8 @@ struct ConversionView: View {
                                             .stroke(colorScheme.accent.opacity(0.2), lineWidth: 2)
                                     )
                             )
+                            .accessibilityElement(children: .combine)
+                            .accessibilityLabel("\(inputAmount) \(unitDisplayText(fromUnit, amount: amount)) equals \(formatAmount(result)) \(unitDisplayText(toUnit, amount: result))")
                         } header: {
                             Text("Result")
                                 .foregroundColor(colorScheme.accent)
@@ -204,6 +212,8 @@ struct ConversionView: View {
                                     .foregroundColor(colorScheme.primaryText)
                             }
                             .listRowBackground(colorScheme.warning.opacity(0.1))
+                            .accessibilityElement(children: .combine)
+                            .accessibilityLabel("Warning: No conversion available")
                         } header: {
                             Text("Result")
                                 .foregroundColor(colorScheme.warning)

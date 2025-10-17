@@ -91,6 +91,9 @@ struct SettingsView: View {
                         .background(
                             ThemedSegmentedPickerBackground(color: colorScheme.primary, textColor: colorScheme.buttonText)
                         )
+                        .accessibilityLabel("Appearance mode")
+                        .accessibilityValue(appearanceMode.rawValue)
+                        .accessibilityHint("Choose between system, light, or dark mode")
                     }
                     .listRowBackground(colorScheme.cardBackground)
                 } header: {
@@ -129,6 +132,9 @@ struct SettingsView: View {
                         }
                     }
                     .listRowBackground(colorScheme.cardBackground)
+                    .accessibilityLabel("Color scheme")
+                    .accessibilityValue(themeManager.currentScheme.name)
+                    .accessibilityHint("Choose a color theme for the app")
                 } header: {
                     Text("Color Scheme")
                         .foregroundColor(colorScheme.secondary)
@@ -230,6 +236,9 @@ struct SettingsView: View {
                         }
                     }
                     .listRowBackground(colorScheme.cardBackground)
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel("iCloud Sync: \(cloudKitHelper.iCloudAvailable ? "Available" : "Unavailable")")
+                    .accessibilityValue(cloudKitHelper.statusMessage)
                 } header: {
                     Text("iCloud")
                         .foregroundColor(colorScheme.secondary)
@@ -272,6 +281,8 @@ struct SettingsView: View {
                             .clipShape(Capsule())
                     }
                     .listRowBackground(colorScheme.cardBackground)
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel("Version \(appVersion), build \(buildNumber)")
                 } header: {
                     Text("About")
                         .foregroundColor(colorScheme.secondary)

@@ -59,9 +59,13 @@ struct IngredientEditorView: View {
                     TextField("Name", text: $name)
                         .foregroundColor(colorScheme.primaryText)
                         .listRowBackground(colorScheme.cardBackground)
+                        .accessibilityLabel("Ingredient name")
+                        .accessibilityHint("Enter the name of the ingredient")
                     TextField("Brand (optional)", text: $brand)
                         .foregroundColor(colorScheme.primaryText)
                         .listRowBackground(colorScheme.cardBackground)
+                        .accessibilityLabel("Brand name")
+                        .accessibilityHint("Enter the brand name, if applicable")
 
                     Picker("Category", selection: $category) {
                         ForEach(availableCategories, id: \.self) { category in
@@ -273,6 +277,8 @@ struct ConversionEditorRow: View {
                     .textFieldStyle(.roundedBorder)
                     .frame(width: 80)
                     .foregroundColor(colorScheme.primaryText)
+                    .accessibilityLabel("From amount")
+                    .accessibilityValue("\(conversion.fromAmount)")
 
                 Text(conversion.fromUnit.displayName)
                     .foregroundColor(colorScheme.secondaryText)
@@ -280,6 +286,7 @@ struct ConversionEditorRow: View {
                     .padding(.vertical, 6)
                     .background(colorScheme.primary.opacity(0.1))
                     .clipShape(Capsule())
+                    .accessibilityLabel("From unit: \(conversion.fromUnit.displayName)")
             }
 
             HStack {
@@ -303,6 +310,8 @@ struct ConversionEditorRow: View {
                     .textFieldStyle(.roundedBorder)
                     .frame(width: 80)
                     .foregroundColor(colorScheme.primaryText)
+                    .accessibilityLabel("To amount")
+                    .accessibilityValue("\(conversion.toAmount)")
 
                 Text(conversion.toUnit.displayName)
                     .foregroundColor(colorScheme.secondaryText)
@@ -310,6 +319,7 @@ struct ConversionEditorRow: View {
                     .padding(.vertical, 6)
                     .background(colorScheme.accent.opacity(0.1))
                     .clipShape(Capsule())
+                    .accessibilityLabel("To unit: \(conversion.toUnit.displayName)")
             }
         }
         .padding(.vertical, 8)

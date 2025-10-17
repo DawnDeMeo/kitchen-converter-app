@@ -227,6 +227,7 @@ struct IngredientListView: View {
                             }
                             .listRowBackground(colorScheme.cardBackground)
                             .buttonStyle(.plain)
+                            .accessibilityLabel("Convert \(ingredient.name)")
                             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                                 Button {
                                     toggleFavorite(ingredient)
@@ -310,6 +311,8 @@ struct IngredientListView: View {
                             .frame(width: 20, alignment: .center)
                             .padding(.horizontal, 4)
                     }
+                    .accessibilityLabel("Sort by \(sortOption == .alphabetical ? "last used" : "alphabetical")")
+                    .accessibilityHint("Changes the sort order of ingredients")
                 }
 
                 ToolbarItem(placement: .topBarLeading) {
@@ -324,6 +327,9 @@ struct IngredientListView: View {
                         Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
                             .symbolVariant(filterOption == .all ? .none : .fill)
                     }
+                    .accessibilityLabel("Filter ingredients")
+                    .accessibilityValue(filterOption.rawValue)
+                    .accessibilityHint("Filter ingredients by all, favorites, custom, or default")
                 }
 
                 ToolbarItem(placement: .topBarLeading) {
@@ -362,6 +368,9 @@ struct IngredientListView: View {
                         )
                         .symbolVariant(selectedCategory == nil ? .none : .fill)
                     }
+                    .accessibilityLabel("Filter by category")
+                    .accessibilityValue(selectedCategory ?? "All Categories")
+                    .accessibilityHint("Filter ingredients by category")
                 }
 
                 if filterOption != .all || selectedCategory != nil {
@@ -473,6 +482,8 @@ struct IngredientRow: View {
                     .font(.title3)
             }
             .buttonStyle(.plain)
+            .accessibilityLabel(ingredient.isFavorite ? "Remove from favorites" : "Add to favorites")
+            .accessibilityHint("Toggles favorite status for this ingredient")
         }
         .padding(.vertical, 4)
         .contentShape(Rectangle())

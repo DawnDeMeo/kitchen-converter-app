@@ -1,15 +1,30 @@
 
 *** CHECK NOTES APP!! ***
 
+add more categories - fetched automatically from db, so add new ingredients to naturally bring in more categories
+
+  When you do add more default ingredients and categories, a few things to keep in mind:
+
+  - Consistency - Settle on a naming convention (e.g., "Baking & Spices" vs "Baking and Spices")
+  - Breadth - Categories that are too narrow create clutter; too broad and they lose usefulness
+  - Coverage - Ensure common ingredients have logical homes (though "Other" is a perfectly fine
+  catch-all)
+
+
+contact info - currently placeholder email address
+
+
+does import overwrite other custom, or add to?
+
+pull to refresh or only kill app to refresh?
+
+
+
 help section or faq
 
 icon - outline of kitchen scale?
 
-contact info
-
 companion website?
-
-sync custom db between devices
 
 family sharing
 
@@ -32,3 +47,10 @@ git commit -m "Complete theme experiment with comprehensive UI theming
 - Fixed result centering in ConversionView
 
 All themes now have dramatic visual impact across the entire app."
+
+
+
+---
+
+changes since last commit:
+* set default to lavender
