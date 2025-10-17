@@ -143,7 +143,7 @@ struct IngredientEditorView: View {
         name = ingredient.name
         brand = ingredient.brand ?? ""
         category = ingredient.category ?? "Other"
-        conversions = ingredient.conversions.map { conversion in
+        conversions = (ingredient.conversions ?? []).map { conversion in
             ConversionEditor(
                 fromAmount: conversion.fromAmount,
                 fromUnit: conversion.fromUnit,
@@ -174,7 +174,12 @@ struct IngredientEditorView: View {
             existing.name = trimmedName
             existing.brand = trimmedBrand.isEmpty ? nil : trimmedBrand
             existing.category = category
-            existing.conversions.removeAll()
+
+            // Initialize conversions array if nil
+            if existing.conversions == nil {
+                existing.conversions = []
+            }
+            existing.conversions?.removeAll()
 
             for conversionEditor in conversions {
                 let conversion = UnitConversion(
@@ -184,7 +189,7 @@ struct IngredientEditorView: View {
                     toUnit: conversionEditor.toUnit
                 )
                 conversion.ingredient = existing
-                existing.conversions.append(conversion)
+                existing.conversions?.append(conversion)
             }
         } else {
             // Create new ingredient
@@ -195,6 +200,11 @@ struct IngredientEditorView: View {
                 isCustom: true
             )
 
+            // Initialize conversions array if nil
+            if newIngredient.conversions == nil {
+                newIngredient.conversions = []
+            }
+
             for conversionEditor in conversions {
                 let conversion = UnitConversion(
                     fromAmount: conversionEditor.fromAmount,
@@ -202,7 +212,7 @@ struct IngredientEditorView: View {
                     toAmount: conversionEditor.toAmount,
                     toUnit: conversionEditor.toUnit
                 )
-                newIngredient.conversions.append(conversion)
+                newIngredient.conversions?.append(conversion)
             }
 
             modelContext.insert(newIngredient)

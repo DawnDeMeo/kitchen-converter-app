@@ -10,15 +10,16 @@ import SwiftData
 
 @Model
 class UnitConversion {
-    @Attribute(.unique) var id: UUID
+    // CloudKit requires: no unique constraints, all properties optional or with defaults
+    var id: UUID = UUID()
     var ingredient: Ingredient?
-    
-    var fromAmount: Double
-    var fromUnit: MeasurementUnit
-    
-    var toAmount: Double
-    var toUnit: MeasurementUnit
-    
+
+    var fromAmount: Double = 0.0
+    var fromUnit: MeasurementUnit = .cup
+
+    var toAmount: Double = 0.0
+    var toUnit: MeasurementUnit = .gram
+
     init(fromAmount: Double, fromUnit: MeasurementUnit, toAmount: Double, toUnit: MeasurementUnit) {
         self.id = UUID()
         self.fromAmount = fromAmount

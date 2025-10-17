@@ -416,7 +416,7 @@ struct IngredientListView: View {
                 }
                 Button("Cancel", role: .cancel) { }
             } message: { ingredient in
-                Text("This action cannot be undone. This ingredient has \(ingredient.conversions.count) conversion\(ingredient.conversions.count == 1 ? "" : "s").")
+                Text("This action cannot be undone. This ingredient has \((ingredient.conversions ?? []).count) conversion\((ingredient.conversions ?? []).count == 1 ? "" : "s").")
             }
             .onAppear {
                 fetchAvailableCategories()

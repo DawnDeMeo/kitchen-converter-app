@@ -350,7 +350,7 @@ struct SettingsView: View {
                     dict["brand"] = brand
                 }
 
-                let conversions = ingredient.conversions.map { conversion -> [String: Any] in
+                let conversions = (ingredient.conversions ?? []).map { conversion -> [String: Any] in
                     var convDict: [String: Any] = [
                         "fromAmount": conversion.fromAmount,
                         "toAmount": conversion.toAmount
@@ -443,11 +443,15 @@ struct SettingsView: View {
                             toAmount: toAmount,
                             toUnit: toUnit
                         )
-                        newIngredient.conversions.append(conversion)
+                        // Initialize conversions array if nil
+                        if newIngredient.conversions == nil {
+                            newIngredient.conversions = []
+                        }
+                        newIngredient.conversions?.append(conversion)
                     }
                 }
 
-                if !newIngredient.conversions.isEmpty {
+                if !(newIngredient.conversions ?? []).isEmpty {
                     modelContext.insert(newIngredient)
                     importedCount += 1
                 }

@@ -143,7 +143,10 @@ struct DefaultIngredientDatabase {
         ingredient.brand = json.brand
 
         // Clear old conversions and add new ones
-        ingredient.conversions.removeAll()
+        if ingredient.conversions == nil {
+            ingredient.conversions = []
+        }
+        ingredient.conversions?.removeAll()
 
         for conversionJSON in json.conversions {
             guard let fromUnit = conversionJSON.fromUnit.toMeasurementUnit(),
@@ -158,7 +161,7 @@ struct DefaultIngredientDatabase {
                 toAmount: conversionJSON.toAmount,
                 toUnit: toUnit
             )
-            ingredient.conversions.append(conversion)
+            ingredient.conversions?.append(conversion)
         }
     }
 
@@ -166,6 +169,11 @@ struct DefaultIngredientDatabase {
     private static func convertJSONToIngredient(_ json: IngredientJSON) -> Ingredient? {
         let ingredient = Ingredient(name: json.name, category: json.category, brand: json.brand, isCustom: false)
 
+        // Ensure conversions array is initialized
+        if ingredient.conversions == nil {
+            ingredient.conversions = []
+        }
+
         for conversionJSON in json.conversions {
             guard let fromUnit = conversionJSON.fromUnit.toMeasurementUnit(),
                   let toUnit = conversionJSON.toUnit.toMeasurementUnit() else {
@@ -179,7 +187,7 @@ struct DefaultIngredientDatabase {
                 toAmount: conversionJSON.toAmount,
                 toUnit: toUnit
             )
-            ingredient.conversions.append(conversion)
+            ingredient.conversions?.append(conversion)
         }
 
         return ingredient

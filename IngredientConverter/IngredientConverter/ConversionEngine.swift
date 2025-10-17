@@ -76,12 +76,12 @@ class ConversionEngine {
     /// Direct conversion: look for a conversion that matches from -> to
     private func directConversion(amount: Double, from: MeasurementUnit, to: MeasurementUnit,
                                    for ingredient: Ingredient) -> Double? {
-        guard let conversion = ingredient.conversions.first(where: {
+        guard let conversion = (ingredient.conversions ?? []).first(where: {
             $0.fromUnit == from && $0.toUnit == to
         }) else {
             return nil
         }
-        
+
         // Calculate: (amount / fromAmount) * toAmount
         return (amount / conversion.fromAmount) * conversion.toAmount
     }
@@ -89,12 +89,12 @@ class ConversionEngine {
     /// Reverse conversion: look for a conversion that matches to -> from, then reverse it
     private func reverseConversion(amount: Double, from: MeasurementUnit, to: MeasurementUnit,
                                     for ingredient: Ingredient) -> Double? {
-        guard let conversion = ingredient.conversions.first(where: {
+        guard let conversion = (ingredient.conversions ?? []).first(where: {
             $0.fromUnit == to && $0.toUnit == from
         }) else {
             return nil
         }
-        
+
         // Calculate in reverse: (amount / toAmount) * fromAmount
         return (amount / conversion.toAmount) * conversion.fromAmount
     }
@@ -131,7 +131,7 @@ class ConversionEngine {
         }
 
         // Try all ingredient-specific conversions from current unit
-        for conversion in ingredient.conversions {
+        for conversion in ingredient.conversions ?? [] {
             var nextUnit: MeasurementUnit?
             var nextAmount: Double?
 

@@ -292,7 +292,7 @@ struct ConversionView: View {
         var units = Set<MeasurementUnit>()
 
         // Add all units from conversions
-        for conversion in ingredient.conversions {
+        for conversion in ingredient.conversions ?? [] {
             units.insert(conversion.fromUnit)
             units.insert(conversion.toUnit)
 
@@ -380,8 +380,8 @@ struct ConversionView: View {
         toUnit: .gram
     )
 
-    flour.conversions.append(cupToGram)
-    flour.conversions.append(tbspToGram)
+    flour.conversions?.append(cupToGram)
+    flour.conversions?.append(tbspToGram)
 
     container.mainContext.insert(flour)
 
