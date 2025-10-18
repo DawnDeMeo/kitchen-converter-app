@@ -248,7 +248,7 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    Link(destination: URL(string: "mailto:feedback@ingredientconverter.app?subject=Ingredient%20Converter%20Feedback")!) {
+                    Link(destination: URL(string: "mailto:dawndemeoapps@gmail.com?subject=Ingredient%20Converter%20Feedback")!) {
                         HStack {
                             Label("Send Feedback", systemImage: "envelope")
                                 .foregroundColor(colorScheme.primary)

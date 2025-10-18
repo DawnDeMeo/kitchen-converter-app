@@ -23,6 +23,8 @@ companion website?
 
 family sharing
 
+toggle favorite from within conversion view
+
 
 ___
 
@@ -43,7 +45,7 @@ All themes now have dramatic visual impact across the entire app."
 ---
 
 wrap up:
-* optimization/improvement
+* code optimization/improvement/organization
 * edit email address in contact section
 * remove extraneous comments/code pertaining to debugging
 * thorough testing before and after code cleanup
