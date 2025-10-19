@@ -44,18 +44,72 @@ struct ConversionView: View {
         VStack(spacing: 0) {
             ScrollViewReader { proxy in
                 Form {
-                    // Ingredient Display (not selectable)
-                    if let ingredient = selectedIngredient {
+                    // Result
+                    if let result = conversionResult,
+                       let fromUnit = selectedFromUnit,
+                       let toUnit = selectedToUnit,
+                       let amount = FractionParser.parse(inputAmount) {
                         Section {
-                            IngredientRowView(ingredient: ingredient)
-                            .padding(.vertical, 4)
-                            .listRowBackground(colorScheme.cardBackground)
-                        } header: {
-                            Text("Ingredient")
-                                .foregroundColor(colorScheme.secondary)
-                        }
-                    }
+                            VStack(alignment: .center, spacing: 16) {
+                                HStack {
+                                    Text(inputAmount)
+                                        .font(.title2)
+                                        .foregroundColor(colorScheme.primaryText)
+                                    Text(unitDisplayText(fromUnit, amount: amount))
+                                        .font(.title3)
+                                        .foregroundColor(colorScheme.secondaryText)
+                                }
 
+                                Divider()
+                                    .background(colorScheme.divider)
+
+                                HStack {
+                                    Image(systemName: "equal")
+                                        .foregroundColor(colorScheme.primary)
+                                        .font(.title2)
+                                }
+
+                                Divider()
+                                    .background(colorScheme.divider)
+
+                                HStack {
+                                    Text(formatAmount(result))
+                                        .font(.system(.largeTitle, design: .rounded))
+                                        .bold()
+                                        .foregroundColor(colorScheme.accent)
+                                    Text(unitDisplayText(toUnit, amount: result))
+                                        .font(.title2)
+                                        .foregroundColor(colorScheme.secondaryText)
+                                }
+                            }
+                            .padding(.vertical, 12)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .listRowBackground(
+                                colorScheme.accent.opacity(0.05)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .stroke(colorScheme.accent.opacity(0.2), lineWidth: 2)
+                                    )
+                            )
+                            .accessibilityElement(children: .combine)
+                            .accessibilityLabel("\(amountToWords(inputAmount)) \(unitDisplayText(fromUnit, amount: amount)) equals \(amountToWords(formatAmount(result))) \(unitDisplayText(toUnit, amount: result))")
+                        }
+                        .id("result")
+                    } else if selectedIngredient != nil && !inputAmount.isEmpty && selectedFromUnit != nil && selectedToUnit != nil {
+                        Section {
+                            HStack(spacing: 12) {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundColor(colorScheme.warning)
+                                Text("No conversion available")
+                                    .foregroundColor(colorScheme.primaryText)
+                            }
+                            .listRowBackground(colorScheme.warning.opacity(0.1))
+                            .accessibilityElement(children: .combine)
+                            .accessibilityLabel("Warning: No conversion available")
+                        }
+                        .id("result")
+                    }
+                    
                     // Conversion Controls
                     Section {
                         // Amount Input
@@ -149,78 +203,6 @@ struct ConversionView: View {
                             .listRowBackground(colorScheme.cardBackground)
                         }
                     }
-
-                    // Result
-                    if let result = conversionResult,
-                       let fromUnit = selectedFromUnit,
-                       let toUnit = selectedToUnit,
-                       let amount = FractionParser.parse(inputAmount) {
-                        Section {
-                            VStack(alignment: .center, spacing: 16) {
-                                HStack {
-                                    Text(inputAmount)
-                                        .font(.title2)
-                                        .foregroundColor(colorScheme.primaryText)
-                                    Text(unitDisplayText(fromUnit, amount: amount))
-                                        .font(.title3)
-                                        .foregroundColor(colorScheme.secondaryText)
-                                }
-
-                                Divider()
-                                    .background(colorScheme.divider)
-
-                                HStack {
-                                    Image(systemName: "equal")
-                                        .foregroundColor(colorScheme.primary)
-                                        .font(.title2)
-                                }
-
-                                Divider()
-                                    .background(colorScheme.divider)
-
-                                HStack {
-                                    Text(formatAmount(result))
-                                        .font(.system(.largeTitle, design: .rounded))
-                                        .bold()
-                                        .foregroundColor(colorScheme.accent)
-                                    Text(unitDisplayText(toUnit, amount: result))
-                                        .font(.title2)
-                                        .foregroundColor(colorScheme.secondaryText)
-                                }
-                            }
-                            .padding(.vertical, 12)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .listRowBackground(
-                                colorScheme.accent.opacity(0.05)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 8)
-                                            .stroke(colorScheme.accent.opacity(0.2), lineWidth: 2)
-                                    )
-                            )
-                            .accessibilityElement(children: .combine)
-                            .accessibilityLabel("\(amountToWords(inputAmount)) \(unitDisplayText(fromUnit, amount: amount)) equals \(amountToWords(formatAmount(result))) \(unitDisplayText(toUnit, amount: result))")
-                        } header: {
-                            Text("Result")
-                                .foregroundColor(colorScheme.accent)
-                        }
-                        .id("result")
-                    } else if selectedIngredient != nil && !inputAmount.isEmpty && selectedFromUnit != nil && selectedToUnit != nil {
-                        Section {
-                            HStack(spacing: 12) {
-                                Image(systemName: "exclamationmark.triangle.fill")
-                                    .foregroundColor(colorScheme.warning)
-                                Text("No conversion available")
-                                    .foregroundColor(colorScheme.primaryText)
-                            }
-                            .listRowBackground(colorScheme.warning.opacity(0.1))
-                            .accessibilityElement(children: .combine)
-                            .accessibilityLabel("Warning: No conversion available")
-                        } header: {
-                            Text("Result")
-                                .foregroundColor(colorScheme.warning)
-                        }
-                        .id("result")
-                    }
                 }
                 .scrollDismissesKeyboard(.interactively)
                 .scrollContentBackground(.hidden)
@@ -249,7 +231,7 @@ struct ConversionView: View {
             }
         }
         .background(colorScheme.background)
-        .navigationTitle("Convert")
+        .navigationTitle(selectedIngredient?.name ?? "No Ingredient Selected")
         .onChange(of: selectedIngredient) { _, newIngredient in
             // Reset units when ingredient changes
             selectedFromUnit = nil
