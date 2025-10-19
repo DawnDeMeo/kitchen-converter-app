@@ -24,9 +24,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		C8E879912E92B90A00816CF0 /* IngredientConverter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IngredientConverter.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C8E879A02E92B90B00816CF0 /* IngredientConverterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IngredientConverterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		C8E879AA2E92B90B00816CF0 /* IngredientConverterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IngredientConverterUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C8020E0F2EA4545B00FCB64E /* IngredientConverter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IngredientConverter.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C8E879A02E92B90B00816CF0 /* IngredientConverterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = IngredientConverterTests.xctest; path = "/Users/dawndemeo/Development/Kitchen Converter App/IngredientConverter/build/Debug-iphoneos/IngredientConverter.app/PlugIns/IngredientConverterTests.xctest"; sourceTree = "<absolute>"; };
+		C8E879AA2E92B90B00816CF0 /* IngredientConverterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = IngredientConverterUITests.xctest; path = "/Users/dawndemeo/Development/Kitchen Converter App/IngredientConverter/build/Debug-iphoneos/IngredientConverterUITests-Runner.app/PlugIns/IngredientConverterUITests.xctest"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -78,18 +78,8 @@
 				C8E879932E92B90A00816CF0 /* IngredientConverter */,
 				C8E879A32E92B90B00816CF0 /* IngredientConverterTests */,
 				C8E879AD2E92B90B00816CF0 /* IngredientConverterUITests */,
-				C8E879922E92B90A00816CF0 /* Products */,
+				C8020E0F2EA4545B00FCB64E /* IngredientConverter.app */,
 			);
-			sourceTree = "<group>";
-		};
-		C8E879922E92B90A00816CF0 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				C8E879912E92B90A00816CF0 /* IngredientConverter.app */,
-				C8E879A02E92B90B00816CF0 /* IngredientConverterTests.xctest */,
-				C8E879AA2E92B90B00816CF0 /* IngredientConverterUITests.xctest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -114,7 +104,7 @@
 			packageProductDependencies = (
 			);
 			productName = IngredientConverter;
-			productReference = C8E879912E92B90A00816CF0 /* IngredientConverter.app */;
+			productReference = C8020E0F2EA4545B00FCB64E /* IngredientConverter.app */;
 			productType = "com.apple.product-type.application";
 		};
 		C8E8799F2E92B90B00816CF0 /* IngredientConverterTests */ = {
@@ -197,7 +187,7 @@
 			mainGroup = C8E879882E92B90A00816CF0;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = C8E879922E92B90A00816CF0 /* Products */;
+			productRefGroup = C8E879882E92B90A00816CF0;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -394,7 +384,7 @@
 		C8E879B52E92B90B00816CF0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = KitchenConverter;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = IngredientConverter/IngredientConverter.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -427,7 +417,7 @@
 		C8E879B62E92B90B00816CF0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = KitchenConverter;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = IngredientConverter/IngredientConverter.entitlements;
 				CODE_SIGN_STYLE = Automatic;
