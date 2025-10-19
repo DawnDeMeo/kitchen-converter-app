@@ -12,14 +12,11 @@ add more categories - fetched automatically from db, so add new ingredients to n
 
 
 ---
-contact info - currently placeholder email address
 
 
 help section or faq - tutorial on first lauch?...with option to skip?
 
 icon - outline of kitchen scale?
-
-companion website?
 
 family sharing
 
@@ -46,7 +43,6 @@ All themes now have dramatic visual impact across the entire app."
 
 wrap up:
 * code optimization/improvement/organization
-* edit email address in contact section
 * remove extraneous comments/code pertaining to debugging
 * thorough testing before and after code cleanup
 * find beta testers! (test flight)
