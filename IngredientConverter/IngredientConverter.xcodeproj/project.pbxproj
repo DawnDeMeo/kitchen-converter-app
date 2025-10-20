@@ -25,8 +25,8 @@
 
 /* Begin PBXFileReference section */
 		C8020E0F2EA4545B00FCB64E /* IngredientConverter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IngredientConverter.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C8E879A02E92B90B00816CF0 /* IngredientConverterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = IngredientConverterTests.xctest; path = "/Users/dawndemeo/Development/Kitchen Converter App/IngredientConverter/build/Debug-iphoneos/IngredientConverter.app/PlugIns/IngredientConverterTests.xctest"; sourceTree = "<absolute>"; };
-		C8E879AA2E92B90B00816CF0 /* IngredientConverterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = IngredientConverterUITests.xctest; path = "/Users/dawndemeo/Development/Kitchen Converter App/IngredientConverter/build/Debug-iphoneos/IngredientConverterUITests-Runner.app/PlugIns/IngredientConverterUITests.xctest"; sourceTree = "<absolute>"; };
+		C88E69832EA52184008DD366 /* IngredientConverterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IngredientConverterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C88E69842EA52184008DD366 /* IngredientConverterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IngredientConverterUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -79,6 +79,8 @@
 				C8E879A32E92B90B00816CF0 /* IngredientConverterTests */,
 				C8E879AD2E92B90B00816CF0 /* IngredientConverterUITests */,
 				C8020E0F2EA4545B00FCB64E /* IngredientConverter.app */,
+				C88E69832EA52184008DD366 /* IngredientConverterTests.xctest */,
+				C88E69842EA52184008DD366 /* IngredientConverterUITests.xctest */,
 			);
 			sourceTree = "<group>";
 		};
@@ -127,7 +129,7 @@
 			packageProductDependencies = (
 			);
 			productName = IngredientConverterTests;
-			productReference = C8E879A02E92B90B00816CF0 /* IngredientConverterTests.xctest */;
+			productReference = C88E69832EA52184008DD366 /* IngredientConverterTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		C8E879A92E92B90B00816CF0 /* IngredientConverterUITests */ = {
@@ -150,7 +152,7 @@
 			packageProductDependencies = (
 			);
 			productName = IngredientConverterUITests;
-			productReference = C8E879AA2E92B90B00816CF0 /* IngredientConverterUITests.xctest */;
+			productReference = C88E69842EA52184008DD366 /* IngredientConverterUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */

@@ -24,6 +24,8 @@ struct ConversionView: View {
 
     @FocusState private var isInputFocused: Bool
     @State private var isKeyboardVisible: Bool = false
+    @State private var showingFromUnitPicker: Bool = false
+    @State private var showingToUnitPicker: Bool = false
 
     private let conversionEngine = ConversionEngine()
 
@@ -203,20 +205,29 @@ struct ConversionView: View {
                                         .foregroundColor(colorScheme.secondary)
                                         .textCase(.uppercase)
 
-                                    Picker("", selection: $selectedFromUnit) {
-                                        Text("Select").tag(nil as MeasurementUnit?)
-                                        ForEach(cachedAvailableUnits, id: \.self) { unit in
-                                            Text(unit.fullDisplayName).tag(unit as MeasurementUnit?)
+                                    Button {
+                                        isKeyboardVisible = false
+                                        showingFromUnitPicker = true
+                                    } label: {
+                                        HStack {
+                                            Text(selectedFromUnit?.fullDisplayName ?? "Select")
+                                                .foregroundColor(selectedFromUnit != nil ? colorScheme.primaryText : colorScheme.secondary)
+                                            Spacer()
+                                            Image(systemName: "chevron.down")
+                                                .font(.caption)
+                                                .foregroundColor(colorScheme.secondary)
                                         }
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 8)
+                                        .background(colorScheme.cardBackground)
+                                        .cornerRadius(8)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 8)
+                                                .stroke(colorScheme.divider, lineWidth: 1)
+                                        )
                                     }
-                                    .pickerStyle(.menu)
+                                    .buttonStyle(.plain)
                                     .accessibilityLabel("From unit")
-                                    .onChange(of: selectedFromUnit) { _, _ in
-                                        performConversion()
-                                        withAnimation {
-                                            proxy.scrollTo("result", anchor: .bottom)
-                                        }
-                                    }
                                 }
                                 .frame(maxWidth: .infinity)
 
@@ -229,10 +240,11 @@ struct ConversionView: View {
                                         Image(systemName: "arrow.left.arrow.right")
                                             .foregroundColor(colorScheme.primary)
                                             .font(.title3)
+                                            .padding(8)
+                                            .background(colorScheme.primary.opacity(0.1))
+                                            .clipShape(RoundedRectangle(cornerRadius: 8))
                                     }
-                                    .padding(8)
-                                    .background(colorScheme.primary.opacity(0.1))
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    .buttonStyle(.plain)
                                     .accessibilityLabel("Swap units")
                                     .accessibilityHint("Swaps the from and to units")
                                 }
@@ -244,20 +256,29 @@ struct ConversionView: View {
                                         .foregroundColor(colorScheme.secondary)
                                         .textCase(.uppercase)
 
-                                    Picker("", selection: $selectedToUnit) {
-                                        Text("Select").tag(nil as MeasurementUnit?)
-                                        ForEach(cachedAvailableUnits, id: \.self) { unit in
-                                            Text(unit.fullDisplayName).tag(unit as MeasurementUnit?)
+                                    Button {
+                                        isKeyboardVisible = false
+                                        showingToUnitPicker = true
+                                    } label: {
+                                        HStack {
+                                            Text(selectedToUnit?.fullDisplayName ?? "Select")
+                                                .foregroundColor(selectedToUnit != nil ? colorScheme.primaryText : colorScheme.secondary)
+                                            Spacer()
+                                            Image(systemName: "chevron.down")
+                                                .font(.caption)
+                                                .foregroundColor(colorScheme.secondary)
                                         }
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 8)
+                                        .background(colorScheme.cardBackground)
+                                        .cornerRadius(8)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 8)
+                                                .stroke(colorScheme.divider, lineWidth: 1)
+                                        )
                                     }
-                                    .pickerStyle(.menu)
+                                    .buttonStyle(.plain)
                                     .accessibilityLabel("To unit")
-                                    .onChange(of: selectedToUnit) { _, _ in
-                                        performConversion()
-                                        withAnimation {
-                                            proxy.scrollTo("result", anchor: .bottom)
-                                        }
-                                    }
                                 }
                                 .frame(maxWidth: .infinity)
                             }
@@ -293,6 +314,26 @@ struct ConversionView: View {
         }
         .background(colorScheme.background)
         .navigationTitle(selectedIngredient?.name ?? "No Ingredient Selected")
+        .sheet(isPresented: $showingFromUnitPicker) {
+            UnitPickerSheet(
+                availableUnits: cachedAvailableUnits,
+                selectedUnit: $selectedFromUnit,
+                title: "From Unit"
+            )
+        }
+        .sheet(isPresented: $showingToUnitPicker) {
+            UnitPickerSheet(
+                availableUnits: cachedAvailableUnits,
+                selectedUnit: $selectedToUnit,
+                title: "To Unit"
+            )
+        }
+        .onChange(of: selectedFromUnit) { _, _ in
+            performConversion()
+        }
+        .onChange(of: selectedToUnit) { _, _ in
+            performConversion()
+        }
         .onChange(of: selectedIngredient) { _, newIngredient in
             // Reset units when ingredient changes
             selectedFromUnit = nil

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum UnitType: Codable {
+enum UnitType: Codable, Hashable {
     case volume
     case weight
     case count
