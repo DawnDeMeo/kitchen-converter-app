@@ -41,6 +41,8 @@ A native iOS app for converting cooking measurements and ingredient quantities, 
 
 ## Project Structure
 
+> **Note**: This is a simplified view showing key files. See the actual project structure for the complete file list.
+
 ```
 kitchen-converter-app/
 ├── IngredientConverter/              # iOS app

@@ -51,3 +51,7 @@ venv/
 *~
 .idea/
 ~$*
+
+# Design assets and reference data
+*.pdf
+*FNDDS*.xlsx
