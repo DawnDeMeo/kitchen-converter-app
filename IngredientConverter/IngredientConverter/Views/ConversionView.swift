@@ -344,15 +344,37 @@ struct ConversionView: View {
             if let ingredient = newIngredient {
                 cachedAvailableUnits = computeAvailableUnits(for: ingredient)
 
-                // Apply default unit preferences if available
-                if let defaultFrom = defaultFromUnit,
-                   cachedAvailableUnits.contains(defaultFrom) {
-                    selectedFromUnit = defaultFrom
+                // For count-based ingredients, prefer count as fromUnit
+                let countUnit = cachedAvailableUnits.first { unit in
+                    if case .count = unit { return true }
+                    return false
                 }
 
-                if let defaultTo = defaultToUnit,
-                   cachedAvailableUnits.contains(defaultTo) {
-                    selectedToUnit = defaultTo
+                if let countUnit = countUnit {
+                    // This is a count-based ingredient
+                    selectedFromUnit = countUnit
+
+                    // For toUnit, prefer defaultToUnit if available, otherwise first non-count unit
+                    if let defaultTo = defaultToUnit,
+                       cachedAvailableUnits.contains(defaultTo) {
+                        selectedToUnit = defaultTo
+                    } else {
+                        selectedToUnit = cachedAvailableUnits.first { unit in
+                            if case .count = unit { return false }
+                            return true
+                        }
+                    }
+                } else {
+                    // Apply default unit preferences for measurement-based ingredients
+                    if let defaultFrom = defaultFromUnit,
+                       cachedAvailableUnits.contains(defaultFrom) {
+                        selectedFromUnit = defaultFrom
+                    }
+
+                    if let defaultTo = defaultToUnit,
+                       cachedAvailableUnits.contains(defaultTo) {
+                        selectedToUnit = defaultTo
+                    }
                 }
 
                 // Trigger conversion with default amount
@@ -366,15 +388,37 @@ struct ConversionView: View {
             if let ingredient = selectedIngredient {
                 cachedAvailableUnits = computeAvailableUnits(for: ingredient)
 
-                // Apply default unit preferences if available
-                if let defaultFrom = defaultFromUnit,
-                   cachedAvailableUnits.contains(defaultFrom) {
-                    selectedFromUnit = defaultFrom
+                // For count-based ingredients, prefer count as fromUnit
+                let countUnit = cachedAvailableUnits.first { unit in
+                    if case .count = unit { return true }
+                    return false
                 }
 
-                if let defaultTo = defaultToUnit,
-                   cachedAvailableUnits.contains(defaultTo) {
-                    selectedToUnit = defaultTo
+                if let countUnit = countUnit {
+                    // This is a count-based ingredient
+                    selectedFromUnit = countUnit
+
+                    // For toUnit, prefer defaultToUnit if available, otherwise first non-count unit
+                    if let defaultTo = defaultToUnit,
+                       cachedAvailableUnits.contains(defaultTo) {
+                        selectedToUnit = defaultTo
+                    } else {
+                        selectedToUnit = cachedAvailableUnits.first { unit in
+                            if case .count = unit { return false }
+                            return true
+                        }
+                    }
+                } else {
+                    // Apply default unit preferences for measurement-based ingredients
+                    if let defaultFrom = defaultFromUnit,
+                       cachedAvailableUnits.contains(defaultFrom) {
+                        selectedFromUnit = defaultFrom
+                    }
+
+                    if let defaultTo = defaultToUnit,
+                       cachedAvailableUnits.contains(defaultTo) {
+                        selectedToUnit = defaultTo
+                    }
                 }
 
                 // Trigger conversion with default amount
@@ -565,6 +609,38 @@ struct ConversionView: View {
 
     return NavigationStack {
         ConversionView(preselectedIngredient: flour)
+            .modelContainer(container)
+    }
+}
+
+#Preview("Count-based Ingredient") {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Ingredient.self, configurations: config)
+
+    // Create apple with count-based conversions
+    let apple = Ingredient(name: "Apple", category: "Fruit", brand: nil, isFavorite: false, isCustom: false)
+
+    // Add conversions with count units
+    let countToGram = UnitConversion(
+        fromAmount: 1,
+        fromUnit: .count(singular: "apple", plural: "apples"),
+        toAmount: 182,
+        toUnit: .gram
+    )
+    let countToCup = UnitConversion(
+        fromAmount: 1,
+        fromUnit: .count(singular: "apple", plural: "apples"),
+        toAmount: 1.25,
+        toUnit: .cup
+    )
+
+    apple.conversions?.append(countToGram)
+    apple.conversions?.append(countToCup)
+
+    container.mainContext.insert(apple)
+
+    return NavigationStack {
+        ConversionView(preselectedIngredient: apple)
             .modelContainer(container)
     }
 }
