@@ -69,30 +69,46 @@ struct ConversionView: View {
                        let toUnit = selectedToUnit,
                        selectedIngredient != nil {
                         Section {
-                            if isInputInvalid {
-                                // Invalid input - show question mark
-                                VStack(alignment: .center, spacing: 16) {
+                            VStack(alignment: .center, spacing: 16) {
+                                // First row - Tappable input area
+                                Button {
+                                    isKeyboardVisible = true
+                                } label: {
                                     HStack {
-                                        Text(inputAmount)
-                                            .font(.title2)
-                                            .foregroundColor(colorScheme.primaryText)
-                                        Text(fromUnit.fullDisplayName)
-                                            .font(.title3)
-                                            .foregroundColor(colorScheme.secondaryText)
+                                        if inputAmount.isEmpty {
+                                            Text("Tap to enter amount")
+                                                .font(.title3)
+                                                .foregroundColor(colorScheme.secondary)
+                                        } else {
+                                            Text(displayAmount)
+                                                .font(.title2)
+                                                .foregroundColor(colorScheme.primaryText)
+                                            Text(unitDisplayText(fromUnit, amount: effectiveAmount ?? 1))
+                                                .font(.title3)
+                                                .foregroundColor(colorScheme.secondaryText)
+                                        }
                                     }
+                                    .frame(maxWidth: .infinity)
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityLabel(inputAmount.isEmpty ? "Tap to enter amount" : "\(amountToWords(displayAmount)) \(unitDisplayText(fromUnit, amount: effectiveAmount ?? 1))")
+                                .accessibilityHint(inputAmount.isEmpty ? "Double tap to enter the quantity you want to convert" : "Double tap to edit amount")
 
-                                    Divider()
-                                        .background(colorScheme.divider)
+                                Divider()
+                                    .background(colorScheme.divider)
 
-                                    HStack {
-                                        Image(systemName: "equal")
-                                            .foregroundColor(colorScheme.primary)
-                                            .font(.title2)
-                                    }
+                                HStack {
+                                    Image(systemName: "equal")
+                                        .foregroundColor(colorScheme.primary)
+                                        .font(.title2)
+                                }
 
-                                    Divider()
-                                        .background(colorScheme.divider)
+                                Divider()
+                                    .background(colorScheme.divider)
 
+                                // Second row - Result
+                                if isInputInvalid {
+                                    // Invalid input - show question mark
                                     HStack {
                                         Text("?")
                                             .font(.system(.largeTitle, design: .rounded))
@@ -102,41 +118,8 @@ struct ConversionView: View {
                                             .font(.title2)
                                             .foregroundColor(colorScheme.secondaryText)
                                     }
-                                }
-                                .padding(.vertical, 12)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .listRowBackground(
-                                    colorScheme.accent.opacity(0.05)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 8)
-                                                .stroke(colorScheme.accent.opacity(0.2), lineWidth: 2)
-                                        )
-                                )
-                                .accessibilityElement(children: .combine)
-                                .accessibilityLabel("Invalid input: \(inputAmount)")
-                            } else if let result = conversionResult, let amount = effectiveAmount {
-                                VStack(alignment: .center, spacing: 16) {
-                                    HStack {
-                                        Text(displayAmount)
-                                            .font(.title2)
-                                            .foregroundColor(colorScheme.primaryText)
-                                        Text(unitDisplayText(fromUnit, amount: amount))
-                                            .font(.title3)
-                                            .foregroundColor(colorScheme.secondaryText)
-                                    }
-
-                                    Divider()
-                                        .background(colorScheme.divider)
-
-                                    HStack {
-                                        Image(systemName: "equal")
-                                            .foregroundColor(colorScheme.primary)
-                                            .font(.title2)
-                                    }
-
-                                    Divider()
-                                        .background(colorScheme.divider)
-
+                                } else if let result = conversionResult, let amount = effectiveAmount {
+                                    // Valid result (shown even when inputAmount is empty, using default 1.0)
                                     HStack {
                                         Text(formatAmount(result))
                                             .font(.system(.largeTitle, design: .rounded))
@@ -146,54 +129,33 @@ struct ConversionView: View {
                                             .font(.title2)
                                             .foregroundColor(colorScheme.secondaryText)
                                     }
+                                } else {
+                                    // No conversion available
+                                    HStack {
+                                        Image(systemName: "exclamationmark.triangle.fill")
+                                            .foregroundColor(colorScheme.warning)
+                                        Text("No conversion")
+                                            .font(.title3)
+                                            .foregroundColor(colorScheme.warning)
+                                    }
                                 }
-                                .padding(.vertical, 12)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .listRowBackground(
-                                    colorScheme.accent.opacity(0.05)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 8)
-                                                .stroke(colorScheme.accent.opacity(0.2), lineWidth: 2)
-                                        )
-                                )
-                                .accessibilityElement(children: .combine)
-                                .accessibilityLabel("\(amountToWords(displayAmount)) \(unitDisplayText(fromUnit, amount: amount)) equals \(amountToWords(formatAmount(result))) \(unitDisplayText(toUnit, amount: result))")
-                            } else {
-                                HStack(spacing: 12) {
-                                    Image(systemName: "exclamationmark.triangle.fill")
-                                        .foregroundColor(colorScheme.warning)
-                                    Text("No conversion available")
-                                        .foregroundColor(colorScheme.primaryText)
-                                }
-                                .listRowBackground(colorScheme.warning.opacity(0.1))
-                                .accessibilityElement(children: .combine)
-                                .accessibilityLabel("Warning: No conversion available")
                             }
+                            .padding(.vertical, 12)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .listRowBackground(
+                                colorScheme.accent.opacity(0.05)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .stroke(colorScheme.accent.opacity(0.2), lineWidth: 2)
+                                    )
+                            )
+                            .accessibilityElement(children: .contain)
                         }
                         .id("result")
                     }
-                    
+
                     // Conversion Controls
                     Section {
-                        // Amount Input
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Amount")
-                                .font(.caption)
-                                .foregroundColor(colorScheme.secondary)
-                                .textCase(.uppercase)
-
-                            NoKeyboardTextField(
-                                text: $inputAmount,
-                                placeholder: "Enter amount (e.g., 1 1/2)",
-                                isFocused: $isKeyboardVisible,
-                                onChange: performConversion
-                            )
-                            .foregroundColor(colorScheme.primaryText)
-                            .accessibilityLabel("Amount to convert")
-                            .accessibilityValue(inputAmount.isEmpty ? "Empty" : amountToWords(inputAmount))
-                            .accessibilityHint("Enter the quantity you want to convert")
-                        }
-                        .listRowBackground(colorScheme.cardBackground)
 
                         // From, Swap, To in horizontal layout
                         if selectedIngredient != nil {
@@ -610,6 +572,7 @@ struct ConversionView: View {
     return NavigationStack {
         ConversionView(preselectedIngredient: flour)
             .modelContainer(container)
+            .environment(\.appColorScheme, .sage)
     }
 }
 
@@ -642,5 +605,6 @@ struct ConversionView: View {
     return NavigationStack {
         ConversionView(preselectedIngredient: apple)
             .modelContainer(container)
+            .environment(\.appColorScheme, .sage)
     }
 }
