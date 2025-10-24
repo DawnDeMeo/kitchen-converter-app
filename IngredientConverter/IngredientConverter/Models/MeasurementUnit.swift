@@ -197,6 +197,41 @@ enum MeasurementUnit: Codable, Hashable {
         }
     }
 
+    // MARK: - Sort Order
+
+    /// Returns a sort order value for displaying units in a logical order
+    /// Lower values appear first
+    var sortOrder: Int {
+        switch self {
+        // Volume units - US cooking measurements (ascending size)
+        case .teaspoon: return 100
+        case .tablespoon: return 110
+        case .fluidOunce: return 120
+        case .cup: return 130
+        case .pint: return 140
+        case .quart: return 150
+        case .gallon: return 160
+
+        // Volume units - metric (ascending size)
+        case .milliliter: return 200
+        case .centiliter: return 210
+        case .liter: return 220
+            
+        // Weight units - imperial (ascending size)
+        case .ounce: return 300
+        case .pound: return 310
+
+        // Weight units - metric (ascending size)
+        case .milligram: return 400
+        case .gram: return 410
+        case .kilogram: return 420
+
+        // Count and other - last
+        case .count: return 900
+        case .other: return 1000
+        }
+    }
+
     // MARK: - Standard Units
 
     static var standardUnits: [MeasurementUnit] {

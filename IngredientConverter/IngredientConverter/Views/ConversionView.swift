@@ -455,7 +455,7 @@ struct ConversionView: View {
             units.formUnion(toSameType)
         }
 
-        return Array(units).sorted { unitDisplayText($0) < unitDisplayText($1) }
+        return Array(units).sorted { $0.sortOrder < $1.sortOrder }
     }
     
     private func unitDisplayText(_ unit: MeasurementUnit, amount: Double? = nil) -> String {

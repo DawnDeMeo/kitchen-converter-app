@@ -112,9 +112,17 @@ struct UnitButton: View {
             VStack(spacing: 6) {
                 // Icon or abbreviation
                 if let symbol = unit.sfSymbol {
-                    Image(systemName: symbol)
-                        .font(.title2)
-                        .foregroundColor(isSelected ? colorScheme.accent : colorScheme.primary)
+                    if unit.usesCustomSymbol {
+                        // Custom symbol from Assets.xcassets
+                        Image(symbol)
+                            .font(.largeTitle)
+                            .foregroundColor(isSelected ? colorScheme.accent : colorScheme.primary)
+                    } else {
+                        // System SF Symbol
+                        Image(systemName: symbol)
+                            .font(.title2)
+                            .foregroundColor(isSelected ? colorScheme.accent : colorScheme.primary)
+                    }
                 } else {
                     Text(unit.displayName)
                         .font(.title3.weight(.medium))
@@ -199,37 +207,56 @@ extension UnitType {
 extension MeasurementUnit {
     var sfSymbol: String? {
         switch self {
-        // Smaller weight units - use scale symbol
-        case .ounce, .gram, .milligram:
-            return "scalemass"
+        // Smaller weight units - use custom weight symbol
+        case .ounce:
+            return "3.weights.l"
+        
+        case .gram:
+            return "3.weights.m"
             
+        case .milligram:
+            return "3.weights.s"
+
         // Larger weight units - use filled scale symbol
-        case .pound, .kilogram:
-            return "scalemass.fill"
-
-        // Smaller liquid volume units - use drop symbol
-        case .milliliter, .centiliter:
-            return "drop"
-
-        // Larger liquid volume units - use filled drop symbol
-        case .fluidOunce, .liter:
-            return "drop.fill"
-
-        // Common cooking measurements - use measuring cup
-        case .cup:
-            return "cup.and.saucer.fill"
+        case .pound:
+            return "weight.lb"
             
-        // Common cooking measurements - use measuring spoon
-        case .tablespoon, .teaspoon:
-            return "spoon.serving"
+        case .kilogram:
+            return "weight.kg"
 
+        // Smaller liquid volume units - use liquid measuring cup symbol
+        case .pint:
+            return "liquid.measure.4"
+            
+        case .fluidOunce:
+            return "liquid.measure.3"
+            
+        case .centiliter:
+            return "liquid.measure.2"
+            
+        case .milliliter:
+            return "liquid.measure.1"
+            
         // Larger volume containers
-        case .pint, .quart:
+        case .liter:
+            return "waterbottle.fill"
+        
+        case .quart:
             return "waterbottle"
+
+        // Common cooking measurements - use measuring cup and spoon symbols
+        case .cup:
+            return "measure.cup.dry.fill"
+
+        case .tablespoon:
+            return "measure.spoon.fill"
             
+        case .teaspoon:
+            return "measure.spoon"
+
         // Larger volume containers
         case .gallon:
-            return "waterbottle.fill"
+            return "jug.fill"
 
         // Count - use number symbol
         case .count:
@@ -240,14 +267,25 @@ extension MeasurementUnit {
             return nil
         }
     }
+
+    // Indicates whether this unit uses a custom symbol from Assets.xcassets
+    var usesCustomSymbol: Bool {
+        switch self {
+        case .other, .count, .quart, .liter:
+            return false
+        default:
+            return true
+        }
+    }
 }
 
 #Preview {
     let units: [MeasurementUnit] = [
         .teaspoon, .tablespoon, .cup, .pint,
-            .quart, .gallon, .liter, .centiliter,
-            .milliliter, .fluidOunce, .pound,
-            .ounce, .gram, .milligram, .kilogram
+        .quart, .gallon, .liter, .centiliter,
+        .milliliter, .fluidOunce, .pound,
+        .ounce, .gram, .milligram, .kilogram,
+        .count(singular: "item", plural: "items"),
     ]
 
     return UnitPickerSheet(
