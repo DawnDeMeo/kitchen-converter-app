@@ -112,17 +112,10 @@ struct UnitButton: View {
             VStack(spacing: 6) {
                 // Icon or abbreviation
                 if let symbol = unit.sfSymbol {
-                    if unit.usesCustomSymbol {
-                        // Custom symbol from Assets.xcassets
-                        Image(symbol)
-                            .font(.largeTitle)
-                            .foregroundColor(isSelected ? colorScheme.accent : colorScheme.primary)
-                    } else {
-                        // System SF Symbol
-                        Image(systemName: symbol)
-                            .font(.title2)
-                            .foregroundColor(isSelected ? colorScheme.accent : colorScheme.primary)
-                    }
+                    // Custom symbol from Assets.xcassets
+                    Image(symbol)
+                        .font(.largeTitle)
+                        .foregroundColor(isSelected ? colorScheme.accent : colorScheme.primary)
                 } else {
                     Text(unit.displayName)
                         .font(.title3.weight(.medium))
@@ -239,20 +232,20 @@ extension MeasurementUnit {
             
         // Larger volume containers
         case .liter:
-            return "waterbottle.fill"
-        
+            return "liter.bottle"
+            
         case .quart:
-            return "waterbottle"
-
+            return "quart.bottle"
+        
         // Common cooking measurements - use measuring cup and spoon symbols
         case .cup:
             return "measure.cup.dry.fill"
 
         case .tablespoon:
-            return "measure.spoon.fill"
+            return "spoons.large.fill"
             
         case .teaspoon:
-            return "measure.spoon"
+            return "spoons.small.fill"
 
         // Larger volume containers
         case .gallon:
@@ -260,31 +253,20 @@ extension MeasurementUnit {
 
         // Count - use number symbol
         case .count:
-            return "number.circle.fill"
+            return "count.circle.fill"
 
         // For .other, use the abbreviation
         case .other:
             return nil
         }
     }
-
-    // Indicates whether this unit uses a custom symbol from Assets.xcassets
-    var usesCustomSymbol: Bool {
-        switch self {
-        case .other, .count, .quart, .liter:
-            return false
-        default:
-            return true
-        }
-    }
 }
 
 #Preview {
     let units: [MeasurementUnit] = [
-        .teaspoon, .tablespoon, .cup, .pint,
-        .quart, .gallon, .liter, .centiliter,
-        .milliliter, .fluidOunce, .pound,
-        .ounce, .gram, .milligram, .kilogram,
+        .teaspoon, .tablespoon, .fluidOunce, .cup,
+        .pint, .quart, .gallon, .milliliter, .centiliter,
+        .liter, .ounce, .pound, .milligram, .gram, .kilogram,
         .count(singular: "item", plural: "items"),
     ]
 
