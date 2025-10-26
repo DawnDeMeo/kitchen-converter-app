@@ -453,14 +453,19 @@ struct SettingsView: View {
                 throw NSError(domain: "Import", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid JSON format"])
             }
 
-            // Fetch existing ingredients to check for duplicates
-            let fetchDescriptor = FetchDescriptor<Ingredient>()
-            let existingIngredients = try modelContext.fetch(fetchDescriptor)
+            // Fetch existing CUSTOM ingredients to check for duplicates
+            // (Allow importing custom ingredients even if default versions exist)
+            let fetchDescriptor = FetchDescriptor<Ingredient>(
+                predicate: #Predicate<Ingredient> { ingredient in
+                    ingredient.isCustom == true
+                }
+            )
+            let existingCustomIngredients = try modelContext.fetch(fetchDescriptor)
 
-            // Create a map of existing ingredient names (case-insensitive) for quick lookup
-            var existingNames = Set<String>()
-            for ingredient in existingIngredients {
-                existingNames.insert(ingredient.name.lowercased())
+            // Create a map of existing custom ingredient names (case-insensitive) for quick lookup
+            var existingCustomNames = Set<String>()
+            for ingredient in existingCustomIngredients {
+                existingCustomNames.insert(ingredient.name.lowercased())
             }
 
             var importedCount = 0
@@ -469,10 +474,10 @@ struct SettingsView: View {
             for ingredientDict in ingredientsArray {
                 guard let name = ingredientDict["name"] as? String else { continue }
 
-                // Check if ingredient already exists (case-insensitive)
-                if existingNames.contains(name.lowercased()) {
+                // Check if custom ingredient with this name already exists (case-insensitive)
+                if existingCustomNames.contains(name.lowercased()) {
                     skippedCount += 1
-                    print("⏭️ Skipping duplicate: \(name)")
+                    print("⏭️ Skipping duplicate custom ingredient: \(name)")
                     continue
                 }
 
@@ -511,7 +516,7 @@ struct SettingsView: View {
 
                 if !(newIngredient.conversions ?? []).isEmpty {
                     modelContext.insert(newIngredient)
-                    existingNames.insert(name.lowercased()) // Add to set for subsequent checks
+                    existingCustomNames.insert(name.lowercased()) // Add to set for subsequent checks
                     importedCount += 1
                 }
             }
