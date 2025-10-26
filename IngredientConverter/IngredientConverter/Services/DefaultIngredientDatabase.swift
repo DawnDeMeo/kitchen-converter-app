@@ -169,7 +169,8 @@ struct DefaultIngredientDatabase {
     }
 
     // Merge new/updated defaults with existing database
-    private static func mergeDefaultIngredients(from ingredientsJSON: IngredientsJSON, context: ModelContext) {
+    // Internal for testing
+    internal static func mergeDefaultIngredients(from ingredientsJSON: IngredientsJSON, context: ModelContext) {
         // Fetch all existing ingredients
         let fetchDescriptor = FetchDescriptor<Ingredient>()
         guard let existingIngredients = try? context.fetch(fetchDescriptor) else {

@@ -5,6 +5,7 @@
 //  Created by Dawn DeMeo on 10/5/25.
 //
 
+import Foundation
 import Testing
 import SwiftData
 @testable import IngredientConverter
