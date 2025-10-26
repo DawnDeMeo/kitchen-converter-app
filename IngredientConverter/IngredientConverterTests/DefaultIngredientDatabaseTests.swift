@@ -27,7 +27,7 @@ struct DefaultIngredientDatabaseTests {
 
         #expect(names.contains("All-purpose flour"))
         #expect(names.contains("Granulated sugar"))
-        #expect(names.contains("Egg, large, no shell"))
+        #expect(names.contains("Large egg, no shell"))
         #expect(names.contains("Graham crackers"))
     }
     
@@ -54,6 +54,7 @@ struct DefaultIngredientDatabaseTests {
         let ingredients = DefaultIngredientDatabase.loadFromJSON()
         let sugar = ingredients.first { $0.name == "Granulated sugar" }
 
+        #expect(sugar != nil, "Granulated sugar should exist in database")
         #expect(sugar?.brand == nil)
     }
     
@@ -69,7 +70,7 @@ struct DefaultIngredientDatabaseTests {
     @Test("Count units load correctly for eggs")
     func eggCountUnitsCorrect() {
         let ingredients = DefaultIngredientDatabase.loadFromJSON()
-        let eggs = ingredients.first { $0.name == "Egg, large, no shell" }
+        let eggs = ingredients.first { $0.name == "Large egg, no shell" }
 
         #expect(eggs != nil, "Eggs should exist in database")
         #expect((eggs?.conversions ?? []).count >= 1, "Eggs should have at least 1 conversion")
