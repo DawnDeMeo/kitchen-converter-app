@@ -81,7 +81,8 @@ struct DefaultIngredientDatabase {
     }
 
     // Remove duplicate default ingredients (happens when multiple devices load defaults before CloudKit syncs)
-    private static func deduplicateDefaultIngredients(context: ModelContext) {
+    // Internal for testing
+    internal static func deduplicateDefaultIngredients(context: ModelContext) {
         let fetchDescriptor = FetchDescriptor<Ingredient>(
             predicate: #Predicate<Ingredient> { ingredient in
                 ingredient.isCustom == false

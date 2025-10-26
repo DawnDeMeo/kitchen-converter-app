@@ -701,4 +701,302 @@ struct DefaultIngredientDatabaseTests {
         #expect(updated.category == "Category Updated")
         #expect(updated.defaultId == "id-a")
     }
+
+    // MARK: - Deduplication Logic Tests
+
+    @Test("Deduplication removes duplicate default ingredients")
+    func deduplicationRemovesDuplicates() {
+        let schema = Schema([Ingredient.self, UnitConversion.self])
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try! ModelContainer(for: schema, configurations: [config])
+        let context = ModelContext(container)
+
+        // Create duplicate default ingredients (same name)
+        let flour1 = Ingredient(
+            name: "Flour",
+            category: "Baking",
+            isCustom: false,
+            defaultId: nil
+        )
+        let flour2 = Ingredient(
+            name: "Flour",
+            category: "Baking",
+            isCustom: false,
+            defaultId: nil
+        )
+        context.insert(flour1)
+        context.insert(flour2)
+        try! context.save()
+
+        // Verify duplicates exist
+        let beforeFetch = FetchDescriptor<Ingredient>()
+        let beforeCount = try! context.fetchCount(beforeFetch)
+        #expect(beforeCount == 2)
+
+        // Run deduplication
+        DefaultIngredientDatabase.deduplicateDefaultIngredients(context: context)
+
+        // Verify only one remains
+        let afterFetch = FetchDescriptor<Ingredient>()
+        let afterCount = try! context.fetchCount(afterFetch)
+        #expect(afterCount == 1)
+    }
+
+    @Test("Deduplication preserves favorited ingredient")
+    func deduplicationPreservesFavorite() {
+        let schema = Schema([Ingredient.self, UnitConversion.self])
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try! ModelContainer(for: schema, configurations: [config])
+        let context = ModelContext(container)
+
+        // Create two duplicates, one favorited
+        let flour1 = Ingredient(
+            name: "Flour",
+            category: "Baking",
+            isCustom: false
+        )
+        flour1.isFavorite = false
+
+        let flour2 = Ingredient(
+            name: "Flour",
+            category: "Baking",
+            isCustom: false
+        )
+        flour2.isFavorite = true
+
+        context.insert(flour1)
+        context.insert(flour2)
+        try! context.save()
+
+        // Run deduplication
+        DefaultIngredientDatabase.deduplicateDefaultIngredients(context: context)
+
+        // Verify favorited one was kept
+        let fetchDescriptor = FetchDescriptor<Ingredient>()
+        let allIngredients = try! context.fetch(fetchDescriptor)
+
+        #expect(allIngredients.count == 1)
+        #expect(allIngredients.first?.isFavorite == true)
+    }
+
+    @Test("Deduplication preserves most recently used ingredient")
+    func deduplicationPreservesRecentlyUsed() {
+        let schema = Schema([Ingredient.self, UnitConversion.self])
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try! ModelContainer(for: schema, configurations: [config])
+        let context = ModelContext(container)
+
+        // Create two duplicates with different usage dates
+        let flour1 = Ingredient(
+            name: "Flour",
+            category: "Baking",
+            isCustom: false
+        )
+        flour1.lastUsedDate = Date(timeIntervalSince1970: 1000000) // Older
+
+        let flour2 = Ingredient(
+            name: "Flour",
+            category: "Baking",
+            isCustom: false
+        )
+        flour2.lastUsedDate = Date(timeIntervalSince1970: 2000000) // Newer
+
+        context.insert(flour1)
+        context.insert(flour2)
+        try! context.save()
+
+        // Run deduplication
+        DefaultIngredientDatabase.deduplicateDefaultIngredients(context: context)
+
+        // Verify most recently used one was kept
+        let fetchDescriptor = FetchDescriptor<Ingredient>()
+        let allIngredients = try! context.fetch(fetchDescriptor)
+
+        #expect(allIngredients.count == 1)
+        #expect(allIngredients.first?.lastUsedDate == Date(timeIntervalSince1970: 2000000))
+    }
+
+    @Test("Deduplication doesn't affect custom ingredients")
+    func deduplicationDoesntAffectCustom() {
+        let schema = Schema([Ingredient.self, UnitConversion.self])
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try! ModelContainer(for: schema, configurations: [config])
+        let context = ModelContext(container)
+
+        // Create duplicate default ingredients
+        let defaultFlour1 = Ingredient(
+            name: "Flour",
+            category: "Baking",
+            isCustom: false
+        )
+        let defaultFlour2 = Ingredient(
+            name: "Flour",
+            category: "Baking",
+            isCustom: false
+        )
+
+        // Create duplicate custom ingredients (should not be touched)
+        let customFlour1 = Ingredient(
+            name: "Custom Flour",
+            category: "Custom",
+            brand: "Brand A",
+            isCustom: true
+        )
+        let customFlour2 = Ingredient(
+            name: "Custom Flour",
+            category: "Custom",
+            brand: "Brand B",
+            isCustom: true
+        )
+
+        context.insert(defaultFlour1)
+        context.insert(defaultFlour2)
+        context.insert(customFlour1)
+        context.insert(customFlour2)
+        try! context.save()
+
+        // Run deduplication
+        DefaultIngredientDatabase.deduplicateDefaultIngredients(context: context)
+
+        // Verify defaults were deduplicated but customs were not
+        let allFetch = FetchDescriptor<Ingredient>()
+        let allIngredients = try! context.fetch(allFetch)
+
+        let defaults = allIngredients.filter { !$0.isCustom }
+        let customs = allIngredients.filter { $0.isCustom }
+
+        #expect(defaults.count == 1, "Default duplicates should be removed")
+        #expect(customs.count == 2, "Custom duplicates should remain")
+    }
+
+    @Test("Deduplication is case-insensitive")
+    func deduplicationCaseInsensitive() {
+        let schema = Schema([Ingredient.self, UnitConversion.self])
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try! ModelContainer(for: schema, configurations: [config])
+        let context = ModelContext(container)
+
+        // Create duplicates with different casing
+        let flour1 = Ingredient(
+            name: "flour",
+            category: "Baking",
+            isCustom: false
+        )
+        let flour2 = Ingredient(
+            name: "Flour",
+            category: "Baking",
+            isCustom: false
+        )
+        let flour3 = Ingredient(
+            name: "FLOUR",
+            category: "Baking",
+            isCustom: false
+        )
+
+        context.insert(flour1)
+        context.insert(flour2)
+        context.insert(flour3)
+        try! context.save()
+
+        // Run deduplication
+        DefaultIngredientDatabase.deduplicateDefaultIngredients(context: context)
+
+        // Verify only one remains
+        let fetchDescriptor = FetchDescriptor<Ingredient>()
+        let allIngredients = try! context.fetch(fetchDescriptor)
+
+        #expect(allIngredients.count == 1)
+    }
+
+    @Test("Deduplication priority: favorite > recently used > first")
+    func deduplicationPriority() {
+        let schema = Schema([Ingredient.self, UnitConversion.self])
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try! ModelContainer(for: schema, configurations: [config])
+        let context = ModelContext(container)
+
+        // Create three duplicates:
+        // 1. First inserted, not favorite, no usage
+        let flour1 = Ingredient(
+            name: "Flour",
+            category: "Baking",
+            isCustom: false
+        )
+
+        // 2. Second, not favorite, recently used
+        let flour2 = Ingredient(
+            name: "Flour",
+            category: "Baking",
+            isCustom: false
+        )
+        flour2.lastUsedDate = Date()
+
+        // 3. Third, favorited (highest priority)
+        let flour3 = Ingredient(
+            name: "Flour",
+            category: "Baking",
+            isCustom: false
+        )
+        flour3.isFavorite = true
+
+        context.insert(flour1)
+        context.insert(flour2)
+        context.insert(flour3)
+        try! context.save()
+
+        let flour3Id = flour3.id
+
+        // Run deduplication
+        DefaultIngredientDatabase.deduplicateDefaultIngredients(context: context)
+
+        // Verify favorited one was kept (highest priority)
+        let fetchDescriptor = FetchDescriptor<Ingredient>()
+        let allIngredients = try! context.fetch(fetchDescriptor)
+
+        #expect(allIngredients.count == 1)
+        #expect(allIngredients.first?.id == flour3Id)
+        #expect(allIngredients.first?.isFavorite == true)
+    }
+
+    @Test("Deduplication handles multiple different duplicate groups")
+    func deduplicationMultipleGroups() {
+        let schema = Schema([Ingredient.self, UnitConversion.self])
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try! ModelContainer(for: schema, configurations: [config])
+        let context = ModelContext(container)
+
+        // Create duplicates for "Flour"
+        let flour1 = Ingredient(name: "Flour", isCustom: false)
+        let flour2 = Ingredient(name: "Flour", isCustom: false)
+
+        // Create duplicates for "Sugar"
+        let sugar1 = Ingredient(name: "Sugar", isCustom: false)
+        let sugar2 = Ingredient(name: "Sugar", isCustom: false)
+        let sugar3 = Ingredient(name: "Sugar", isCustom: false)
+
+        // Create unique ingredient
+        let salt = Ingredient(name: "Salt", isCustom: false)
+
+        context.insert(flour1)
+        context.insert(flour2)
+        context.insert(sugar1)
+        context.insert(sugar2)
+        context.insert(sugar3)
+        context.insert(salt)
+        try! context.save()
+
+        // Run deduplication
+        DefaultIngredientDatabase.deduplicateDefaultIngredients(context: context)
+
+        // Should have 3 ingredients: 1 flour, 1 sugar, 1 salt
+        let fetchDescriptor = FetchDescriptor<Ingredient>()
+        let allIngredients = try! context.fetch(fetchDescriptor)
+
+        #expect(allIngredients.count == 3)
+
+        let ingredientNames = Set(allIngredients.map { $0.name })
+        #expect(ingredientNames.contains("Flour"))
+        #expect(ingredientNames.contains("Sugar"))
+        #expect(ingredientNames.contains("Salt"))
+    }
 }
