@@ -249,4 +249,74 @@ struct ConversionEngineTests {
         #expect(result != nil, "Conversion should succeed")
         #expect(abs(result! - 3.0) < 0.01, "Result should be approximately 3 teaspoons")
     }
+
+    @Test("Same-type volume conversion is exact - cup to tablespoon")
+    func sameTypeVolumeConversionExact() {
+        let engine = ConversionEngine()
+        let ingredient = Ingredient(name: "Flour")
+
+        // Add a cross-type conversion (shouldn't affect volume-to-volume)
+        let conversion = UnitConversion(
+            fromAmount: 1,
+            fromUnit: .cup,
+            toAmount: 120,
+            toUnit: .gram
+        )
+        if ingredient.conversions == nil {
+            ingredient.conversions = []
+        }
+        ingredient.conversions?.append(conversion)
+
+        // Convert cup to tablespoon - should be exactly 16
+        let result = engine.convert(amount: 1, from: .cup, to: .tablespoon, for: ingredient)
+
+        #expect(result == 16.0, "1 cup should equal exactly 16 tablespoons, got \(result ?? 0)")
+    }
+
+    @Test("Same-type volume conversion is exact - tablespoon to cup")
+    func sameTypeVolumeConversionExactReverse() {
+        let engine = ConversionEngine()
+        let ingredient = Ingredient(name: "Sugar")
+
+        // Add a cross-type conversion
+        let conversion = UnitConversion(
+            fromAmount: 1,
+            fromUnit: .cup,
+            toAmount: 200,
+            toUnit: .gram
+        )
+        if ingredient.conversions == nil {
+            ingredient.conversions = []
+        }
+        ingredient.conversions?.append(conversion)
+
+        // Convert tablespoon to cup - should be exactly 1/16
+        let result = engine.convert(amount: 16, from: .tablespoon, to: .cup, for: ingredient)
+
+        #expect(result == 1.0, "16 tablespoons should equal exactly 1 cup, got \(result ?? 0)")
+    }
+
+    @Test("Same-type weight conversion is exact - gram to ounce")
+    func sameTypeWeightConversionExact() {
+        let engine = ConversionEngine()
+        let ingredient = Ingredient(name: "Salt")
+
+        // Add a cross-type conversion
+        let conversion = UnitConversion(
+            fromAmount: 1,
+            fromUnit: .teaspoon,
+            toAmount: 6,
+            toUnit: .gram
+        )
+        if ingredient.conversions == nil {
+            ingredient.conversions = []
+        }
+        ingredient.conversions?.append(conversion)
+
+        // Convert 28.349523125 grams to ounce - should be exactly 1
+        let result = engine.convert(amount: 28.349523125, from: .gram, to: .ounce, for: ingredient)
+
+        #expect(result != nil, "Conversion should succeed")
+        #expect(abs(result! - 1.0) < 0.0001, "28.349523125 grams should equal 1 ounce")
+    }
 }
