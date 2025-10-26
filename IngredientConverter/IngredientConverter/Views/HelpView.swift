@@ -287,9 +287,15 @@ struct HelpView: View {
                         .font(.subheadline)
                         .foregroundColor(colorScheme.secondaryText)
 
-                    Text("Check the app's repository or contact support")
-                        .font(.caption)
-                        .foregroundColor(colorScheme.secondaryText)
+                    Link(destination: URL(string: "mailto:dawndemeoapps@gmail.com?subject=Ingredient%20Converter%20Support")!) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "envelope.fill")
+                                .font(.caption)
+                            Text("Contact Support")
+                                .font(.caption)
+                        }
+                        .foregroundColor(colorScheme.accent)
+                    }
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.top, 20)
