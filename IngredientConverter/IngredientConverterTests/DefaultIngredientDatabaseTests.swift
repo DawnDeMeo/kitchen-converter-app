@@ -443,4 +443,262 @@ struct DefaultIngredientDatabaseTests {
         #expect(custom?.brand == "Custom Brand")
         #expect(custom?.isCustom == true)
     }
+
+    // MARK: - Rename Handling Tests
+
+    @Test("Multiple ingredients renamed in same update")
+    func multipleIngredientsRenamed() {
+        let schema = Schema([Ingredient.self, UnitConversion.self])
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try! ModelContainer(for: schema, configurations: [config])
+        let context = ModelContext(container)
+
+        // Create existing ingredients with old names
+        let apricots = Ingredient(
+            name: "Apricots, dried",
+            category: "Dried Fruit",
+            isCustom: false,
+            defaultId: "apricot-id"
+        )
+        let cranberries = Ingredient(
+            name: "Cranberries, dried",
+            category: "Dried Fruit",
+            isCustom: false,
+            defaultId: "cranberry-id"
+        )
+        context.insert(apricots)
+        context.insert(cranberries)
+        try! context.save()
+
+        // Create JSON with new names for both
+        let json1 = IngredientJSON(
+            id: "apricot-id",
+            name: "Dried apricots",
+            category: "Fruit",
+            brand: nil,
+            conversions: []
+        )
+        let json2 = IngredientJSON(
+            id: "cranberry-id",
+            name: "Dried cranberries",
+            category: "Fruit",
+            brand: nil,
+            conversions: []
+        )
+        let ingredientsJSON = IngredientsJSON(version: 2, ingredients: [json1, json2])
+
+        // Perform merge
+        DefaultIngredientDatabase.mergeDefaultIngredients(from: ingredientsJSON, context: context)
+
+        // Fetch all ingredients
+        let fetchDescriptor = FetchDescriptor<Ingredient>()
+        let allIngredients = try! context.fetch(fetchDescriptor)
+
+        // Should still only have 2 ingredients (renamed, not duplicated)
+        #expect(allIngredients.count == 2)
+
+        // Check both were renamed
+        let updatedApricots = allIngredients.first { $0.defaultId == "apricot-id" }
+        let updatedCranberries = allIngredients.first { $0.defaultId == "cranberry-id" }
+
+        #expect(updatedApricots?.name == "Dried apricots")
+        #expect(updatedCranberries?.name == "Dried cranberries")
+    }
+
+    @Test("Rename with simultaneous category change")
+    func renameWithCategoryChange() {
+        let schema = Schema([Ingredient.self, UnitConversion.self])
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try! ModelContainer(for: schema, configurations: [config])
+        let context = ModelContext(container)
+
+        // Create existing ingredient
+        let existing = Ingredient(
+            name: "Chocolate chips, semisweet",
+            category: "Baking",
+            isCustom: false,
+            defaultId: "choc-chip-id"
+        )
+        context.insert(existing)
+        try! context.save()
+
+        // Create JSON with both name and category change
+        let json = IngredientJSON(
+            id: "choc-chip-id",
+            name: "Semisweet chocolate chips",
+            category: "Chocolate",
+            brand: nil,
+            conversions: []
+        )
+        let ingredientsJSON = IngredientsJSON(version: 2, ingredients: [json])
+
+        // Perform merge
+        DefaultIngredientDatabase.mergeDefaultIngredients(from: ingredientsJSON, context: context)
+
+        // Fetch and verify
+        let fetchDescriptor = FetchDescriptor<Ingredient>()
+        let allIngredients = try! context.fetch(fetchDescriptor)
+
+        #expect(allIngredients.count == 1)
+
+        let updated = allIngredients.first!
+        #expect(updated.name == "Semisweet chocolate chips")
+        #expect(updated.category == "Chocolate")
+        #expect(updated.defaultId == "choc-chip-id")
+    }
+
+    @Test("Rename doesn't affect custom ingredients with old name")
+    func renameDoesntAffectCustomWithOldName() {
+        let schema = Schema([Ingredient.self, UnitConversion.self])
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try! ModelContainer(for: schema, configurations: [config])
+        let context = ModelContext(container)
+
+        // Create default ingredient with old name
+        let defaultIng = Ingredient(
+            name: "Apricots, dried",
+            category: "Dried Fruit",
+            isCustom: false,
+            defaultId: "apricot-id"
+        )
+        context.insert(defaultIng)
+
+        // Create custom ingredient with same old name
+        let customIng = Ingredient(
+            name: "Apricots, dried",
+            category: "Custom",
+            brand: "Organic Brand",
+            isCustom: true,
+            defaultId: nil
+        )
+        context.insert(customIng)
+        try! context.save()
+
+        // Rename the default ingredient
+        let json = IngredientJSON(
+            id: "apricot-id",
+            name: "Dried apricots",
+            category: "Fruit",
+            brand: nil,
+            conversions: []
+        )
+        let ingredientsJSON = IngredientsJSON(version: 2, ingredients: [json])
+
+        // Perform merge
+        DefaultIngredientDatabase.mergeDefaultIngredients(from: ingredientsJSON, context: context)
+
+        // Fetch all ingredients
+        let fetchDescriptor = FetchDescriptor<Ingredient>()
+        let allIngredients = try! context.fetch(fetchDescriptor)
+
+        #expect(allIngredients.count == 2)
+
+        let defaultIngredient = allIngredients.first { !$0.isCustom }
+        let customIngredient = allIngredients.first { $0.isCustom }
+
+        // Default should be renamed
+        #expect(defaultIngredient?.name == "Dried apricots")
+        #expect(defaultIngredient?.defaultId == "apricot-id")
+
+        // Custom should retain old name
+        #expect(customIngredient?.name == "Apricots, dried")
+        #expect(customIngredient?.brand == "Organic Brand")
+    }
+
+    @Test("Backward compatibility: ingredients without IDs still work")
+    func backwardCompatibilityWithoutIds() {
+        let schema = Schema([Ingredient.self, UnitConversion.self])
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try! ModelContainer(for: schema, configurations: [config])
+        let context = ModelContext(container)
+
+        // Create old-style ingredients without defaultIds
+        let ingredient1 = Ingredient(
+            name: "Old Ingredient 1",
+            category: "Test",
+            isCustom: false,
+            defaultId: nil
+        )
+        let ingredient2 = Ingredient(
+            name: "Old Ingredient 2",
+            category: "Test",
+            isCustom: false,
+            defaultId: nil
+        )
+        context.insert(ingredient1)
+        context.insert(ingredient2)
+        try! context.save()
+
+        // Update using name-based matching (no IDs in JSON)
+        let json1 = IngredientJSON(
+            id: nil,
+            name: "Old Ingredient 1",
+            category: "Updated",
+            brand: nil,
+            conversions: []
+        )
+        let json2 = IngredientJSON(
+            id: nil,
+            name: "Old Ingredient 2",
+            category: "Updated",
+            brand: nil,
+            conversions: []
+        )
+        let ingredientsJSON = IngredientsJSON(version: 2, ingredients: [json1, json2])
+
+        // Perform merge
+        DefaultIngredientDatabase.mergeDefaultIngredients(from: ingredientsJSON, context: context)
+
+        // Should still work via name matching
+        let fetchDescriptor = FetchDescriptor<Ingredient>()
+        let allIngredients = try! context.fetch(fetchDescriptor)
+
+        #expect(allIngredients.count == 2)
+
+        for ingredient in allIngredients {
+            #expect(ingredient.category == "Updated")
+        }
+    }
+
+    @Test("ID takes precedence over name when both match")
+    func idTakesPrecedenceOverName() {
+        let schema = Schema([Ingredient.self, UnitConversion.self])
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try! ModelContainer(for: schema, configurations: [config])
+        let context = ModelContext(container)
+
+        // Create ingredient A with ID
+        let ingredientA = Ingredient(
+            name: "Ingredient A",
+            category: "Category A",
+            isCustom: false,
+            defaultId: "id-a"
+        )
+        context.insert(ingredientA)
+        try! context.save()
+
+        // Create JSON with ID that matches A, but name that would create confusion
+        let json = IngredientJSON(
+            id: "id-a",
+            name: "Ingredient A Renamed",
+            category: "Category Updated",
+            brand: nil,
+            conversions: []
+        )
+        let ingredientsJSON = IngredientsJSON(version: 2, ingredients: [json])
+
+        // Perform merge
+        DefaultIngredientDatabase.mergeDefaultIngredients(from: ingredientsJSON, context: context)
+
+        // Should match by ID and rename
+        let fetchDescriptor = FetchDescriptor<Ingredient>()
+        let allIngredients = try! context.fetch(fetchDescriptor)
+
+        #expect(allIngredients.count == 1)
+
+        let updated = allIngredients.first!
+        #expect(updated.name == "Ingredient A Renamed")
+        #expect(updated.category == "Category Updated")
+        #expect(updated.defaultId == "id-a")
+    }
 }
