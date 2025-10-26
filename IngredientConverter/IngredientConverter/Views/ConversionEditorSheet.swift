@@ -100,7 +100,7 @@ struct ConversionEditorSheet: View {
 
                     Section {
                         Picker("Unit Type", selection: $toUnitType) {
-                            ForEach(allowedToUnitTypes, id: \.self) { type in
+                            ForEach(UnitInputType.allCases, id: \.self) { type in
                                 Text(type.rawValue).tag(type)
                             }
                         }
@@ -211,6 +211,7 @@ struct ConversionEditorSheet: View {
                     Button("Save") {
                         saveConversion()
                     }
+                    .disabled(fromUnitType == toUnitType)
                 }
             }
             .alert("Error", isPresented: $showingError) {
@@ -231,11 +232,6 @@ struct ConversionEditorSheet: View {
             }
         }
 
-    // Available "To" unit types based on "From" selection
-    private var allowedToUnitTypes: [UnitInputType] {
-        UnitInputType.allCases.filter { $0 != fromUnitType }
-    }
-    
     private func handleFromUnitTypeChange(from oldType: UnitInputType, to newType: UnitInputType) {
         // Update default unit when type changes
         switch newType {
@@ -245,14 +241,6 @@ struct ConversionEditorSheet: View {
             fromUnit = .gram
         case .count:
             break
-        }
-        
-        // If "to" type is now the same as "from", switch it
-        if toUnitType == newType {
-            // Pick the first different type
-            if let differentType = UnitInputType.allCases.first(where: { $0 != newType }) {
-                toUnitType = differentType
-            }
         }
     }
 
