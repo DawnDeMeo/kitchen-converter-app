@@ -248,6 +248,14 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    NavigationLink {
+                        HelpView()
+                    } label: {
+                        Label("Help & FAQ", systemImage: "questionmark.circle")
+                            .foregroundColor(colorScheme.primary)
+                    }
+                    .listRowBackground(colorScheme.cardBackground)
+
                     Link(destination: URL(string: "mailto:dawndemeoapps@gmail.com?subject=Ingredient%20Converter%20Feedback")!) {
                         HStack {
                             Label("Send Feedback", systemImage: "envelope")
@@ -263,7 +271,7 @@ struct SettingsView: View {
                     Text("Support")
                         .foregroundColor(colorScheme.secondary)
                 } footer: {
-                    Text("Report bugs, suggest features, or share your feedback.")
+                    Text("Get help using the app or send us feedback.")
                         .foregroundColor(colorScheme.secondaryText)
                 }
 
