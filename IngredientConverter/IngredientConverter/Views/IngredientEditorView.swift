@@ -12,10 +12,11 @@ struct IngredientEditorView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(\.appColorScheme) private var colorScheme
+    @Query private var allIngredients: [Ingredient]
 
     let ingredientToEdit: Ingredient?
     let onDismiss: (() -> Void)?
-    
+
     @State private var name: String = ""
     @State private var brand: String = ""
     @State private var category: String = "Other"
@@ -26,23 +27,18 @@ struct IngredientEditorView: View {
     @State private var showingError = false
     @State private var errorMessage = ""
 
-    // Available categories matching the database
-    private let availableCategories = [
-        "Baking",
-        "Chocolate",
-        "Dairy",
-        "Dried Fruit",
-        "Egg",
-        "Fat",
-        "Flour",
-        "Fruit",
-        "Grain",
-        "Nut",
-        "Other",
-        "Spice",
-        "Sugar",
-        "Vegetable"
-    ]
+    // Dynamically get available categories from database
+    private var availableCategories: [String] {
+        let categories = Set(allIngredients.compactMap { $0.category })
+        var sortedCategories = Array(categories).sorted()
+
+        // Always include "Other" as a fallback option
+        if !sortedCategories.contains("Other") {
+            sortedCategories.append("Other")
+        }
+
+        return sortedCategories
+    }
     
     var isEditing: Bool {
         ingredientToEdit != nil
