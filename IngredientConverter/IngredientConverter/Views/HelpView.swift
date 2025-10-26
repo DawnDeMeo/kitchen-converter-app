@@ -93,8 +93,8 @@ struct HelpView: View {
                 } content: {
                     VStack(alignment: .leading, spacing: 12) {
                         HelpItem(
-                            question: "Why can't I convert cups to tablespoons for all ingredients?",
-                            answer: "You can! Volume-to-volume (cups ↔ tablespoons) and weight-to-weight (grams ↔ ounces) conversions work universally for all ingredients. The app uses these automatically."
+                            question: "Can I convert between the same unit types?",
+                            answer: "Yes! Volume-to-volume (cups ↔ tablespoons) and weight-to-weight (grams ↔ ounces) conversions use standard measurements that are the same for all ingredients. For example, 1 cup always equals 16 tablespoons, regardless of the ingredient."
                         )
 
                         HelpItem(
@@ -212,7 +212,7 @@ struct HelpView: View {
 
                         HelpItem(
                             question: "How do I change the app theme?",
-                            answer: "Go to Settings → Appearance → Color Scheme. Choose from Sage (green), Lavender (purple), or System (follows your device's dark/light mode)."
+                            answer: "Go to Settings → Appearance → Color Scheme. Choose from Sage (green), Lavender (purple), or one of the other available color schemes."
                         )
 
                         HelpItem(
@@ -233,8 +233,8 @@ struct HelpView: View {
                 } content: {
                     VStack(alignment: .leading, spacing: 12) {
                         HelpItem(
-                            question: "A conversion isn't working. Why?",
-                            answer: "Make sure you're trying to convert between different unit types. For example, you can't convert cups to milliliters for a specific ingredient (that's universal). You need cross-type conversions like cups to grams."
+                            question: "A conversion returns nil or doesn't work. Why?",
+                            answer: "If a conversion returns no result, the ingredient may not have the necessary conversion data. For example, to convert cups to grams, the ingredient needs a volume-to-weight conversion defined. Volume-to-volume and weight-to-weight conversions always work using standard measurements."
                         )
 
                         HelpItem(

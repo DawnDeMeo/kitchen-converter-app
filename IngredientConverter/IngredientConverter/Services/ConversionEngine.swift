@@ -28,21 +28,20 @@ class ConversionEngine {
             return amount
         }
 
-        // Check cache for previously computed conversion ratio
-        let cacheKey = CacheKey(ingredientID: ingredient.id, fromUnit: from, toUnit: to)
-        if let cachedRatio = conversionCache[cacheKey] {
-            return amount * cachedRatio
-        }
-
-        // If both units are the same type (both volume or both weight), use Foundation's conversion
+        // If both units are the same type (both volume or both weight), ALWAYS use Foundation's standard conversion
+        // This ensures precise conversions (e.g., 1 cup = exactly 16 tablespoons)
+        // We check this BEFORE the cache to prevent imprecise chained conversions from being cached
         if from.type == to.type, from.type == .volume || from.type == .weight {
             if let result = UnitConversionHelper.convert(amount: amount, from: from, to: to) {
-                // Cache the ratio for future conversions
-                let ratio = result / amount
-                conversionCache[cacheKey] = ratio
                 return result
             }
             return nil
+        }
+
+        // Check cache for previously computed conversion ratio (only for cross-type conversions)
+        let cacheKey = CacheKey(ingredientID: ingredient.id, fromUnit: from, toUnit: to)
+        if let cachedRatio = conversionCache[cacheKey] {
+            return amount * cachedRatio
         }
 
         // Try direct conversion
