@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 3,
   "ingredients": [
     {
       "name": "Active dry yeast",
@@ -11,6 +11,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "e8f72226-cbc9-4797-9f04-6f1133eb242f",
       "category": "Baking"
     },
     {
@@ -23,6 +24,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "095716ee-bf0e-401d-b103-70bda2949340",
       "category": "Baking"
     },
     {
@@ -35,6 +37,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "09865fa5-da84-4e2b-b8a9-ad513ed8ca85",
       "category": "Baking"
     },
     {
@@ -47,6 +50,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "8921d23c-dbbd-4d0a-985d-a964cfb7bba2",
       "category": "Baking"
     },
     {
@@ -59,6 +63,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "d2b6b48a-486c-4377-9d01-2e44f10f372e",
       "category": "Baking"
     },
     {
@@ -71,6 +76,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "492139b7-c046-432e-b0c2-a5428d415766",
       "category": "Baking"
     },
     {
@@ -83,6 +89,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "362717fa-2806-49f4-a11f-9ce9b0dc02b8",
       "category": "Baking"
     },
     {
@@ -95,6 +102,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "de42ecc4-40c5-49e2-802d-4d59f08cf3b8",
       "category": "Chocolate"
     },
     {
@@ -107,6 +115,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "a6310e68-61e1-477c-9a59-d37a041f250c",
       "category": "Chocolate"
     },
     {
@@ -125,7 +134,131 @@
           "toUnit": "gram"
         }
       ],
+      "id": "07eef50c-6994-4fdd-9432-7564cb468ea0",
       "category": "Chocolate"
+    },
+    {
+      "name": "Balsamic vinegar",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "tablespoon",
+          "toAmount": 16.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "a374a888-af17-4f1f-a170-9b3ff55db161",
+      "category": "Condiments & Sauces"
+    },
+    {
+      "name": "Cider vinegar",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "tablespoon",
+          "toAmount": 14.9,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "5aecfd2b-0751-4eab-b127-4ac1e19f08f1",
+      "category": "Condiments & Sauces"
+    },
+    {
+      "name": "Distilled vinegar",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "tablespoon",
+          "toAmount": 14.9,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "01b63c36-215d-4e67-b0fc-006f79ac2132",
+      "category": "Condiments & Sauces"
+    },
+    {
+      "name": "Hoisin sauce",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "tablespoon",
+          "toAmount": 16.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "cfe0f666-68f3-4490-95fc-2b8206626ee5",
+      "category": "Condiments & Sauces"
+    },
+    {
+      "name": "Ketchup",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "tablespoon",
+          "toAmount": 17.0,
+          "toUnit": "gram"
+        },
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 240.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "b9af0b17-d6f6-4fef-9eea-694474be3994",
+      "category": "Condiments & Sauces"
+    },
+    {
+      "name": "Oyster sauce",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "tablespoon",
+          "toAmount": 18.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "9ee3249d-7771-4d2f-bc80-12eb1ecfdf85",
+      "category": "Condiments & Sauces"
+    },
+    {
+      "name": "Red wine vinegar",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "tablespoon",
+          "toAmount": 14.9,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "36878cb6-8dff-49ae-b42a-12121c05966a",
+      "category": "Condiments & Sauces"
+    },
+    {
+      "name": "Soy sauce",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "tablespoon",
+          "toAmount": 16.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "ce98492f-0a72-4c25-841e-2f9005b6b268",
+      "category": "Condiments & Sauces"
+    },
+    {
+      "name": "Tomato paste",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "tablespoon",
+          "toAmount": 16.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "7f151f4e-8044-4e51-842b-ccf826bf6074",
+      "category": "Condiments & Sauces"
     },
     {
       "name": "Buttermilk",
@@ -137,18 +270,7 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Dairy"
-    },
-    {
-      "name": "Cheese, shredded",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 4.0,
-          "toUnit": "ounce"
-        }
-      ],
+      "id": "ffb80247-ed76-4c23-9d80-57e7dfe1cc4f",
       "category": "Dairy"
     },
     {
@@ -167,6 +289,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "8f8a5d54-1ae6-49bb-97d8-d529fc774f1a",
       "category": "Dairy"
     },
     {
@@ -179,6 +302,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "c6a4b2c7-5acb-442d-88b7-d88fd49f0b99",
       "category": "Dairy"
     },
     {
@@ -197,6 +321,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "168efc36-783b-432b-85c2-7e25c1a5586f",
       "category": "Dairy"
     },
     {
@@ -209,6 +334,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "80ba2d0f-3066-4e3f-88df-fa0eacc62b21",
       "category": "Dairy"
     },
     {
@@ -221,6 +347,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "9dc3f147-27b3-4a00-b0ef-e5a5442a139e",
       "category": "Dairy"
     },
     {
@@ -233,6 +360,20 @@
           "toUnit": "gram"
         }
       ],
+      "id": "53596d7f-f208-469e-94bb-922a9a941f4d",
+      "category": "Dairy"
+    },
+    {
+      "name": "Shredded cheese",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 4.0,
+          "toUnit": "ounce"
+        }
+      ],
+      "id": "7d709622-7fbc-4a11-8eaa-a598c04c680c",
       "category": "Dairy"
     },
     {
@@ -245,6 +386,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "f2a29aed-f034-443c-8a58-3daa02c9c31a",
       "category": "Dairy"
     },
     {
@@ -263,92 +405,29 @@
           "toUnit": "gram"
         }
       ],
+      "id": "77e291df-2cb3-44ba-bef2-a91677056d0e",
       "category": "Dairy"
     },
     {
-      "name": "Apricots, dried",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 130.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Dried Fruit"
-    },
-    {
-      "name": "Cranberries, dried",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 160.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Dried Fruit"
-    },
-    {
-      "name": "Dates, chopped",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 147.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Dried Fruit"
-    },
-    {
-      "name": "Raisins",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 165.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Dried Fruit"
-    },
-    {
-      "name": "Egg white, large",
+      "name": "Duck egg, no shell",
       "conversions": [
         {
           "fromAmount": 1.0,
           "fromUnit": {
             "count": {
-              "singular": "white",
-              "plural": "whites"
+              "singular": "egg",
+              "plural": "eggs"
             }
           },
-          "toAmount": 33.0,
+          "toAmount": 70.0,
           "toUnit": "gram"
         }
       ],
-      "category": "Egg"
+      "id": "75550a7f-f4d9-47ac-a944-2e9ed78df045",
+      "category": "Eggs"
     },
     {
-      "name": "Egg yolk, large",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": {
-            "count": {
-              "singular": "yolk",
-              "plural": "yolks"
-            }
-          },
-          "toAmount": 17.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Egg"
-    },
-    {
-      "name": "Egg, extra large, no shell",
+      "name": "Extra large egg, no shell",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -362,27 +441,29 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Egg"
+      "id": "d41c8473-3233-41ab-a597-e1d57ac4935f",
+      "category": "Eggs"
     },
     {
-      "name": "Egg, large, no shell",
+      "name": "Large egg white",
       "conversions": [
         {
           "fromAmount": 1.0,
           "fromUnit": {
             "count": {
-              "singular": "egg",
-              "plural": "eggs"
+              "singular": "white",
+              "plural": "whites"
             }
           },
-          "toAmount": 50.0,
+          "toAmount": 33.0,
           "toUnit": "gram"
         }
       ],
-      "category": "Egg"
+      "id": "e58826ac-4f5c-4932-b513-671fb43da58f",
+      "category": "Eggs"
     },
     {
-      "name": "Egg, large, with shell",
+      "name": "Large egg with shell",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -396,10 +477,47 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Egg"
+      "id": "029a37ac-6b6c-41f7-a1e1-cec05ed077b7",
+      "category": "Eggs"
     },
     {
-      "name": "Egg, medium, no shell",
+      "name": "Large egg yolk",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": {
+            "count": {
+              "singular": "yolk",
+              "plural": "yolks"
+            }
+          },
+          "toAmount": 17.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "89134007-3631-4995-a241-74ac6b51eabf",
+      "category": "Eggs"
+    },
+    {
+      "name": "Large egg, no shell",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": {
+            "count": {
+              "singular": "egg",
+              "plural": "eggs"
+            }
+          },
+          "toAmount": 50.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "29465dd1-c5f4-4474-a010-93bd697c9a81",
+      "category": "Eggs"
+    },
+    {
+      "name": "Medium egg, no shell",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -413,7 +531,8 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Egg"
+      "id": "8343748a-6d6b-411c-b32b-9853671efc62",
+      "category": "Eggs"
     },
     {
       "name": "Butter",
@@ -448,7 +567,8 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Fat"
+      "id": "5cb3db11-254b-496b-a47e-76ea0ad13cc5",
+      "category": "Fats"
     },
     {
       "name": "Coconut oil",
@@ -460,7 +580,8 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Fat"
+      "id": "cc1b3085-713d-4527-bdcf-0c2bd095bb37",
+      "category": "Fats"
     },
     {
       "name": "Lard",
@@ -472,7 +593,27 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Fat"
+      "id": "e5eadac5-cfae-4e0b-86ea-3bf225f08366",
+      "category": "Fats"
+    },
+    {
+      "name": "Mayonnaise",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "tablespoon",
+          "toAmount": 13.8,
+          "toUnit": "gram"
+        },
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 220.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "8689e77b-a124-4898-8155-f6a64f8a0fcf",
+      "category": "Fats"
     },
     {
       "name": "Olive oil",
@@ -490,7 +631,8 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Fat"
+      "id": "58733b46-e7ed-4071-801b-b54d7c60f7a5",
+      "category": "Fats"
     },
     {
       "name": "Shortening",
@@ -502,7 +644,8 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Fat"
+      "id": "0504c1fd-bc1b-43b7-9899-79f5ee929064",
+      "category": "Fats"
     },
     {
       "name": "Vegetable oil",
@@ -520,7 +663,8 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Fat"
+      "id": "a835fa1f-fad5-4cad-be1a-4cf7793dfee2",
+      "category": "Fats"
     },
     {
       "name": "All-purpose flour",
@@ -538,6 +682,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "f1070ed1-0415-4d79-b8b3-9535615a55c4",
       "category": "Flour"
     },
     {
@@ -550,6 +695,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "a7963310-ab73-4e12-8348-ed4346c1ba11",
       "category": "Flour"
     },
     {
@@ -562,6 +708,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "e3d8bb92-cf09-429a-aa8a-91abece24c35",
       "category": "Flour"
     },
     {
@@ -574,6 +721,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "a055e0f8-8952-4acb-9d3b-e59c5b8ca0db",
       "category": "Flour"
     },
     {
@@ -586,6 +734,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "bfcd8ca8-150a-4605-a636-77350c364833",
       "category": "Flour"
     },
     {
@@ -598,6 +747,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "10a4a321-e109-4203-8403-3a950cf6b221",
       "category": "Flour"
     },
     {
@@ -610,6 +760,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "e38b5699-d55e-47b5-9831-2f793abaf74f",
       "category": "Flour"
     },
     {
@@ -622,6 +773,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "d89dec3f-e39e-4560-b257-327ff07e0537",
       "category": "Flour"
     },
     {
@@ -634,10 +786,63 @@
           "toUnit": "gram"
         }
       ],
+      "id": "060a4712-6d80-472b-9fca-237ec8009ea6",
       "category": "Flour"
     },
     {
-      "name": "Apple, medium",
+      "name": "Blueberries",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 148.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "05e9f63c-af6d-424f-baa0-3588008bd1c5",
+      "category": "Fruit"
+    },
+    {
+      "name": "Chopped dates",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 147.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "dc7944ee-12a7-47ff-945d-560f1d133acb",
+      "category": "Fruit"
+    },
+    {
+      "name": "Dried apricots",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 130.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "8f56d7ad-4dd2-46d5-a16f-cf2198375da8",
+      "category": "Fruit"
+    },
+    {
+      "name": "Dried cranberries",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 160.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "831f0176-71d4-40aa-b18c-d9c2ab45ae6d",
+      "category": "Fruit"
+    },
+    {
+      "name": "Medium apple",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -651,10 +856,11 @@
           "toUnit": "gram"
         }
       ],
+      "id": "1051a81b-660b-4d47-9e50-0bf34ecfe847",
       "category": "Fruit"
     },
     {
-      "name": "Banana, medium",
+      "name": "Medium banana",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -668,22 +874,11 @@
           "toUnit": "gram"
         }
       ],
+      "id": "8faa750c-3c0c-4b0d-b5c0-000b446e4910",
       "category": "Fruit"
     },
     {
-      "name": "Blueberries",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 148.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Fruit"
-    },
-    {
-      "name": "Lemon, medium",
+      "name": "Medium lemon",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -697,10 +892,24 @@
           "toUnit": "gram"
         }
       ],
+      "id": "aa3583cb-577f-49f2-aabe-f1195b0fbd48",
       "category": "Fruit"
     },
     {
-      "name": "Strawberries, sliced",
+      "name": "Raisins",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 165.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "8f2e4b82-a237-4f14-b298-53033593d2a2",
+      "category": "Fruit"
+    },
+    {
+      "name": "Sliced strawberries",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -709,10 +918,11 @@
           "toUnit": "gram"
         }
       ],
+      "id": "5a0547c8-82cd-41f6-9e0c-5d44b8468f2b",
       "category": "Fruit"
     },
     {
-      "name": "Breadcrumbs, dry",
+      "name": "Dry breadcrumbs",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -721,10 +931,11 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Grain"
+      "id": "021e9843-1fa0-47a1-b8e1-1d919c667ea4",
+      "category": "Grains"
     },
     {
-      "name": "Breadcrumbs, fresh",
+      "name": "Fresh breadcrumbs",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -733,10 +944,11 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Grain"
+      "id": "607be981-ea6f-41be-be4f-970eaa7ccf06",
+      "category": "Grains"
     },
     {
-      "name": "Breadcrumbs, panko",
+      "name": "Panko breadcrumbs",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -745,31 +957,8 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Grain"
-    },
-    {
-      "name": "Brown rice, uncooked",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 190.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Grain"
-    },
-    {
-      "name": "Quinoa, uncooked",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 170.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Grain"
+      "id": "43d31bfa-485e-477f-971c-cac5fb509c49",
+      "category": "Grains"
     },
     {
       "name": "Rolled oats",
@@ -781,10 +970,37 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Grain"
+      "id": "3442694c-7b97-4711-88fc-8a6892284437",
+      "category": "Grains"
     },
     {
-      "name": "White rice, uncooked",
+      "name": "Uncooked brown rice",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 190.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "bf167d20-014d-47c9-9bfc-1170adfd78bf",
+      "category": "Grains"
+    },
+    {
+      "name": "Uncooked quinoa",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 170.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "10b952aa-95f6-44a5-b1d7-939d5167e6d4",
+      "category": "Grains"
+    },
+    {
+      "name": "Uncooked white rice",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -793,174 +1009,8 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Grain"
-    },
-    {
-      "name": "Almonds, sliced",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 92.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Nut"
-    },
-    {
-      "name": "Almonds, whole",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 143.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Nut"
-    },
-    {
-      "name": "Cashews",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 129.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Nut"
-    },
-    {
-      "name": "Peanut butter",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 258.0,
-          "toUnit": "gram"
-        },
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "tablespoon",
-          "toAmount": 16.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Nut"
-    },
-    {
-      "name": "Peanuts",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 146.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Nut"
-    },
-    {
-      "name": "Pecans, chopped",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 109.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Nut"
-    },
-    {
-      "name": "Sunflower seeds",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 140.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Nut"
-    },
-    {
-      "name": "Walnut halves",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 100.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Nut"
-    },
-    {
-      "name": "Walnuts, chopped",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 117.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Nut"
-    },
-    {
-      "name": "Graham crackers",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": {
-            "count": {
-              "singular": "cracker",
-              "plural": "crackers"
-            }
-          },
-          "toAmount": 15.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Other"
-    },
-    {
-      "name": "Graham crackers, crushed",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 84.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Other"
-    },
-    {
-      "name": "Water",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 237.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Other"
-    },
-    {
-      "name": "Black pepper, ground",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "teaspoon",
-          "toAmount": 2.3,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Spice"
+      "id": "6933a8cf-d468-4521-b8b1-90f631086b9c",
+      "category": "Grains"
     },
     {
       "name": "Chili powder",
@@ -972,19 +1022,21 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Spice"
+      "id": "a45ccc36-7fca-4133-81e8-f57ef6d4ea1a",
+      "category": "Herbs & Spices"
     },
     {
-      "name": "Cinnamon, ground",
+      "name": "Chopped fresh basil",
       "conversions": [
         {
-          "fromAmount": 1.0,
-          "fromUnit": "teaspoon",
-          "toAmount": 2.6,
+          "fromAmount": 2.0,
+          "fromUnit": "tablespoon",
+          "toAmount": 5.3,
           "toUnit": "gram"
         }
       ],
-      "category": "Spice"
+      "id": "4632249a-bcb6-4fcd-a769-1309a829d39f",
+      "category": "Herbs & Spices"
     },
     {
       "name": "Cumin seed",
@@ -996,7 +1048,21 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Spice"
+      "id": "3703609d-5045-493a-a7fe-9781d75b8c03",
+      "category": "Herbs & Spices"
+    },
+    {
+      "name": "Fresh basil leaves",
+      "conversions": [
+        {
+          "fromAmount": 0.25,
+          "fromUnit": "cup",
+          "toAmount": 6.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "15bec564-71be-41d1-8ba2-cedd62f4b382",
+      "category": "Herbs & Spices"
     },
     {
       "name": "Garlic powder",
@@ -1008,10 +1074,37 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Spice"
+      "id": "cbad589e-91de-4e56-92e1-7b2711835160",
+      "category": "Herbs & Spices"
     },
     {
-      "name": "Ginger, ground",
+      "name": "Ground black pepper",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "teaspoon",
+          "toAmount": 2.3,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "85b4af72-2f0d-4a10-91ea-236bd5c9d815",
+      "category": "Herbs & Spices"
+    },
+    {
+      "name": "Ground cinnamon",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "teaspoon",
+          "toAmount": 2.6,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "7f455099-ee26-4fc5-bfac-77f0ba30d790",
+      "category": "Herbs & Spices"
+    },
+    {
+      "name": "Ground ginger",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1020,7 +1113,8 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Spice"
+      "id": "6897e7c2-38a0-463e-ac98-519d75b58168",
+      "category": "Herbs & Spices"
     },
     {
       "name": "Kosher salt",
@@ -1038,7 +1132,8 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Spice",
+      "id": "a96007c6-4c76-4650-a37e-681d04f3b6c1",
+      "category": "Herbs & Spices",
       "brand": "Diamond Crystal"
     },
     {
@@ -1051,7 +1146,8 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Spice"
+      "id": "50c8b875-a710-4120-b19d-7d8059f335aa",
+      "category": "Herbs & Spices"
     },
     {
       "name": "Paprika",
@@ -1063,7 +1159,8 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Spice"
+      "id": "e50f48f9-a504-40a5-adf1-0de152694e1c",
+      "category": "Herbs & Spices"
     },
     {
       "name": "Table salt",
@@ -1075,10 +1172,191 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Spice"
+      "id": "69e2b60e-7aae-4987-ab9b-aa5338bd5e67",
+      "category": "Herbs & Spices"
     },
     {
-      "name": "Brown sugar, packed",
+      "name": "Cashews",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 129.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "db3ce5cb-0b00-40cb-b40c-7723401baac0",
+      "category": "Nuts"
+    },
+    {
+      "name": "Chopped pecans",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 109.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "afe3e7bd-631f-4b01-8923-e106b843bba9",
+      "category": "Nuts"
+    },
+    {
+      "name": "Chopped walnuts",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 117.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "a8bb54a5-9726-4da5-8558-503bb03d6e86",
+      "category": "Nuts"
+    },
+    {
+      "name": "Peanut butter",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 258.0,
+          "toUnit": "gram"
+        },
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "tablespoon",
+          "toAmount": 16.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "52a82039-b3e8-4003-bfaa-a860f37c5f70",
+      "category": "Nuts"
+    },
+    {
+      "name": "Peanuts",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 146.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "e60350f9-d84e-4876-8d49-1ab76f35fda5",
+      "category": "Nuts"
+    },
+    {
+      "name": "Sliced almonds",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 92.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "dd72deaa-315e-4ed2-a4c2-3e83f7fa80d6",
+      "category": "Nuts"
+    },
+    {
+      "name": "Sunflower seeds",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 140.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "9683b02f-a492-4ca5-a088-c3f8118d8222",
+      "category": "Nuts"
+    },
+    {
+      "name": "Walnut halves",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 100.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "a0464dda-7a7c-48be-93c9-5a4a98e0bb7e",
+      "category": "Nuts"
+    },
+    {
+      "name": "Whole almonds",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 143.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "dfeecfa0-cb85-4d15-8a34-e0350649414d",
+      "category": "Nuts"
+    },
+    {
+      "name": "Crushed graham crackers",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 84.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "5683c23b-96af-4d3a-9261-5f8946c2cc95",
+      "category": "Other"
+    },
+    {
+      "name": "Graham crackers",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": {
+            "count": {
+              "singular": "cracker",
+              "plural": "crackers"
+            }
+          },
+          "toAmount": 15.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "f0fd8cff-a447-41c1-9029-edecca5cb9e6",
+      "category": "Other"
+    },
+    {
+      "name": "Miso",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "tablespoon",
+          "toAmount": 17.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "bcb0e310-67b6-4f6a-a108-68fd52200d6e",
+      "category": "Other"
+    },
+    {
+      "name": "Water",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 237.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "295d9e50-eb8b-44b6-ba07-57121d742601",
+      "category": "Other"
+    },
+    {
+      "name": "Brown sugar",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1093,6 +1371,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "d8153aa0-4cd2-409c-87af-f174aff9e67c",
       "category": "Sugar"
     },
     {
@@ -1105,6 +1384,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "9b0a807c-43cf-4976-963a-60b97466311b",
       "category": "Sugar"
     },
     {
@@ -1129,6 +1409,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "a3459ea8-0f28-4edd-a72b-665c70f42f29",
       "category": "Sugar"
     },
     {
@@ -1147,6 +1428,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "7869dc9f-560b-45a5-8bcf-5e6247d18ae9",
       "category": "Sugar"
     },
     {
@@ -1165,6 +1447,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "c195b429-60ae-47a6-a227-30b42a9cf6b3",
       "category": "Sugar"
     },
     {
@@ -1183,6 +1466,7 @@
           "toUnit": "gram"
         }
       ],
+      "id": "e86325de-87ea-4505-b490-78068e496dc2",
       "category": "Sugar"
     },
     {
@@ -1201,10 +1485,11 @@
           "toUnit": "gram"
         }
       ],
+      "id": "9b5358ab-7071-435a-a615-d68c4effcd20",
       "category": "Sugar"
     },
     {
-      "name": "Carrot, chopped",
+      "name": "Chopped carrot",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1213,10 +1498,76 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Vegetable"
+      "id": "3db14c22-f0dc-4d61-bebe-696624606e6b",
+      "category": "Vegetables"
     },
     {
-      "name": "Garlic, clove",
+      "name": "Chopped onion",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 160.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "505645df-b9bf-4b47-a421-3cb37e352c68",
+      "category": "Vegetables"
+    },
+    {
+      "name": "Chopped pepper",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 149.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "72f01621-e3ce-433a-a84d-d0893fee9db4",
+      "category": "Vegetables"
+    },
+    {
+      "name": "Chopped tomato",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 180.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "38ba55c5-d80e-4d09-9f99-367da3e4f02c",
+      "category": "Vegetables"
+    },
+    {
+      "name": "Diced potato",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 150.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "23996d39-5072-474c-8822-7b39ace29eed",
+      "category": "Vegetables"
+    },
+    {
+      "name": "Fresh spinach",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 30.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "7d91a0de-5080-4b6c-b727-4357f7bb7a4f",
+      "category": "Vegetables"
+    },
+    {
+      "name": "Garlic clove",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1230,10 +1581,11 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Vegetable"
+      "id": "10441eb8-5e07-45ce-b21d-4692206d3284",
+      "category": "Vegetables"
     },
     {
-      "name": "Garlic, minced",
+      "name": "Minced garlic",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1242,10 +1594,11 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Vegetable"
+      "id": "fd71651f-ef9b-4624-884d-eedf86abd5bb",
+      "category": "Vegetables"
     },
     {
-      "name": "Mushrooms, sliced",
+      "name": "Sliced mushrooms",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1254,67 +1607,8 @@
           "toUnit": "gram"
         }
       ],
-      "category": "Vegetable"
-    },
-    {
-      "name": "Onion, chopped",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 160.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Vegetable"
-    },
-    {
-      "name": "Pepper, chopped",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 149.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Vegetable"
-    },
-    {
-      "name": "Potato, diced",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 150.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Vegetable"
-    },
-    {
-      "name": "Spinach, fresh",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 30.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Vegetable"
-    },
-    {
-      "name": "Tomato, chopped",
-      "conversions": [
-        {
-          "fromAmount": 1.0,
-          "fromUnit": "cup",
-          "toAmount": 180.0,
-          "toUnit": "gram"
-        }
-      ],
-      "category": "Vegetable"
+      "id": "0f49a639-b188-46c1-9b93-75b6715d2717",
+      "category": "Vegetables"
     }
   ]
 }
