@@ -216,6 +216,15 @@ class ConversionEngine {
         conversionCache.removeAll()
     }
 
+    /// Clear same-type conversion cache entries (volume-to-volume, weight-to-weight)
+    /// These should never be cached since they use Foundation's standard conversions
+    func clearSameTypeConversions() {
+        conversionCache = conversionCache.filter { key, _ in
+            // Keep only cross-type conversions (where from and to have different types)
+            key.fromUnit.type != key.toUnit.type
+        }
+    }
+
     /// Get the current cache size (for monitoring)
     var cacheSize: Int {
         return conversionCache.count

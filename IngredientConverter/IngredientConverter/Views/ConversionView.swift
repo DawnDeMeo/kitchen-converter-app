@@ -357,6 +357,11 @@ struct ConversionView: View {
                 cachedAvailableUnits = []
             }
         }
+        .onAppear {
+            // Clear any cached same-type conversions (volume-to-volume, weight-to-weight)
+            // These should use Foundation's precise standard conversions, not cached ratios
+            conversionEngine.clearSameTypeConversions()
+        }
         .task(id: selectedIngredient?.id) {
             // Compute units on initial appearance if ingredient is preselected
             if let ingredient = selectedIngredient {
