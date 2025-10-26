@@ -18,10 +18,11 @@ class Ingredient {
     var isFavorite: Bool = false
     var isCustom: Bool = false
     var lastUsedDate: Date?
+    var defaultId: String?  // Stable ID from default database (for tracking across name changes)
 
     @Relationship(deleteRule: .cascade) var conversions: [UnitConversion]?
 
-    init(name: String, category: String? = nil, brand: String? = nil, isFavorite: Bool = false, isCustom: Bool = false) {
+    init(name: String, category: String? = nil, brand: String? = nil, isFavorite: Bool = false, isCustom: Bool = false, defaultId: String? = nil) {
         self.id = UUID()
         self.name = name
         self.category = category
@@ -29,6 +30,7 @@ class Ingredient {
         self.isFavorite = isFavorite
         self.isCustom = isCustom
         self.lastUsedDate = nil
+        self.defaultId = defaultId
         self.conversions = []
     }
 }

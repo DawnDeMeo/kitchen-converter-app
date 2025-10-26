@@ -177,35 +177,46 @@ struct DefaultIngredientDatabase {
             return
         }
 
-        // Group existing ingredients by name, preserving both custom and default versions
+        // Create indexes for both ID-based and name-based lookups
+        var ingredientsByDefaultId: [String: Ingredient] = [:]
         var ingredientsByName: [String: [Ingredient]] = [:]
+
         for ingredient in existingIngredients {
+            // Index by defaultId (only for default ingredients with IDs)
+            if !ingredient.isCustom, let defaultId = ingredient.defaultId {
+                ingredientsByDefaultId[defaultId] = ingredient
+            }
+
+            // Index by name for fallback matching
             let key = ingredient.name.lowercased()
             ingredientsByName[key, default: []].append(ingredient)
         }
 
         var addedCount = 0
         var updatedCount = 0
+        var renamedCount = 0
         var skippedCustomCount = 0
 
         for ingredientJSON in ingredientsJSON.ingredients {
-            let key = ingredientJSON.name.lowercased()
+            var matchedIngredient: Ingredient?
+            var matchType: String = ""
 
-            if let existingGroup = ingredientsByName[key] {
-                // Find the default version (if any) and update it
-                if let defaultIngredient = existingGroup.first(where: { !$0.isCustom }) {
-                    // Update existing default ingredient
-                    updateIngredient(defaultIngredient, from: ingredientJSON, context: context)
-                    updatedCount += 1
-                    print("🔄 Updated default ingredient: \(defaultIngredient.name)")
-                } else {
-                    // Only custom versions exist - add the default version
-                    if let newIngredient = convertJSONToIngredient(ingredientJSON) {
-                        context.insert(newIngredient)
-                        addedCount += 1
-                        print("➕ Added default ingredient (custom version exists): \(newIngredient.name)")
-                    }
+            // Strategy 1: Match by defaultId (most reliable, handles renames)
+            if let jsonId = ingredientJSON.id, let existing = ingredientsByDefaultId[jsonId] {
+                matchedIngredient = existing
+                matchType = "ID"
+
+                // Check if name changed
+                if existing.name != ingredientJSON.name {
+                    renamedCount += 1
+                    print("🏷️  Detected rename: '\(existing.name)' → '\(ingredientJSON.name)'")
                 }
+            }
+            // Strategy 2: Fall back to name matching (for backward compatibility)
+            else if let existingGroup = ingredientsByName[ingredientJSON.name.lowercased()] {
+                // Find the default version (if any)
+                matchedIngredient = existingGroup.first(where: { !$0.isCustom })
+                matchType = "name"
 
                 // Count custom ingredients we're preserving
                 let customCount = existingGroup.filter { $0.isCustom }.count
@@ -215,6 +226,14 @@ struct DefaultIngredientDatabase {
                         print("✓ Preserving custom ingredient: \(customIng.name) (brand: \(customIng.brand ?? "none"))")
                     }
                 }
+            }
+
+            // Update or add ingredient
+            if let existing = matchedIngredient {
+                // Update existing default ingredient
+                updateIngredient(existing, from: ingredientJSON, context: context)
+                updatedCount += 1
+                print("🔄 Updated ingredient (matched by \(matchType)): \(ingredientJSON.name)")
             } else {
                 // New ingredient - add it
                 if let newIngredient = convertJSONToIngredient(ingredientJSON) {
@@ -227,7 +246,7 @@ struct DefaultIngredientDatabase {
 
         do {
             try context.save()
-            print("✅ Merge complete: \(addedCount) added, \(updatedCount) updated, \(skippedCustomCount) custom ingredients preserved")
+            print("✅ Merge complete: \(addedCount) added, \(updatedCount) updated, \(renamedCount) renamed, \(skippedCustomCount) custom ingredients preserved")
         } catch {
             print("❌ Error saving merged ingredients: \(error)")
         }
@@ -236,8 +255,10 @@ struct DefaultIngredientDatabase {
     // Update an existing ingredient with new data
     private static func updateIngredient(_ ingredient: Ingredient, from json: IngredientJSON, context: ModelContext) {
         // Update basic properties (but preserve user preferences like isFavorite)
+        ingredient.name = json.name  // Update name in case it changed
         ingredient.category = json.category
         ingredient.brand = json.brand
+        ingredient.defaultId = json.id  // Update/set the defaultId
 
         // Clear old conversions and add new ones
         if ingredient.conversions == nil {
@@ -264,7 +285,7 @@ struct DefaultIngredientDatabase {
 
     // Convert JSON to Ingredient model
     private static func convertJSONToIngredient(_ json: IngredientJSON) -> Ingredient? {
-        let ingredient = Ingredient(name: json.name, category: json.category, brand: json.brand, isCustom: false)
+        let ingredient = Ingredient(name: json.name, category: json.category, brand: json.brand, isCustom: false, defaultId: json.id)
 
         // Ensure conversions array is initialized
         if ingredient.conversions == nil {

@@ -14,6 +14,7 @@ struct IngredientsJSON: Codable {
 }
 
 struct IngredientJSON: Codable {
+    let id: String?  // Stable ID for tracking across name changes
     let name: String
     let category: String?
     let brand: String?

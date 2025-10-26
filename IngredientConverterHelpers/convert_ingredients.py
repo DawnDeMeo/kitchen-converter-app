@@ -3,19 +3,21 @@
 Convert an Excel or CSV file of ingredients to the JSON format for IngredientConverter.
 
 Excel/CSV Format:
-- Column A: Ingredient Name
-- Column B: Brand (optional, can be empty)
-- Column C: From Amount
-- Column D: From Unit
-- Column E: From Unit Singular (only for count units, otherwise empty)
-- Column F: From Unit Plural (only for count units, otherwise empty)
-- Column G: To Amount
-- Column H: To Unit
-- Column I: To Unit Singular (only for count units, otherwise empty)
-- Column J: To Unit Plural (only for count units, otherwise empty)
+- Column A: ID (stable identifier, recommended: UUID)
+- Column B: Ingredient Name
+- Column C: Category (optional)
+- Column D: Brand (optional, can be empty)
+- Column E: From Amount
+- Column F: From Unit
+- Column G: From Unit Singular (only for count units, otherwise empty)
+- Column H: From Unit Plural (only for count units, otherwise empty)
+- Column I: To Amount
+- Column J: To Unit
+- Column K: To Unit Singular (only for count units, otherwise empty)
+- Column L: To Unit Plural (only for count units, otherwise empty)
 
-Each row represents one conversion. Multiple rows with the same ingredient name
-will be grouped together.
+Each row represents one conversion. Multiple rows with the same ID/name
+will be grouped together. The ID allows tracking ingredients across name changes.
 """
 
 import pandas as pd
@@ -83,7 +85,7 @@ def convert_to_json(input_file, output_file=None):
 
     # Expected columns
     expected_cols = [
-        'Name', 'Category', 'Brand',
+        'ID', 'Name', 'Category', 'Brand',
         'From Amount', 'From Unit', 'From Unit Singular', 'From Unit Plural',
         'To Amount', 'To Unit', 'To Unit Singular', 'To Unit Plural'
     ]
@@ -91,13 +93,18 @@ def convert_to_json(input_file, output_file=None):
     # Rename columns if they don't match (case-insensitive)
     df.columns = df.columns.str.strip()
 
-    # Group by ingredient name
+    # Group by ingredient ID (or name if no ID)
     ingredients = {}
 
     for _, row in df.iterrows():
+        # Get ID if present, otherwise use name as fallback
+        ingredient_id = str(row['ID']).strip() if pd.notna(row.get('ID')) and row.get('ID') else None
         name = str(row['Name']).strip()
         category = str(row['Category']).strip() if pd.notna(row.get('Category')) and row.get('Category') else None
         brand = str(row['Brand']).strip() if pd.notna(row['Brand']) and row['Brand'] else None
+
+        # Use ID as key if available, otherwise use name
+        key = ingredient_id if ingredient_id else name
 
         # Create conversion
         from_unit = parse_unit(
@@ -120,18 +127,21 @@ def convert_to_json(input_file, output_file=None):
         }
 
         # Add to ingredients dict
-        if name not in ingredients:
+        if key not in ingredients:
             ingredient_data = {
                 "name": name,
                 "conversions": []
             }
+            # Add ID if present
+            if ingredient_id:
+                ingredient_data["id"] = ingredient_id
             if category:
                 ingredient_data["category"] = category
             if brand:
                 ingredient_data["brand"] = brand
-            ingredients[name] = ingredient_data
+            ingredients[key] = ingredient_data
 
-        ingredients[name]["conversions"].append(conversion)
+        ingredients[key]["conversions"].append(conversion)
 
     # Convert to list
     ingredients_list = list(ingredients.values())
@@ -154,7 +164,16 @@ def convert_to_json(input_file, output_file=None):
 
 def create_sample_excel():
     """Create a sample Excel file showing the expected format."""
+    import uuid
+
     data = {
+        'ID': [
+            str(uuid.uuid4()),  # Unique ID for all-purpose flour
+            str(uuid.uuid4()),  # Unique ID for all-purpose flour (same ingredient, different conversion)
+            str(uuid.uuid4()),  # Unique ID for sugar
+            str(uuid.uuid4()),  # Unique ID for eggs
+            str(uuid.uuid4())   # Unique ID for graham crackers
+        ],
         'Name': [
             'Flour, all-purpose, sifted',
             'Flour, all-purpose, sifted',
@@ -162,6 +181,7 @@ def create_sample_excel():
             'Eggs, large',
             'Graham crackers'
         ],
+        'Category': ['Flour', 'Flour', 'Sugar', 'Egg', 'Baking'],
         'Brand': [None, None, None, None, None],
         'From Amount': [1, 1, 1, 1, 8],
         'From Unit': ['cup', 'tablespoon', 'cup', '', ''],
@@ -173,9 +193,13 @@ def create_sample_excel():
         'To Unit Plural': ['', '', '', '', '']
     }
 
+    # Use same ID for flour conversions (they're the same ingredient)
+    data['ID'][1] = data['ID'][0]
+
     df = pd.DataFrame(data)
     df.to_excel('sample_ingredients.xlsx', index=False)
     print("✓ Created sample_ingredients.xlsx")
+    print("  Note: Rows with the same ID will be grouped as one ingredient")
     print("  Edit this file and run: python convert_ingredients.py sample_ingredients.xlsx")
 
 
