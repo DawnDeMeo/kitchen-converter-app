@@ -266,7 +266,7 @@ struct HelpView: View {
                     VStack(alignment: .leading, spacing: 12) {
                         HelpItem(
                             question: "Where do the conversions come from?",
-                            answer: "Default ingredient conversions are sourced from King Arthur Baking's ingredient weight chart and USDA FoodData Central. These are professional, verified measurements used by bakers and food scientists."
+                            answer: "Default ingredient conversions are sourced from USDA FoodData Central and King Arthur Baking's ingredient weight chart. These are professional, verified measurements used by bakers and food scientists."
                         )
 
                         HelpItem(

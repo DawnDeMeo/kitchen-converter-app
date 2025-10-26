@@ -11,20 +11,31 @@ struct UnitConversionHelper {
     
     /// Convert between units of the same type using Foundation's Measurement API
     static func convert(amount: Double, from fromUnit: MeasurementUnit, to toUnit: MeasurementUnit) -> Double? {
+        print("   📐 UnitConversionHelper: \(amount) \(fromUnit.displayName) → \(toUnit.displayName)")
         // Only convert if both units are the same type
         guard fromUnit.type == toUnit.type else {
+            print("   ❌ Types don't match: \(fromUnit.type) vs \(toUnit.type)")
             return nil
         }
-        
+
+        let result: Double?
         switch fromUnit.type {
         case .volume:
-            return convertVolume(amount: amount, from: fromUnit, to: toUnit)
+            result = convertVolume(amount: amount, from: fromUnit, to: toUnit)
         case .weight:
-            return convertWeight(amount: amount, from: fromUnit, to: toUnit)
+            result = convertWeight(amount: amount, from: fromUnit, to: toUnit)
         case .count, .other:
             // Can't auto-convert count or other types
-            return nil
+            result = nil
         }
+
+        if let result = result {
+            print("   ✅ UnitConversionHelper result: \(result)")
+        } else {
+            print("   ❌ UnitConversionHelper returned nil")
+        }
+
+        return result
     }
     
     private static func convertVolume(amount: Double, from fromUnit: MeasurementUnit, to toUnit: MeasurementUnit) -> Double? {

@@ -23,8 +23,12 @@ class ConversionEngine {
     func convert(amount: Double, from: MeasurementUnit, to: MeasurementUnit,
                  for ingredient: Ingredient) -> Double? {
 
+        print("🔄 ConversionEngine: Converting \(amount) \(from.displayName) → \(to.displayName) for \(ingredient.name)")
+        print("   From type: \(from.type), To type: \(to.type)")
+
         // If converting to the same unit, just return the amount
         if from == to {
+            print("   ✅ Same unit, returning \(amount)")
             return amount
         }
 
@@ -32,17 +36,23 @@ class ConversionEngine {
         // This ensures precise conversions (e.g., 1 cup = exactly 16 tablespoons)
         // We check this BEFORE the cache to prevent imprecise chained conversions from being cached
         if from.type == to.type, from.type == .volume || from.type == .weight {
+            print("   🎯 Same type conversion, using Foundation")
             if let result = UnitConversionHelper.convert(amount: amount, from: from, to: to) {
+                print("   ✅ Foundation returned: \(result)")
                 return result
             }
+            print("   ❌ Foundation returned nil")
             return nil
         }
 
         // Check cache for previously computed conversion ratio (only for cross-type conversions)
         let cacheKey = CacheKey(ingredientID: ingredient.id, fromUnit: from, toUnit: to)
         if let cachedRatio = conversionCache[cacheKey] {
-            return amount * cachedRatio
+            let result = amount * cachedRatio
+            print("   💾 Using cached ratio: \(cachedRatio), result: \(result)")
+            return result
         }
+        print("   🔍 No cache entry, searching for conversion path")
 
         // Try direct conversion
         if let result = directConversion(amount: amount, from: from, to: to, for: ingredient) {
@@ -219,10 +229,25 @@ class ConversionEngine {
     /// Clear same-type conversion cache entries (volume-to-volume, weight-to-weight)
     /// These should never be cached since they use Foundation's standard conversions
     func clearSameTypeConversions() {
+        let beforeCount = conversionCache.count
+        let sameTypeEntries = conversionCache.filter { key, _ in
+            key.fromUnit.type == key.toUnit.type
+        }
+
+        print("🧹 Clearing same-type conversions from cache")
+        print("   Cache size before: \(beforeCount)")
+        print("   Same-type entries found: \(sameTypeEntries.count)")
+
+        for (key, ratio) in sameTypeEntries {
+            print("   Removing: \(key.fromUnit.displayName) → \(key.toUnit.displayName), ratio: \(ratio)")
+        }
+
         conversionCache = conversionCache.filter { key, _ in
             // Keep only cross-type conversions (where from and to have different types)
             key.fromUnit.type != key.toUnit.type
         }
+
+        print("   Cache size after: \(conversionCache.count)")
     }
 
     /// Get the current cache size (for monitoring)
