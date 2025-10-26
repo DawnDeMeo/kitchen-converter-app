@@ -177,30 +177,43 @@ struct DefaultIngredientDatabase {
             return
         }
 
-        // Create a map of existing ingredients by name (case-insensitive)
-        var existingMap: [String: Ingredient] = [:]
+        // Group existing ingredients by name, preserving both custom and default versions
+        var ingredientsByName: [String: [Ingredient]] = [:]
         for ingredient in existingIngredients {
-            existingMap[ingredient.name.lowercased()] = ingredient
+            let key = ingredient.name.lowercased()
+            ingredientsByName[key, default: []].append(ingredient)
         }
 
         var addedCount = 0
         var updatedCount = 0
-        var skippedCount = 0
+        var skippedCustomCount = 0
 
         for ingredientJSON in ingredientsJSON.ingredients {
             let key = ingredientJSON.name.lowercased()
 
-            if let existing = existingMap[key] {
-                // Ingredient exists
-                if existing.isCustom {
-                    // Skip custom ingredients - never modify them
-                    skippedCount += 1
-                    print("⏭️ Skipping custom ingredient: \(existing.name)")
-                } else {
-                    // Update default ingredient
-                    updateIngredient(existing, from: ingredientJSON, context: context)
+            if let existingGroup = ingredientsByName[key] {
+                // Find the default version (if any) and update it
+                if let defaultIngredient = existingGroup.first(where: { !$0.isCustom }) {
+                    // Update existing default ingredient
+                    updateIngredient(defaultIngredient, from: ingredientJSON, context: context)
                     updatedCount += 1
-                    print("🔄 Updated ingredient: \(existing.name)")
+                    print("🔄 Updated default ingredient: \(defaultIngredient.name)")
+                } else {
+                    // Only custom versions exist - add the default version
+                    if let newIngredient = convertJSONToIngredient(ingredientJSON) {
+                        context.insert(newIngredient)
+                        addedCount += 1
+                        print("➕ Added default ingredient (custom version exists): \(newIngredient.name)")
+                    }
+                }
+
+                // Count custom ingredients we're preserving
+                let customCount = existingGroup.filter { $0.isCustom }.count
+                if customCount > 0 {
+                    skippedCustomCount += customCount
+                    for customIng in existingGroup.filter({ $0.isCustom }) {
+                        print("✓ Preserving custom ingredient: \(customIng.name) (brand: \(customIng.brand ?? "none"))")
+                    }
                 }
             } else {
                 // New ingredient - add it
@@ -214,7 +227,7 @@ struct DefaultIngredientDatabase {
 
         do {
             try context.save()
-            print("✅ Merge complete: \(addedCount) added, \(updatedCount) updated, \(skippedCount) custom ingredients preserved")
+            print("✅ Merge complete: \(addedCount) added, \(updatedCount) updated, \(skippedCustomCount) custom ingredients preserved")
         } catch {
             print("❌ Error saving merged ingredients: \(error)")
         }
