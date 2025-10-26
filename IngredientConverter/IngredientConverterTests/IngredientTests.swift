@@ -59,4 +59,46 @@ struct IngredientTests {
         #expect((ingredient.conversions ?? []).first?.toAmount == 200)
         #expect((ingredient.conversions ?? []).first?.toUnit == .gram)
     }
+
+    @Test("Create ingredient with defaultId")
+    func createIngredientWithDefaultId() {
+        let ingredient = Ingredient(
+            name: "Flour",
+            category: "Baking",
+            brand: nil,
+            isFavorite: false,
+            isCustom: false,
+            defaultId: "test-flour-id"
+        )
+
+        #expect(ingredient.name == "Flour")
+        #expect(ingredient.category == "Baking")
+        #expect(ingredient.defaultId == "test-flour-id")
+        #expect(ingredient.isCustom == false)
+    }
+
+    @Test("Default ingredients can have defaultId, custom ingredients should not")
+    func defaultIdOnlyForDefaults() {
+        let defaultIngredient = Ingredient(
+            name: "Default Flour",
+            isCustom: false,
+            defaultId: "default-id"
+        )
+
+        let customIngredient = Ingredient(
+            name: "Custom Flour",
+            isCustom: true,
+            defaultId: nil
+        )
+
+        #expect(defaultIngredient.defaultId == "default-id")
+        #expect(customIngredient.defaultId == nil)
+    }
+
+    @Test("Ingredient defaultId defaults to nil")
+    func defaultIdDefaultsToNil() {
+        let ingredient = Ingredient(name: "Test")
+
+        #expect(ingredient.defaultId == nil)
+    }
 }
