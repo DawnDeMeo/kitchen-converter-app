@@ -133,6 +133,7 @@ struct SettingsView: View {
                     .id(themeManager.currentScheme.id)
                     .foregroundStyle(colorScheme.primaryText)
                     .tint(colorScheme.primary)
+                    .background(ThemedPickerBackground(color: colorScheme.primaryText))
                     .listRowBackground(colorScheme.cardBackground)
                     .accessibilityLabel("Color scheme")
                     .accessibilityValue(themeManager.currentScheme.name)
@@ -159,6 +160,7 @@ struct SettingsView: View {
                     .id(themeManager.currentScheme.id)
                     .foregroundStyle(colorScheme.primaryText)
                     .tint(colorScheme.primary)
+                    .background(ThemedPickerBackground(color: colorScheme.primaryText))
                     .listRowBackground(colorScheme.cardBackground)
 
                     Picker("To", selection: defaultToUnitBinding) {
@@ -169,6 +171,7 @@ struct SettingsView: View {
                     .id(themeManager.currentScheme.id)
                     .foregroundStyle(colorScheme.primaryText)
                     .tint(colorScheme.primary)
+                    .background(ThemedPickerBackground(color: colorScheme.primaryText))
                     .listRowBackground(colorScheme.cardBackground)
                 } header: {
                     Text("Unit Preferences")
@@ -644,6 +647,37 @@ struct DocumentPicker: UIViewControllerRepresentable {
         func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
             guard let url = urls.first else { return }
             onPick(url)
+        }
+    }
+}
+
+// Helper view to theme regular pickers by updating their UIKit labels
+struct ThemedPickerBackground: UIViewRepresentable {
+    let color: Color
+
+    func makeUIView(context: Context) -> UIView {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
+    }
+
+    func updateUIView(_ uiView: UIView, context: Context) {
+        DispatchQueue.main.async {
+            guard let window = uiView.window else { return }
+            self.updatePickerLabels(in: window)
+        }
+    }
+
+    private func updatePickerLabels(in view: UIView) {
+        // Update UILabels that are part of table view cells (picker value labels)
+        if let label = view as? UILabel,
+           let cell = view.superview?.superview as? UITableViewCell,
+           label != cell.textLabel {  // Don't update the left-side label, only the right-side value
+            label.textColor = UIColor(color)
+        }
+
+        for subview in view.subviews {
+            updatePickerLabels(in: subview)
         }
     }
 }
