@@ -92,17 +92,22 @@ struct ConversionView: View {
             Divider()
                 .background(colorScheme.divider)
 
-            HStack {
-                Image(systemName: "equal")
-                    .foregroundColor(colorScheme.primary)
-                    .font(.title2)
+            // Combine equals sign and result into single VoiceOver element
+            VStack(spacing: 16) {
+                HStack {
+                    Image(systemName: "equal")
+                        .foregroundColor(colorScheme.primary)
+                        .font(.title2)
+                }
+
+                Divider()
+                    .background(colorScheme.divider)
+
+                // Result
+                resultRow(toUnit: toUnit)
             }
-
-            Divider()
-                .background(colorScheme.divider)
-
-            // Second row - Result
-            resultRow(toUnit: toUnit)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(resultAccessibilityLabel(toUnit: toUnit))
         }
         .padding(.vertical, 12)
         .frame(maxWidth: .infinity, alignment: .center)
@@ -129,7 +134,7 @@ struct ConversionView: View {
                     .font(.title2)
                     .foregroundColor(colorScheme.secondaryText)
             }
-        } else if let result = conversionResult, let amount = effectiveAmount {
+        } else if let result = conversionResult, effectiveAmount != nil {
             // Valid result (shown even when inputAmount is empty, using default 1.0)
             HStack {
                 Text(formatAmount(result))
@@ -353,6 +358,19 @@ struct ConversionView: View {
     }
     
     // MARK: - Helper Functions
+
+    /// Generate accessibility label for the result section (equals sign + result)
+    private func resultAccessibilityLabel(toUnit: MeasurementUnit) -> String {
+        if isInputInvalid {
+            return "equals unknown"
+        } else if let result = conversionResult, effectiveAmount != nil {
+            let resultWords = FractionParser.amountToWords(formatAmount(result))
+            let unitText = unitDisplayText(toUnit, amount: result)
+            return "equals \(resultWords) \(unitText)"
+        } else {
+            return "equals no conversion available"
+        }
+    }
 
     private func computeAvailableUnits(for ingredient: Ingredient) -> [MeasurementUnit] {
         var units = Set<MeasurementUnit>()
