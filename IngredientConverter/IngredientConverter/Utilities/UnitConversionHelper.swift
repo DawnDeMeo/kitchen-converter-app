@@ -39,10 +39,10 @@ struct UnitConversionHelper {
 
     /// Convert between units of the same type using exact conversion tables
     static func convert(amount: Double, from fromUnit: MeasurementUnit, to toUnit: MeasurementUnit) -> Double? {
-        print("   📐 UnitConversionHelper: \(amount) \(fromUnit.displayName) → \(toUnit.displayName)")
+        DebugLogger.log("   📐 \(amount) \(fromUnit.displayName) → \(toUnit.displayName)", category: "UnitConversionHelper")
         // Only convert if both units are the same type
         guard fromUnit.type == toUnit.type else {
-            print("   ❌ Types don't match: \(fromUnit.type) vs \(toUnit.type)")
+            DebugLogger.log("   ❌ Types don't match: \(fromUnit.type) vs \(toUnit.type)", category: "UnitConversionHelper")
             return nil
         }
 
@@ -58,9 +58,9 @@ struct UnitConversionHelper {
         }
 
         if let result = result {
-            print("   ✅ UnitConversionHelper result: \(result)")
+            DebugLogger.log("   ✅ Result: \(result)", category: "UnitConversionHelper")
         } else {
-            print("   ❌ UnitConversionHelper returned nil")
+            DebugLogger.log("   ❌ Returned nil", category: "UnitConversionHelper")
         }
 
         return result
@@ -77,11 +77,11 @@ struct UnitConversionHelper {
         let amountInTeaspoons = amount * fromTeaspoons
         let result = amountInTeaspoons / toTeaspoons
 
-        print("      🧮 Exact calculation: \(amount) × \(fromTeaspoons) ÷ \(toTeaspoons) = \(result)")
+        DebugLogger.log("      🧮 Exact calculation: \(amount) × \(fromTeaspoons) ÷ \(toTeaspoons) = \(result)", category: "UnitConversionHelper")
 
         return result
     }
-    
+
     private static func convertWeight(amount: Double, from fromUnit: MeasurementUnit, to toUnit: MeasurementUnit) -> Double? {
         // Use exact conversion table for precision
         guard let fromGrams = weightConversionsToGrams[fromUnit],
@@ -93,7 +93,7 @@ struct UnitConversionHelper {
         let amountInGrams = amount * fromGrams
         let result = amountInGrams / toGrams
 
-        print("      🧮 Exact calculation: \(amount) × \(fromGrams) ÷ \(toGrams) = \(result)")
+        DebugLogger.log("      🧮 Exact calculation: \(amount) × \(fromGrams) ÷ \(toGrams) = \(result)", category: "UnitConversionHelper")
 
         return result
     }

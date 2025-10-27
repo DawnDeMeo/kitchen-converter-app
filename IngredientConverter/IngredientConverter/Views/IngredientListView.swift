@@ -190,7 +190,7 @@ struct IngredientListView: View {
         do {
             ingredients = try modelContext.fetch(descriptor)
         } catch {
-            print("Failed to fetch ingredients: \(error)")
+            DebugLogger.log("Failed to fetch ingredients: \(error)", category: "IngredientList")
             ingredients = []
         }
     }
@@ -202,7 +202,7 @@ struct IngredientListView: View {
             let categories = Set(allIngredients.compactMap { $0.category })
             availableCategories = categories.sorted()
         } catch {
-            print("Failed to fetch categories: \(error)")
+            DebugLogger.log("Failed to fetch categories: \(error)", category: "IngredientList")
             availableCategories = []
         }
     }

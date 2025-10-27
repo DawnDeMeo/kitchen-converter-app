@@ -22,7 +22,7 @@ struct IngredientConverterApp: App {
             do {
                 try FileManager.default.createDirectory(at: applicationSupportURL, withIntermediateDirectories: true, attributes: nil)
             } catch {
-                print("⚠️ Failed to create Application Support directory: \(error)")
+                DebugLogger.log("⚠️ Failed to create Application Support directory: \(error)", category: "App")
             }
         }
 

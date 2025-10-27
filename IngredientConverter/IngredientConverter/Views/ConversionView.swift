@@ -275,15 +275,6 @@ struct ConversionView: View {
                     onChange: performConversion
                 )
                 .transition(.move(edge: .bottom))
-                .onAppear {
-                    print("Custom keyboard appeared")
-                }
-            } else {
-                Color.clear
-                    .frame(height: 0)
-                    .onAppear {
-                        print("Custom keyboard hidden, isKeyboardVisible = \(isKeyboardVisible)")
-                    }
             }
         }
         .background(colorScheme.background)
@@ -308,14 +299,15 @@ struct ConversionView: View {
         .onChange(of: selectedToUnit) { _, _ in
             performConversion()
         }
-        .onChange(of: selectedIngredient) { _, newIngredient in
+        .task(id: selectedIngredient?.id) {
+            // This runs on initial appearance AND whenever selectedIngredient changes
             // Reset units when ingredient changes
             selectedFromUnit = nil
             selectedToUnit = nil
             conversionResult = nil
 
             // Compute and cache available units for new ingredient
-            if let ingredient = newIngredient {
+            if let ingredient = selectedIngredient {
                 cachedAvailableUnits = computeAvailableUnits(for: ingredient)
 
                 // For count-based ingredients, prefer count as fromUnit
@@ -357,57 +349,7 @@ struct ConversionView: View {
                 cachedAvailableUnits = []
             }
         }
-        .onAppear {
-            // Clear any cached same-type conversions (volume-to-volume, weight-to-weight)
-            // These should use Foundation's precise standard conversions, not cached ratios
-            conversionEngine.clearSameTypeConversions()
-        }
-        .task(id: selectedIngredient?.id) {
-            // Compute units on initial appearance if ingredient is preselected
-            if let ingredient = selectedIngredient {
-                cachedAvailableUnits = computeAvailableUnits(for: ingredient)
-
-                // For count-based ingredients, prefer count as fromUnit
-                let countUnit = cachedAvailableUnits.first { unit in
-                    if case .count = unit { return true }
-                    return false
-                }
-
-                if let countUnit = countUnit {
-                    // This is a count-based ingredient
-                    selectedFromUnit = countUnit
-
-                    // For toUnit, prefer defaultToUnit if available, otherwise first non-count unit
-                    if let defaultTo = defaultToUnit,
-                       cachedAvailableUnits.contains(defaultTo) {
-                        selectedToUnit = defaultTo
-                    } else {
-                        selectedToUnit = cachedAvailableUnits.first { unit in
-                            if case .count = unit { return false }
-                            return true
-                        }
-                    }
-                } else {
-                    // Apply default unit preferences for measurement-based ingredients
-                    if let defaultFrom = defaultFromUnit,
-                       cachedAvailableUnits.contains(defaultFrom) {
-                        selectedFromUnit = defaultFrom
-                    }
-
-                    if let defaultTo = defaultToUnit,
-                       cachedAvailableUnits.contains(defaultTo) {
-                        selectedToUnit = defaultTo
-                    }
-                }
-
-                // Trigger conversion with default amount
-                performConversion()
-            }
-        }
         .animation(.easeInOut(duration: 0.3), value: isKeyboardVisible)
-        .onChange(of: isKeyboardVisible) { oldValue, newValue in
-            print("isKeyboardVisible changed from \(oldValue) to \(newValue)")
-        }
     }
     
     // MARK: - Helper Functions

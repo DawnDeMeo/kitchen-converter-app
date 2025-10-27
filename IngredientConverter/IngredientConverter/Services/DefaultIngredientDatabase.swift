@@ -16,7 +16,7 @@ struct DefaultIngredientDatabase {
     static func loadAndMergeIfNeeded(context: ModelContext) {
         // Load the JSON data
         guard let ingredientsJSON = loadJSONData() else {
-            print("❌ Could not load default ingredients JSON")
+            DebugLogger.log("❌ Could not load default ingredients JSON", category: "Database")
             return
         }
 
@@ -25,11 +25,11 @@ struct DefaultIngredientDatabase {
         let currentVersion = UserDefaults.standard.integer(forKey: versionKey)
         let bundledVersion = ingredientsJSON.version
 
-        print("📊 Has loaded before: \(hasLoadedBefore), Current version: \(currentVersion), Bundled version: \(bundledVersion)")
+        DebugLogger.log("📊 Has loaded before: \(hasLoadedBefore), Current version: \(currentVersion), Bundled version: \(bundledVersion)", category: "Database")
 
         if !hasLoadedBefore {
             // First launch on this device - load defaults (but check for CloudKit synced duplicates first)
-            print("📦 First launch on this device - checking for existing defaults...")
+            DebugLogger.log("📦 First launch on this device - checking for existing defaults...", category: "Database")
 
             // Give CloudKit a moment to sync if this is a second device
             let fetchDescriptor = FetchDescriptor<Ingredient>(
@@ -40,23 +40,23 @@ struct DefaultIngredientDatabase {
             let existingDefaultsCount = (try? context.fetchCount(fetchDescriptor)) ?? 0
 
             if existingDefaultsCount > 0 {
-                print("☁️ Found \(existingDefaultsCount) default ingredients from CloudKit sync - skipping load")
+                DebugLogger.log("☁️ Found \(existingDefaultsCount) default ingredients from CloudKit sync - skipping load", category: "Database")
                 // Mark as loaded even though we didn't load them (they came from CloudKit)
                 UserDefaults.standard.set(bundledVersion, forKey: versionKey)
                 UserDefaults.standard.set(true, forKey: hasLoadedDefaultsKey)
             } else {
-                print("📦 No existing defaults - loading from bundle...")
+                DebugLogger.log("📦 No existing defaults - loading from bundle...", category: "Database")
                 loadAllDefaults(from: ingredientsJSON, context: context)
                 UserDefaults.standard.set(bundledVersion, forKey: versionKey)
                 UserDefaults.standard.set(true, forKey: hasLoadedDefaultsKey)
             }
         } else if bundledVersion > currentVersion {
             // Newer version available - merge changes
-            print("🔄 Newer version available - merging changes...")
+            DebugLogger.log("🔄 Newer version available - merging changes...", category: "Database")
             mergeDefaultIngredients(from: ingredientsJSON, context: context)
             UserDefaults.standard.set(bundledVersion, forKey: versionKey)
         } else {
-            print("✓ Database is up to date (version \(currentVersion))")
+            DebugLogger.log("✓ Database is up to date (version \(currentVersion))", category: "Database")
         }
 
         // Always deduplicate default ingredients after load (handles CloudKit sync duplicates)
@@ -108,7 +108,7 @@ struct DefaultIngredientDatabase {
             let toKeep = chooseBestDuplicate(from: ingredients)
             let toDelete = ingredients.filter { $0.id != toKeep.id }
 
-            print("🔍 Found \(ingredients.count) copies of '\(name)' - keeping best version (favorite: \(toKeep.isFavorite)), deleting \(toDelete.count)")
+            DebugLogger.log("🔍 Found \(ingredients.count) copies of '\(name)' - keeping best version (favorite: \(toKeep.isFavorite)), deleting \(toDelete.count)", category: "Database")
 
             // Delete the others
             for ingredient in toDelete {
@@ -120,34 +120,34 @@ struct DefaultIngredientDatabase {
         if deletedCount > 0 {
             do {
                 try context.save()
-                print("✅ Deduplicated \(deletedCount) duplicate default ingredients")
+                DebugLogger.log("✅ Deduplicated \(deletedCount) duplicate default ingredients", category: "Database")
             } catch {
-                print("❌ Error saving after deduplication: \(error)")
+                DebugLogger.log("❌ Error saving after deduplication: \(error)", category: "Database")
             }
         } else {
-            print("✓ No duplicate default ingredients found")
+            DebugLogger.log("✓ No duplicate default ingredients found", category: "Database")
         }
     }
 
     // Load JSON data from bundle
     private static func loadJSONData() -> IngredientsJSON? {
         guard let url = Bundle.main.url(forResource: "default_ingredients", withExtension: "json") else {
-            print("❌ Could not find default_ingredients.json")
+            DebugLogger.log("❌ Could not find default_ingredients.json", category: "Database")
             return nil
         }
 
         guard let data = try? Data(contentsOf: url) else {
-            print("❌ Could not load data from default_ingredients.json")
+            DebugLogger.log("❌ Could not load data from default_ingredients.json", category: "Database")
             return nil
         }
 
         let decoder = JSONDecoder()
         guard let ingredientsJSON = try? decoder.decode(IngredientsJSON.self, from: data) else {
-            print("❌ Could not decode default_ingredients.json")
+            DebugLogger.log("❌ Could not decode default_ingredients.json", category: "Database")
             return nil
         }
 
-        print("✓ Successfully parsed JSON version \(ingredientsJSON.version) with \(ingredientsJSON.ingredients.count) ingredients")
+        DebugLogger.log("✓ Successfully parsed JSON version \(ingredientsJSON.version) with \(ingredientsJSON.ingredients.count) ingredients", category: "Database")
         return ingredientsJSON
     }
 
@@ -163,9 +163,9 @@ struct DefaultIngredientDatabase {
 
         do {
             try context.save()
-            print("✅ Loaded \(ingredients.count) default ingredients")
+            DebugLogger.log("✅ Loaded \(ingredients.count) default ingredients", category: "Database")
         } catch {
-            print("❌ Error saving ingredients: \(error)")
+            DebugLogger.log("❌ Error saving ingredients: \(error)", category: "Database")
         }
     }
 
@@ -175,7 +175,7 @@ struct DefaultIngredientDatabase {
         // Fetch all existing ingredients
         let fetchDescriptor = FetchDescriptor<Ingredient>()
         guard let existingIngredients = try? context.fetch(fetchDescriptor) else {
-            print("❌ Could not fetch existing ingredients")
+            DebugLogger.log("❌ Could not fetch existing ingredients", category: "Database")
             return
         }
 
@@ -211,7 +211,7 @@ struct DefaultIngredientDatabase {
                 // Check if name changed
                 if existing.name != ingredientJSON.name {
                     renamedCount += 1
-                    print("🏷️  Detected rename: '\(existing.name)' → '\(ingredientJSON.name)'")
+                    DebugLogger.log("🏷️  Detected rename: '\(existing.name)' → '\(ingredientJSON.name)'", category: "Database")
                 }
             }
             // Strategy 2: Fall back to name matching (for backward compatibility)
@@ -225,7 +225,7 @@ struct DefaultIngredientDatabase {
                 if customCount > 0 {
                     skippedCustomCount += customCount
                     for customIng in existingGroup.filter({ $0.isCustom }) {
-                        print("✓ Preserving custom ingredient: \(customIng.name) (brand: \(customIng.brand ?? "none"))")
+                        DebugLogger.log("✓ Preserving custom ingredient: \(customIng.name) (brand: \(customIng.brand ?? "none"))", category: "Database")
                     }
                 }
             }
@@ -235,22 +235,22 @@ struct DefaultIngredientDatabase {
                 // Update existing default ingredient
                 updateIngredient(existing, from: ingredientJSON, context: context)
                 updatedCount += 1
-                print("🔄 Updated ingredient (matched by \(matchType)): \(ingredientJSON.name)")
+                DebugLogger.log("🔄 Updated ingredient (matched by \(matchType)): \(ingredientJSON.name)", category: "Database")
             } else {
                 // New ingredient - add it
                 if let newIngredient = convertJSONToIngredient(ingredientJSON) {
                     context.insert(newIngredient)
                     addedCount += 1
-                    print("➕ Added new ingredient: \(newIngredient.name)")
+                    DebugLogger.log("➕ Added new ingredient: \(newIngredient.name)", category: "Database")
                 }
             }
         }
 
         do {
             try context.save()
-            print("✅ Merge complete: \(addedCount) added, \(updatedCount) updated, \(renamedCount) renamed, \(skippedCustomCount) custom ingredients preserved")
+            DebugLogger.log("✅ Merge complete: \(addedCount) added, \(updatedCount) updated, \(renamedCount) renamed, \(skippedCustomCount) custom ingredients preserved", category: "Database")
         } catch {
-            print("❌ Error saving merged ingredients: \(error)")
+            DebugLogger.log("❌ Error saving merged ingredients: \(error)", category: "Database")
         }
     }
 
@@ -271,7 +271,7 @@ struct DefaultIngredientDatabase {
         for conversionJSON in json.conversions {
             guard let fromUnit = conversionJSON.fromUnit.toMeasurementUnit(),
                   let toUnit = conversionJSON.toUnit.toMeasurementUnit() else {
-                print("⚠️ Could not convert units for \(json.name)")
+                DebugLogger.log("⚠️ Could not convert units for \(json.name)", category: "Database")
                 continue
             }
 
@@ -297,7 +297,7 @@ struct DefaultIngredientDatabase {
         for conversionJSON in json.conversions {
             guard let fromUnit = conversionJSON.fromUnit.toMeasurementUnit(),
                   let toUnit = conversionJSON.toUnit.toMeasurementUnit() else {
-                print("⚠️ Could not convert units for \(json.name)")
+                DebugLogger.log("⚠️ Could not convert units for \(json.name)", category: "Database")
                 continue
             }
 
