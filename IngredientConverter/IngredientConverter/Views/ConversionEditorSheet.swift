@@ -9,8 +9,6 @@ import SwiftUI
 
 struct ConversionEditorSheet: View {
     @Environment(\.appColorScheme) private var colorScheme
-    @State private var fromKeyboardVisible: Bool = false
-    @State private var toKeyboardVisible: Bool = false
 
     let onSave: (ConversionEditor) -> Void
     
@@ -61,14 +59,10 @@ struct ConversionEditorSheet: View {
                         }
                         .listRowBackground(colorScheme.cardBackground)
 
-                        NoKeyboardTextField(
-                            text: $fromAmount,
-                            placeholder: "Enter from amount (e.g., 1 1/2)",
-                            isFocused: $fromKeyboardVisible,
-                            onChange: nil
-                        )
-                        .foregroundColor(colorScheme.primaryText)
-                        .listRowBackground(colorScheme.cardBackground)
+                        TextField("Enter from amount (e.g., 1 1/2)", text: $fromAmount)
+                            .keyboardType(.decimalPad)
+                            .foregroundColor(colorScheme.primaryText)
+                            .listRowBackground(colorScheme.cardBackground)
 
                         switch fromUnitType {
                         case .volume:
@@ -113,14 +107,10 @@ struct ConversionEditorSheet: View {
                         }
                         .listRowBackground(colorScheme.cardBackground)
 
-                        NoKeyboardTextField(
-                            text: $toAmount,
-                            placeholder: "Enter to amount (e.g., 1 1/2)",
-                            isFocused: $toKeyboardVisible,
-                            onChange: nil
-                        )
-                        .foregroundColor(colorScheme.primaryText)
-                        .listRowBackground(colorScheme.cardBackground)
+                        TextField("Enter to amount (e.g., 1 1/2)", text: $toAmount)
+                            .keyboardType(.decimalPad)
+                            .foregroundColor(colorScheme.primaryText)
+                            .listRowBackground(colorScheme.cardBackground)
 
                         switch toUnitType {
                         case .volume:
@@ -180,28 +170,6 @@ struct ConversionEditorSheet: View {
                     }
                 }
                 .scrollContentBackground(.hidden)
-                .background(colorScheme.background)
-
-                // Custom keyboard
-                if fromKeyboardVisible {
-                    CustomNumericKeyboard(
-                        text: $fromAmount,
-                        onDone: {
-                            fromKeyboardVisible = false
-                        },
-                        onChange: nil
-                    )
-                    .transition(.move(edge: .bottom))
-                } else if toKeyboardVisible {
-                    CustomNumericKeyboard(
-                        text: $toAmount,
-                        onDone: {
-                            toKeyboardVisible = false
-                        },
-                        onChange: nil
-                    )
-                    .transition(.move(edge: .bottom))
-                }
             }
             .background(colorScheme.background)
             .navigationTitle("Add Conversion")
@@ -218,17 +186,6 @@ struct ConversionEditorSheet: View {
                 Button("OK", role: .cancel) { }
             } message: {
                 Text(errorMessage)
-            }
-            .animation(.easeInOut(duration: 0.3), value: fromKeyboardVisible || toKeyboardVisible)
-            .onChange(of: fromKeyboardVisible) { _, newValue in
-                if newValue {
-                    toKeyboardVisible = false
-                }
-            }
-            .onChange(of: toKeyboardVisible) { _, newValue in
-                if newValue {
-                    fromKeyboardVisible = false
-                }
             }
         }
 
