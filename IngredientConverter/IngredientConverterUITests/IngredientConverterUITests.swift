@@ -111,9 +111,17 @@ final class IngredientConverterUITests: XCTestCase {
         app.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
 
-        // Look for From picker label
+        // The "From" picker might need scrolling on smaller screens
         let fromLabel = app.staticTexts["From"]
-        XCTAssertTrue(fromLabel.exists, "From picker should exist")
+        var attempts = 0
+        while !fromLabel.exists && attempts < 3 {
+            app.swipeUp()
+            attempts += 1
+            // Small delay to allow UI to settle after scroll
+            Thread.sleep(forTimeInterval: 0.3)
+        }
+
+        XCTAssertTrue(fromLabel.waitForExistence(timeout: 5), "From picker should exist")
     }
 
     @MainActor
@@ -121,10 +129,15 @@ final class IngredientConverterUITests: XCTestCase {
         app.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
 
-        // Scroll to Unit Preferences section if needed
+        // The "To" picker might need scrolling to become visible
+        // Try multiple scroll attempts if needed
         let toLabel = app.staticTexts["To"]
-        if !toLabel.isHittable {
+        var attempts = 0
+        while !toLabel.exists && attempts < 3 {
             app.swipeUp()
+            attempts += 1
+            // Small delay to allow UI to settle after scroll
+            Thread.sleep(forTimeInterval: 0.3)
         }
 
         XCTAssertTrue(toLabel.waitForExistence(timeout: 5), "To picker should exist")
