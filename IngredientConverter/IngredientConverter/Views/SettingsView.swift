@@ -675,8 +675,15 @@ struct ThemedSegmentedPickerBackground: UIViewRepresentable {
             for: .normal
         )
 
-        // Find and update the actual segmented control instance
-        if let segmentedControl = findSegmentedControl(in: uiView.superview) {
+        // Find and update all segmented controls in the window
+        DispatchQueue.main.async {
+            guard let window = uiView.window else { return }
+            self.updateAllSegmentedControls(in: window)
+        }
+    }
+
+    private func updateAllSegmentedControls(in view: UIView) {
+        if let segmentedControl = view as? UISegmentedControl {
             segmentedControl.selectedSegmentTintColor = UIColor(color)
             segmentedControl.setTitleTextAttributes(
                 [.foregroundColor: UIColor(textColor)],
@@ -687,22 +694,10 @@ struct ThemedSegmentedPickerBackground: UIViewRepresentable {
                 for: .normal
             )
         }
-    }
-
-    private func findSegmentedControl(in view: UIView?) -> UISegmentedControl? {
-        guard let view = view else { return nil }
-
-        if let segmentedControl = view as? UISegmentedControl {
-            return segmentedControl
-        }
 
         for subview in view.subviews {
-            if let found = findSegmentedControl(in: subview) {
-                return found
-            }
+            updateAllSegmentedControls(in: subview)
         }
-
-        return nil
     }
 }
 
