@@ -155,6 +155,7 @@ struct SettingsView: View {
                         }
                     }
                     .listRowBackground(colorScheme.cardBackground)
+                    .accessibilityIdentifier("FromUnitPicker")
 
                     Picker("To", selection: defaultToUnitBinding) {
                         ForEach(MeasurementUnit.standardUnits, id: \.self) { unit in
@@ -162,6 +163,7 @@ struct SettingsView: View {
                         }
                     }
                     .listRowBackground(colorScheme.cardBackground)
+                    .accessibilityIdentifier("ToUnitPicker")
                 } header: {
                     Text("Unit Preferences")
                         .foregroundColor(colorScheme.secondary)
