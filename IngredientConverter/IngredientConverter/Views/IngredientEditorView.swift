@@ -29,7 +29,10 @@ struct IngredientEditorView: View {
 
     // Cached available categories from database
     @State private var availableCategories: [String] = ["Other"]
-    
+
+    // Track if we've loaded the ingredient already
+    @State private var hasLoaded = false
+
     var isEditing: Bool {
         ingredientToEdit != nil
     }
@@ -119,8 +122,11 @@ struct IngredientEditorView: View {
                 Text(errorMessage)
             }
             .onAppear {
-                loadCategories()
-                loadIngredient()
+                if !hasLoaded {
+                    loadCategories()
+                    loadIngredient()
+                    hasLoaded = true
+                }
             }
     }
     
