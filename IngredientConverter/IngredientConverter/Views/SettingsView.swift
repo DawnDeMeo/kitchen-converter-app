@@ -105,39 +105,40 @@ struct SettingsView: View {
 
                 // MARK: - Color Scheme Selection
                 Section {
-                    Picker("Theme", selection: Binding(
-                        get: { themeManager.currentScheme },
-                        set: { themeManager.currentScheme = $0 }
-                    )) {
-                        ForEach(AppColorScheme.allSchemes) { scheme in
-                            HStack(spacing: 12) {
-                                Circle()
-                                    .fill(
-                                        LinearGradient(
-                                            colors: [scheme.primary, scheme.secondary],
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
+                    Group {
+                        Picker("Theme", selection: Binding(
+                            get: { themeManager.currentScheme },
+                            set: { themeManager.currentScheme = $0 }
+                        )) {
+                            ForEach(AppColorScheme.allSchemes) { scheme in
+                                HStack(spacing: 12) {
+                                    Circle()
+                                        .fill(
+                                            LinearGradient(
+                                                colors: [scheme.primary, scheme.secondary],
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            )
                                         )
-                                    )
-                                    .frame(width: 20, height: 20)
-                                    .overlay(
-                                        Circle()
-                                            .stroke(scheme.accent, lineWidth: 2)
-                                    )
-                                Text(scheme.name)
-                                    .foregroundColor(colorScheme.primaryText)
+                                        .frame(width: 20, height: 20)
+                                        .overlay(
+                                            Circle()
+                                                .stroke(scheme.accent, lineWidth: 2)
+                                        )
+                                    Text(scheme.name)
+                                        .foregroundColor(colorScheme.primaryText)
+                                }
+                                .tag(scheme)
                             }
-                            .tag(scheme)
                         }
+                        .foregroundStyle(colorScheme.primaryText)
+                        .tint(colorScheme.primary)
+                        .listRowBackground(colorScheme.cardBackground)
+                        .accessibilityLabel("Color scheme")
+                        .accessibilityValue(themeManager.currentScheme.name)
+                        .accessibilityHint("Choose a color theme for the app")
                     }
                     .id(themeManager.currentScheme.id)
-                    .foregroundStyle(colorScheme.primaryText)
-                    .tint(colorScheme.primary)
-                    .background(ThemedPickerBackground(color: colorScheme.primaryText))
-                    .listRowBackground(colorScheme.cardBackground)
-                    .accessibilityLabel("Color scheme")
-                    .accessibilityValue(themeManager.currentScheme.name)
-                    .accessibilityHint("Choose a color theme for the app")
                 } header: {
                     Text("Color Scheme")
                         .foregroundColor(colorScheme.secondary)
@@ -152,27 +153,29 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    Picker("From", selection: defaultFromUnitBinding) {
-                        ForEach(MeasurementUnit.standardUnits, id: \.self) { unit in
-                            Text(unit.fullDisplayName).tag(unit)
+                    Group {
+                        Picker("From", selection: defaultFromUnitBinding) {
+                            ForEach(MeasurementUnit.standardUnits, id: \.self) { unit in
+                                Text(unit.fullDisplayName).tag(unit)
+                            }
                         }
+                        .foregroundStyle(colorScheme.primaryText)
+                        .tint(colorScheme.primary)
+                        .listRowBackground(colorScheme.cardBackground)
                     }
                     .id(themeManager.currentScheme.id)
-                    .foregroundStyle(colorScheme.primaryText)
-                    .tint(colorScheme.primary)
-                    .background(ThemedPickerBackground(color: colorScheme.primaryText))
-                    .listRowBackground(colorScheme.cardBackground)
 
-                    Picker("To", selection: defaultToUnitBinding) {
-                        ForEach(MeasurementUnit.standardUnits, id: \.self) { unit in
-                            Text(unit.fullDisplayName).tag(unit)
+                    Group {
+                        Picker("To", selection: defaultToUnitBinding) {
+                            ForEach(MeasurementUnit.standardUnits, id: \.self) { unit in
+                                Text(unit.fullDisplayName).tag(unit)
+                            }
                         }
+                        .foregroundStyle(colorScheme.primaryText)
+                        .tint(colorScheme.primary)
+                        .listRowBackground(colorScheme.cardBackground)
                     }
                     .id(themeManager.currentScheme.id)
-                    .foregroundStyle(colorScheme.primaryText)
-                    .tint(colorScheme.primary)
-                    .background(ThemedPickerBackground(color: colorScheme.primaryText))
-                    .listRowBackground(colorScheme.cardBackground)
                 } header: {
                     Text("Unit Preferences")
                         .foregroundColor(colorScheme.secondary)
@@ -647,44 +650,6 @@ struct DocumentPicker: UIViewControllerRepresentable {
         func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
             guard let url = urls.first else { return }
             onPick(url)
-        }
-    }
-}
-
-// Helper view to theme regular pickers by updating their UIKit labels
-struct ThemedPickerBackground: UIViewRepresentable {
-    let color: Color
-
-    func makeUIView(context: Context) -> UIView {
-        let view = UIView()
-        view.backgroundColor = .clear
-        return view
-    }
-
-    func updateUIView(_ uiView: UIView, context: Context) {
-        DispatchQueue.main.async {
-            guard let window = uiView.window else { return }
-            self.updatePickerLabels(in: window)
-        }
-    }
-
-    private func updatePickerLabels(in view: UIView) {
-        // Find all UITableViewCells and update their detail text labels
-        if let cell = view as? UITableViewCell {
-            // Update the detail text label (right side value)
-            if let detailLabel = cell.detailTextLabel {
-                detailLabel.textColor = UIColor(color)
-            }
-            // Also search for custom value labels (in case detailTextLabel isn't used)
-            for subview in cell.contentView.subviews {
-                if let label = subview as? UILabel, label != cell.textLabel {
-                    label.textColor = UIColor(color)
-                }
-            }
-        }
-
-        for subview in view.subviews {
-            updatePickerLabels(in: subview)
         }
     }
 }
