@@ -101,9 +101,13 @@ final class IngredientConverterUITests: XCTestCase {
         app.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
 
+        // Wait for Settings content to load
+        let displayHeader = app.staticTexts["Display"]
+        XCTAssertTrue(displayHeader.waitForExistence(timeout: 5), "Settings content should load")
+
         // Verify Unit Preferences header exists
         let unitPreferencesHeader = app.staticTexts["Unit Preferences"]
-        XCTAssertTrue(unitPreferencesHeader.exists, "Unit Preferences section should exist")
+        XCTAssertTrue(unitPreferencesHeader.waitForExistence(timeout: 5), "Unit Preferences section should exist")
     }
 
     @MainActor
@@ -111,16 +115,22 @@ final class IngredientConverterUITests: XCTestCase {
         app.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
 
+        // Wait for Settings sheet content to load
+        let displayHeader = app.staticTexts["Display"]
+        XCTAssertTrue(displayHeader.waitForExistence(timeout: 5), "Settings content should load")
+
         // Scroll to Unit Preferences section if needed
-        let fromPicker = app.otherElements["FromUnitPicker"]
-        var attempts = 0
-        while !fromPicker.exists && attempts < 3 {
+        let unitPreferencesHeader = app.staticTexts["Unit Preferences"]
+        var scrollAttempts = 0
+        while !unitPreferencesHeader.isHittable && scrollAttempts < 3 {
             app.swipeUp()
-            attempts += 1
+            scrollAttempts += 1
             Thread.sleep(forTimeInterval: 0.3)
         }
 
-        XCTAssertTrue(fromPicker.waitForExistence(timeout: 5), "From picker should exist")
+        // Look for the "From" label in the picker
+        let fromLabel = app.staticTexts["From"]
+        XCTAssertTrue(fromLabel.waitForExistence(timeout: 5), "From picker should exist")
     }
 
     @MainActor
@@ -128,16 +138,23 @@ final class IngredientConverterUITests: XCTestCase {
         app.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
 
-        // Scroll to Unit Preferences section
-        let toPicker = app.otherElements["ToUnitPicker"]
-        var attempts = 0
-        while !toPicker.exists && attempts < 3 {
+        // IMPORTANT: Wait for Settings sheet content to load
+        // Look for "Display" header which is always at the top of Settings
+        let displayHeader = app.staticTexts["Display"]
+        XCTAssertTrue(displayHeader.waitForExistence(timeout: 5), "Settings content should load")
+
+        // Now scroll to Unit Preferences section
+        let unitPreferencesHeader = app.staticTexts["Unit Preferences"]
+        var scrollAttempts = 0
+        while !unitPreferencesHeader.isHittable && scrollAttempts < 3 {
             app.swipeUp()
-            attempts += 1
+            scrollAttempts += 1
             Thread.sleep(forTimeInterval: 0.3)
         }
 
-        XCTAssertTrue(toPicker.waitForExistence(timeout: 5), "To picker should exist")
+        // Look for the "To" label in the picker
+        let toLabel = app.staticTexts["To"]
+        XCTAssertTrue(toLabel.waitForExistence(timeout: 5), "To picker should exist")
     }
 
     // MARK: - Data Management Tests
@@ -146,6 +163,10 @@ final class IngredientConverterUITests: XCTestCase {
     func testExportButtonExists() throws {
         app.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
+
+        // Wait for Settings content to load
+        let displayHeader = app.staticTexts["Display"]
+        XCTAssertTrue(displayHeader.waitForExistence(timeout: 5), "Settings content should load")
 
         // Scroll to Data section
         let exportButton = app.buttons["Export Custom Ingredients"]
@@ -161,6 +182,10 @@ final class IngredientConverterUITests: XCTestCase {
         app.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
 
+        // Wait for Settings content to load
+        let displayHeader = app.staticTexts["Display"]
+        XCTAssertTrue(displayHeader.waitForExistence(timeout: 5), "Settings content should load")
+
         // Scroll to Data section
         let importButton = app.buttons["Import Custom Ingredients"]
         if !importButton.isHittable {
@@ -175,6 +200,10 @@ final class IngredientConverterUITests: XCTestCase {
         app.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
 
+        // Wait for Settings content to load
+        let displayHeader = app.staticTexts["Display"]
+        XCTAssertTrue(displayHeader.waitForExistence(timeout: 5), "Settings content should load")
+
         // Scroll to Data section
         let resetButton = app.buttons["Reset to Default Ingredients"]
         if !resetButton.isHittable {
@@ -188,6 +217,10 @@ final class IngredientConverterUITests: XCTestCase {
     func testResetConfirmationDialog() throws {
         app.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
+
+        // Wait for Settings content to load
+        let displayHeader = app.staticTexts["Display"]
+        XCTAssertTrue(displayHeader.waitForExistence(timeout: 5), "Settings content should load")
 
         // Scroll to find the reset button
         let resetButton = app.buttons["Reset to Default Ingredients"]
@@ -220,6 +253,10 @@ final class IngredientConverterUITests: XCTestCase {
         app.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
 
+        // Wait for Settings content to load
+        let displayHeader = app.staticTexts["Display"]
+        XCTAssertTrue(displayHeader.waitForExistence(timeout: 5), "Settings content should load")
+
         // Scroll to bottom to see About section - may need multiple swipes
         let aboutHeader = app.staticTexts["About"]
         var attempts = 0
@@ -236,6 +273,10 @@ final class IngredientConverterUITests: XCTestCase {
         app.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
 
+        // Wait for Settings content to load
+        let displayHeader = app.staticTexts["Display"]
+        XCTAssertTrue(displayHeader.waitForExistence(timeout: 5), "Settings content should load")
+
         // Scroll to bottom - may need multiple swipes
         let versionLabel = app.staticTexts["Version"]
         var attempts = 0
@@ -251,6 +292,10 @@ final class IngredientConverterUITests: XCTestCase {
     func testCopyrightTextExists() throws {
         app.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
+
+        // Wait for Settings content to load
+        let displayHeader = app.staticTexts["Display"]
+        XCTAssertTrue(displayHeader.waitForExistence(timeout: 5), "Settings content should load")
 
         // Scroll to bottom - may need multiple swipes
         var attempts = 0
