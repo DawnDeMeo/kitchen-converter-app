@@ -18,7 +18,6 @@ struct ContentView: View {
             .environment(\.appColorScheme, themeManager.currentScheme)
             .preferredColorScheme(appearanceMode.colorScheme)
             .tint(themeManager.currentScheme.primary) // Set app-wide accent color
-            .id(appearanceMode) // Force view recreation when appearance mode changes
             .onAppear {
                 configureNavigationBarAppearance()
             }
