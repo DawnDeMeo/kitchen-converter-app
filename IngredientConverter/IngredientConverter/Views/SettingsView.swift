@@ -131,6 +131,8 @@ struct SettingsView: View {
                         }
                     }
                     .id(themeManager.currentScheme.id)
+                    .foregroundStyle(colorScheme.primaryText)
+                    .tint(colorScheme.primary)
                     .listRowBackground(colorScheme.cardBackground)
                     .accessibilityLabel("Color scheme")
                     .accessibilityValue(themeManager.currentScheme.name)
@@ -155,6 +157,8 @@ struct SettingsView: View {
                         }
                     }
                     .id(themeManager.currentScheme.id)
+                    .foregroundStyle(colorScheme.primaryText)
+                    .tint(colorScheme.primary)
                     .listRowBackground(colorScheme.cardBackground)
 
                     Picker("To", selection: defaultToUnitBinding) {
@@ -163,6 +167,8 @@ struct SettingsView: View {
                         }
                     }
                     .id(themeManager.currentScheme.id)
+                    .foregroundStyle(colorScheme.primaryText)
+                    .tint(colorScheme.primary)
                     .listRowBackground(colorScheme.cardBackground)
                 } header: {
                     Text("Unit Preferences")
