@@ -138,12 +138,11 @@ final class IngredientConverterUITests: XCTestCase {
         app.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
 
-        // IMPORTANT: Wait for Settings sheet content to load
-        // Look for "Display" header which is always at the top of Settings
+        // Wait for Settings sheet content to load
         let displayHeader = app.staticTexts["Display"]
         XCTAssertTrue(displayHeader.waitForExistence(timeout: 5), "Settings content should load")
 
-        // Now scroll to Unit Preferences section
+        // Scroll to Unit Preferences section if needed
         let unitPreferencesHeader = app.staticTexts["Unit Preferences"]
         var scrollAttempts = 0
         while !unitPreferencesHeader.isHittable && scrollAttempts < 3 {
