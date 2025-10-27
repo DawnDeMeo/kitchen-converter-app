@@ -104,6 +104,10 @@ struct SettingsView: View {
                 }
 
                 // MARK: - Color Scheme Selection
+                // Note: The selected value text (right side) in these pickers may not update
+                // immediately when changing themes due to SwiftUI Form Picker's internal caching
+                // of UIKit label colors. The text will update when the Settings sheet is dismissed
+                // and reopened. This is a known limitation of mixing SwiftUI and UIKit.
                 Section {
                     Group {
                         Picker("Theme", selection: Binding(
@@ -152,6 +156,7 @@ struct SettingsView: View {
                     }
                 }
 
+                // Note: Unit preference picker selected values have the same limitation as above
                 Section {
                     Group {
                         Picker("From", selection: defaultFromUnitBinding) {
