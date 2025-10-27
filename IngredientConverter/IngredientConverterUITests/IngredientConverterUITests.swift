@@ -121,9 +121,13 @@ final class IngredientConverterUITests: XCTestCase {
         app.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
 
-        // Look for To picker label
+        // Scroll to Unit Preferences section if needed
         let toLabel = app.staticTexts["To"]
-        XCTAssertTrue(toLabel.exists, "To picker should exist")
+        if !toLabel.isHittable {
+            app.swipeUp()
+        }
+
+        XCTAssertTrue(toLabel.waitForExistence(timeout: 5), "To picker should exist")
     }
 
     // MARK: - Data Management Tests
@@ -133,8 +137,13 @@ final class IngredientConverterUITests: XCTestCase {
         app.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
 
+        // Scroll to Data section
         let exportButton = app.buttons["Export Custom Ingredients"]
-        XCTAssertTrue(exportButton.exists, "Export button should exist")
+        if !exportButton.isHittable {
+            app.swipeUp()
+        }
+
+        XCTAssertTrue(exportButton.waitForExistence(timeout: 5), "Export button should exist")
     }
 
     @MainActor
@@ -142,8 +151,13 @@ final class IngredientConverterUITests: XCTestCase {
         app.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
 
+        // Scroll to Data section
         let importButton = app.buttons["Import Custom Ingredients"]
-        XCTAssertTrue(importButton.exists, "Import button should exist")
+        if !importButton.isHittable {
+            app.swipeUp()
+        }
+
+        XCTAssertTrue(importButton.waitForExistence(timeout: 5), "Import button should exist")
     }
 
     @MainActor
@@ -151,8 +165,13 @@ final class IngredientConverterUITests: XCTestCase {
         app.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
 
+        // Scroll to Data section
         let resetButton = app.buttons["Reset to Default Ingredients"]
-        XCTAssertTrue(resetButton.exists, "Reset button should exist")
+        if !resetButton.isHittable {
+            app.swipeUp()
+        }
+
+        XCTAssertTrue(resetButton.waitForExistence(timeout: 5), "Reset button should exist")
     }
 
     @MainActor
@@ -160,8 +179,15 @@ final class IngredientConverterUITests: XCTestCase {
         app.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
 
+        // Scroll to find the reset button
+        let resetButton = app.buttons["Reset to Default Ingredients"]
+        if !resetButton.isHittable {
+            app.swipeUp()
+        }
+        XCTAssertTrue(resetButton.waitForExistence(timeout: 5), "Reset button should exist")
+
         // Tap reset button
-        app.buttons["Reset to Default Ingredients"].tap()
+        resetButton.tap()
 
         // Verify confirmation alert appears
         let alert = app.alerts["Reset to Default Ingredients?"]
@@ -184,13 +210,15 @@ final class IngredientConverterUITests: XCTestCase {
         app.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
 
-        // Scroll to bottom to see About section
+        // Scroll to bottom to see About section - may need multiple swipes
         let aboutHeader = app.staticTexts["About"]
-        if !aboutHeader.isHittable {
+        var attempts = 0
+        while !aboutHeader.isHittable && attempts < 5 {
             app.swipeUp()
+            attempts += 1
         }
 
-        XCTAssertTrue(aboutHeader.exists, "About section should exist")
+        XCTAssertTrue(aboutHeader.waitForExistence(timeout: 5), "About section should exist")
     }
 
     @MainActor
@@ -198,11 +226,15 @@ final class IngredientConverterUITests: XCTestCase {
         app.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
 
-        // Scroll to bottom
-        app.swipeUp()
-
+        // Scroll to bottom - may need multiple swipes
         let versionLabel = app.staticTexts["Version"]
-        XCTAssertTrue(versionLabel.exists, "Version label should exist")
+        var attempts = 0
+        while !versionLabel.isHittable && attempts < 5 {
+            app.swipeUp()
+            attempts += 1
+        }
+
+        XCTAssertTrue(versionLabel.waitForExistence(timeout: 5), "Version label should exist")
     }
 
     @MainActor
@@ -210,11 +242,16 @@ final class IngredientConverterUITests: XCTestCase {
         app.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
 
-        // Scroll to bottom
-        app.swipeUp()
+        // Scroll to bottom - may need multiple swipes
+        var attempts = 0
+        while attempts < 5 {
+            app.swipeUp()
+            attempts += 1
+        }
 
+        // Give time for rendering after scrolling
         let copyrightText = app.staticTexts.containing(NSPredicate(format: "label CONTAINS[c] '2025 Dawn DeMeo'")).firstMatch
-        XCTAssertTrue(copyrightText.exists, "Copyright text should exist")
+        XCTAssertTrue(copyrightText.waitForExistence(timeout: 5), "Copyright text should exist")
     }
 
     // MARK: - Performance Tests
