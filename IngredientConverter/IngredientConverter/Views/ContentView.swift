@@ -34,10 +34,39 @@ struct ContentView: View {
         appearance.largeTitleTextAttributes = [.foregroundColor: UIColor(themeManager.currentScheme.primary)]
         appearance.titleTextAttributes = [.foregroundColor: UIColor(themeManager.currentScheme.primary)]
 
-        // Update the global appearance proxy - this handles all navigation bars
+        // Update the global appearance proxy - this handles future navigation bars
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
         UINavigationBar.appearance().compactAppearance = appearance
+
+        // Update existing navigation bars that are already on screen
+        updateExistingNavigationBars(with: appearance)
+    }
+
+    /// Update navigation bars that are already instantiated
+    private func updateExistingNavigationBars(with appearance: UINavigationBarAppearance) {
+        // Find all windows in all scenes and update their navigation bars
+        for scene in UIApplication.shared.connectedScenes {
+            guard let windowScene = scene as? UIWindowScene else { continue }
+
+            for window in windowScene.windows where window.isKeyWindow {
+                updateNavigationBars(in: window, with: appearance)
+            }
+        }
+    }
+
+    /// Recursively find and update navigation bars
+    private func updateNavigationBars(in view: UIView, with appearance: UINavigationBarAppearance) {
+        if let navigationBar = view as? UINavigationBar {
+            navigationBar.standardAppearance = appearance
+            navigationBar.scrollEdgeAppearance = appearance
+            navigationBar.compactAppearance = appearance
+        }
+
+        // Check subviews
+        for subview in view.subviews {
+            updateNavigationBars(in: subview, with: appearance)
+        }
     }
 }
 
