@@ -669,11 +669,18 @@ struct ThemedPickerBackground: UIViewRepresentable {
     }
 
     private func updatePickerLabels(in view: UIView) {
-        // Update UILabels that are part of table view cells (picker value labels)
-        if let label = view as? UILabel,
-           let cell = view.superview?.superview as? UITableViewCell,
-           label != cell.textLabel {  // Don't update the left-side label, only the right-side value
-            label.textColor = UIColor(color)
+        // Find all UITableViewCells and update their detail text labels
+        if let cell = view as? UITableViewCell {
+            // Update the detail text label (right side value)
+            if let detailLabel = cell.detailTextLabel {
+                detailLabel.textColor = UIColor(color)
+            }
+            // Also search for custom value labels (in case detailTextLabel isn't used)
+            for subview in cell.contentView.subviews {
+                if let label = subview as? UILabel, label != cell.textLabel {
+                    label.textColor = UIColor(color)
+                }
+            }
         }
 
         for subview in view.subviews {
