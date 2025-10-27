@@ -198,6 +198,7 @@ struct IngredientEditorView: View {
                     toUnit: conversionEditor.toUnit
                 )
                 conversion.ingredient = existing
+                modelContext.insert(conversion) // Explicitly insert into context
                 existing.conversions?.append(conversion)
             }
         } else {
@@ -221,6 +222,8 @@ struct IngredientEditorView: View {
                     toAmount: conversionEditor.toAmount,
                     toUnit: conversionEditor.toUnit
                 )
+                conversion.ingredient = newIngredient
+                modelContext.insert(conversion) // Explicitly insert into context
                 newIngredient.conversions?.append(conversion)
             }
 
