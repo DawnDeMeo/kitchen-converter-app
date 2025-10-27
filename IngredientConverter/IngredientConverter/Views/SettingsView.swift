@@ -130,6 +130,7 @@ struct SettingsView: View {
                             .tag(scheme)
                         }
                     }
+                    .id(themeManager.currentScheme.id)
                     .listRowBackground(colorScheme.cardBackground)
                     .accessibilityLabel("Color scheme")
                     .accessibilityValue(themeManager.currentScheme.name)
@@ -153,6 +154,7 @@ struct SettingsView: View {
                             Text(unit.fullDisplayName).tag(unit)
                         }
                     }
+                    .id(themeManager.currentScheme.id)
                     .listRowBackground(colorScheme.cardBackground)
 
                     Picker("To", selection: defaultToUnitBinding) {
@@ -160,6 +162,7 @@ struct SettingsView: View {
                             Text(unit.fullDisplayName).tag(unit)
                         }
                     }
+                    .id(themeManager.currentScheme.id)
                     .listRowBackground(colorScheme.cardBackground)
                 } header: {
                     Text("Unit Preferences")
@@ -338,6 +341,7 @@ struct SettingsView: View {
                 Text(importMessage)
             }
         }
+        .preferredColorScheme(appearanceMode.colorScheme)
     }
 
     private func exportCustomIngredients() {
