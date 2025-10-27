@@ -86,7 +86,7 @@ struct ConversionView: View {
                 .frame(maxWidth: .infinity)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel(inputAmount.isEmpty ? "Tap to enter amount" : "\(amountToWords(displayAmount)) \(unitDisplayText(fromUnit, amount: effectiveAmount ?? 1))")
+            .accessibilityLabel(inputAmount.isEmpty ? "Tap to enter amount" : "\(FractionParser.amountToWords(displayAmount)) \(unitDisplayText(fromUnit, amount: effectiveAmount ?? 1))")
             .accessibilityHint(inputAmount.isEmpty ? "Double tap to enter the quantity you want to convert" : "Double tap to edit amount")
 
             Divider()
@@ -428,77 +428,6 @@ struct ConversionView: View {
         }
 
         performConversion()
-    }
-
-    private func amountToWords(_ amount: String) -> String {
-        let trimmed = amount.trimmingCharacters(in: .whitespaces)
-
-        // Check if it's a mixed number (e.g., "1 1/2")
-        if trimmed.contains(" ") && trimmed.contains("/") {
-            let parts = trimmed.components(separatedBy: " ")
-            if parts.count == 2 {
-                let whole = parts[0]
-                let fraction = parts[1]
-                return "\(whole) and \(fractionToWords(fraction))"
-            }
-        }
-
-        // Check if it's a simple fraction (e.g., "1/4")
-        if trimmed.contains("/") && !trimmed.contains(" ") {
-            return fractionToWords(trimmed)
-        }
-
-        // Check if it's a decimal - replace "." with " point " for VoiceOver
-        if trimmed.contains(".") {
-            return trimmed.replacingOccurrences(of: ".", with: " point ")
-        }
-
-        return trimmed
-    }
-
-    private func fractionToWords(_ fraction: String) -> String {
-        switch fraction {
-        case "1/8": return "one eighth"
-        case "1/4": return "one quarter"
-        case "1/3": return "one third"
-        case "1/2": return "one half"
-        case "2/3": return "two thirds"
-        case "3/4": return "three quarters"
-        default:
-            // Try to parse other fractions like "5/8" → "five eighths"
-            let components = fraction.components(separatedBy: "/")
-            if components.count == 2,
-               let numerator = Int(components[0]),
-               let denominator = Int(components[1]) {
-                let numWord = numberToWord(numerator)
-                let denomWord = denominatorToWord(denominator, plural: numerator > 1)
-                return "\(numWord) \(denomWord)"
-            }
-            return fraction
-        }
-    }
-
-    private func numberToWord(_ num: Int) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .spellOut
-        return formatter.string(from: NSNumber(value: num)) ?? "\(num)"
-    }
-
-    private func denominatorToWord(_ denom: Int, plural: Bool) -> String {
-        let base: String
-        switch denom {
-        case 2: base = "half"
-        case 3: base = "third"
-        case 4: base = "quarter"
-        case 5: base = "fifth"
-        case 6: base = "sixth"
-        case 7: base = "seventh"
-        case 8: base = "eighth"
-        case 9: base = "ninth"
-        case 10: base = "tenth"
-        default: base = "\(denom)th"
-        }
-        return plural ? base + "s" : base
     }
 }
 

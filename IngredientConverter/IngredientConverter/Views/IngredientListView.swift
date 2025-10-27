@@ -60,120 +60,18 @@ struct IngredientListView: View {
     private func fetchIngredients() {
         var descriptor = FetchDescriptor<Ingredient>()
 
-        // Build combined predicate based on filter, search, and category
+        // Build combined predicate compositionally based on active filters
         let search = searchText
         let category = selectedCategory
+        let hasSearch = !searchText.isEmpty
+        let hasCategory = selectedCategory != nil
 
-        switch (filterOption, searchText.isEmpty, selectedCategory == nil) {
-        // No filters at all
-        case (.all, true, true):
-            descriptor.predicate = nil
-
-        // Only category filter
-        case (.all, true, false):
-            descriptor.predicate = #Predicate { ingredient in
-                ingredient.category == category
-            }
-
-        // Only search filter
-        case (.all, false, true):
-            descriptor.predicate = #Predicate { ingredient in
-                ingredient.name.localizedStandardContains(search) ||
-                (ingredient.brand?.localizedStandardContains(search) ?? false)
-            }
-
-        // Category AND search
-        case (.all, false, false):
-            descriptor.predicate = #Predicate { ingredient in
-                ingredient.category == category &&
-                (ingredient.name.localizedStandardContains(search) ||
-                 (ingredient.brand?.localizedStandardContains(search) ?? false))
-            }
-
-        // Favorites only
-        case (.favorites, true, true):
-            descriptor.predicate = #Predicate { $0.isFavorite == true }
-
-        // Favorites AND category
-        case (.favorites, true, false):
-            descriptor.predicate = #Predicate { ingredient in
-                ingredient.isFavorite == true &&
-                ingredient.category == category
-            }
-
-        // Favorites AND search
-        case (.favorites, false, true):
-            descriptor.predicate = #Predicate { ingredient in
-                ingredient.isFavorite == true &&
-                (ingredient.name.localizedStandardContains(search) ||
-                 (ingredient.brand?.localizedStandardContains(search) ?? false))
-            }
-
-        // Favorites AND category AND search
-        case (.favorites, false, false):
-            descriptor.predicate = #Predicate { ingredient in
-                ingredient.isFavorite == true &&
-                ingredient.category == category &&
-                (ingredient.name.localizedStandardContains(search) ||
-                 (ingredient.brand?.localizedStandardContains(search) ?? false))
-            }
-
-        // Custom only
-        case (.custom, true, true):
-            descriptor.predicate = #Predicate { $0.isCustom == true }
-
-        // Custom AND category
-        case (.custom, true, false):
-            descriptor.predicate = #Predicate { ingredient in
-                ingredient.isCustom == true &&
-                ingredient.category == category
-            }
-
-        // Custom AND search
-        case (.custom, false, true):
-            descriptor.predicate = #Predicate { ingredient in
-                ingredient.isCustom == true &&
-                (ingredient.name.localizedStandardContains(search) ||
-                 (ingredient.brand?.localizedStandardContains(search) ?? false))
-            }
-
-        // Custom AND category AND search
-        case (.custom, false, false):
-            descriptor.predicate = #Predicate { ingredient in
-                ingredient.isCustom == true &&
-                ingredient.category == category &&
-                (ingredient.name.localizedStandardContains(search) ||
-                 (ingredient.brand?.localizedStandardContains(search) ?? false))
-            }
-
-        // Default only
-        case (.defaultOnly, true, true):
-            descriptor.predicate = #Predicate { $0.isCustom == false }
-
-        // Default AND category
-        case (.defaultOnly, true, false):
-            descriptor.predicate = #Predicate { ingredient in
-                ingredient.isCustom == false &&
-                ingredient.category == category
-            }
-
-        // Default AND search
-        case (.defaultOnly, false, true):
-            descriptor.predicate = #Predicate { ingredient in
-                ingredient.isCustom == false &&
-                (ingredient.name.localizedStandardContains(search) ||
-                 (ingredient.brand?.localizedStandardContains(search) ?? false))
-            }
-
-        // Default AND category AND search
-        case (.defaultOnly, false, false):
-            descriptor.predicate = #Predicate { ingredient in
-                ingredient.isCustom == false &&
-                ingredient.category == category &&
-                (ingredient.name.localizedStandardContains(search) ||
-                 (ingredient.brand?.localizedStandardContains(search) ?? false))
-            }
-        }
+        // Build predicate based on combination of active filters
+        descriptor.predicate = buildPredicate(
+            filterOption: filterOption,
+            search: hasSearch ? search : nil,
+            category: hasCategory ? category : nil
+        )
 
         // Apply sort descriptors at database level
         switch sortOption {
@@ -206,7 +104,108 @@ struct IngredientListView: View {
             availableCategories = []
         }
     }
-    
+
+    /// Build a predicate compositionally based on active filters
+    /// - Parameters:
+    ///   - filterOption: The type filter (all, favorites, custom, or default)
+    ///   - search: Optional search string for name/brand
+    ///   - category: Optional category filter
+    /// - Returns: Combined predicate, or nil if no filters are active
+    private func buildPredicate(
+        filterOption: IngredientFilterOption,
+        search: String?,
+        category: String?
+    ) -> Predicate<Ingredient>? {
+        // If no filters at all, return nil (fetch all)
+        if filterOption == .all && search == nil && category == nil {
+            return nil
+        }
+
+        // Build predicate based on combination of filters
+        switch (filterOption, search, category) {
+        // Filter only
+        case (.favorites, nil, nil):
+            return #Predicate { $0.isFavorite == true }
+        case (.custom, nil, nil):
+            return #Predicate { $0.isCustom == true }
+        case (.defaultOnly, nil, nil):
+            return #Predicate { $0.isCustom == false }
+
+        // Category only
+        case (.all, nil, let cat?):
+            return #Predicate { $0.category == cat }
+
+        // Search only
+        case (.all, let s?, nil):
+            return #Predicate { ingredient in
+                ingredient.name.localizedStandardContains(s) ||
+                (ingredient.brand?.localizedStandardContains(s) ?? false)
+            }
+
+        // Filter + Category
+        case (.favorites, nil, let cat?):
+            return #Predicate { $0.isFavorite == true && $0.category == cat }
+        case (.custom, nil, let cat?):
+            return #Predicate { $0.isCustom == true && $0.category == cat }
+        case (.defaultOnly, nil, let cat?):
+            return #Predicate { $0.isCustom == false && $0.category == cat }
+
+        // Filter + Search
+        case (.favorites, let s?, nil):
+            return #Predicate { ingredient in
+                ingredient.isFavorite == true &&
+                (ingredient.name.localizedStandardContains(s) ||
+                 (ingredient.brand?.localizedStandardContains(s) ?? false))
+            }
+        case (.custom, let s?, nil):
+            return #Predicate { ingredient in
+                ingredient.isCustom == true &&
+                (ingredient.name.localizedStandardContains(s) ||
+                 (ingredient.brand?.localizedStandardContains(s) ?? false))
+            }
+        case (.defaultOnly, let s?, nil):
+            return #Predicate { ingredient in
+                ingredient.isCustom == false &&
+                (ingredient.name.localizedStandardContains(s) ||
+                 (ingredient.brand?.localizedStandardContains(s) ?? false))
+            }
+
+        // Category + Search
+        case (.all, let s?, let cat?):
+            return #Predicate { ingredient in
+                ingredient.category == cat &&
+                (ingredient.name.localizedStandardContains(s) ||
+                 (ingredient.brand?.localizedStandardContains(s) ?? false))
+            }
+
+        // Filter + Category + Search
+        case (.favorites, let s?, let cat?):
+            return #Predicate { ingredient in
+                ingredient.isFavorite == true &&
+                ingredient.category == cat &&
+                (ingredient.name.localizedStandardContains(s) ||
+                 (ingredient.brand?.localizedStandardContains(s) ?? false))
+            }
+        case (.custom, let s?, let cat?):
+            return #Predicate { ingredient in
+                ingredient.isCustom == true &&
+                ingredient.category == cat &&
+                (ingredient.name.localizedStandardContains(s) ||
+                 (ingredient.brand?.localizedStandardContains(s) ?? false))
+            }
+        case (.defaultOnly, let s?, let cat?):
+            return #Predicate { ingredient in
+                ingredient.isCustom == false &&
+                ingredient.category == cat &&
+                (ingredient.name.localizedStandardContains(s) ||
+                 (ingredient.brand?.localizedStandardContains(s) ?? false))
+            }
+
+        default:
+            return nil
+        }
+    }
+
     var body: some View {
         NavigationStack {
             Group {
