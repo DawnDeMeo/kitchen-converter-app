@@ -39,31 +39,20 @@ struct UnitConversionHelper {
 
     /// Convert between units of the same type using exact conversion tables
     static func convert(amount: Double, from fromUnit: MeasurementUnit, to toUnit: MeasurementUnit) -> Double? {
-        DebugLogger.log("   📐 \(amount) \(fromUnit.displayName) → \(toUnit.displayName)", category: "UnitConversionHelper")
         // Only convert if both units are the same type
         guard fromUnit.type == toUnit.type else {
-            DebugLogger.log("   ❌ Types don't match: \(fromUnit.type) vs \(toUnit.type)", category: "UnitConversionHelper")
             return nil
         }
 
-        let result: Double?
         switch fromUnit.type {
         case .volume:
-            result = convertVolume(amount: amount, from: fromUnit, to: toUnit)
+            return convertVolume(amount: amount, from: fromUnit, to: toUnit)
         case .weight:
-            result = convertWeight(amount: amount, from: fromUnit, to: toUnit)
+            return convertWeight(amount: amount, from: fromUnit, to: toUnit)
         case .count, .other:
             // Can't auto-convert count or other types
-            result = nil
+            return nil
         }
-
-        if let result = result {
-            DebugLogger.log("   ✅ Result: \(result)", category: "UnitConversionHelper")
-        } else {
-            DebugLogger.log("   ❌ Returned nil", category: "UnitConversionHelper")
-        }
-
-        return result
     }
     
     private static func convertVolume(amount: Double, from fromUnit: MeasurementUnit, to toUnit: MeasurementUnit) -> Double? {
@@ -75,11 +64,7 @@ struct UnitConversionHelper {
 
         // Convert: amount in fromUnit → teaspoons → toUnit
         let amountInTeaspoons = amount * fromTeaspoons
-        let result = amountInTeaspoons / toTeaspoons
-
-        DebugLogger.log("      🧮 Exact calculation: \(amount) × \(fromTeaspoons) ÷ \(toTeaspoons) = \(result)", category: "UnitConversionHelper")
-
-        return result
+        return amountInTeaspoons / toTeaspoons
     }
 
     private static func convertWeight(amount: Double, from fromUnit: MeasurementUnit, to toUnit: MeasurementUnit) -> Double? {
@@ -91,11 +76,7 @@ struct UnitConversionHelper {
 
         // Convert: amount in fromUnit → grams → toUnit
         let amountInGrams = amount * fromGrams
-        let result = amountInGrams / toGrams
-
-        DebugLogger.log("      🧮 Exact calculation: \(amount) × \(fromGrams) ÷ \(toGrams) = \(result)", category: "UnitConversionHelper")
-
-        return result
+        return amountInGrams / toGrams
     }
     
     /// Get all available units of the same type as the given unit

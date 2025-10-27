@@ -23,12 +23,8 @@ class ConversionEngine {
     func convert(amount: Double, from: MeasurementUnit, to: MeasurementUnit,
                  for ingredient: Ingredient) -> Double? {
 
-        DebugLogger.log("🔄 Converting \(amount) \(from.displayName) → \(to.displayName) for \(ingredient.name)", category: "ConversionEngine")
-        DebugLogger.log("   From type: \(from.type), To type: \(to.type)", category: "ConversionEngine")
-
         // If converting to the same unit, just return the amount
         if from == to {
-            DebugLogger.log("   ✅ Same unit, returning \(amount)", category: "ConversionEngine")
             return amount
         }
 
@@ -36,12 +32,9 @@ class ConversionEngine {
         // This ensures precise conversions (e.g., 1 cup = exactly 16 tablespoons)
         // We check this BEFORE the cache to prevent imprecise chained conversions from being cached
         if from.type == to.type, from.type == .volume || from.type == .weight {
-            DebugLogger.log("   🎯 Same type conversion, using Foundation", category: "ConversionEngine")
             if let result = UnitConversionHelper.convert(amount: amount, from: from, to: to) {
-                DebugLogger.log("   ✅ Foundation returned: \(result)", category: "ConversionEngine")
                 return result
             }
-            DebugLogger.log("   ❌ Foundation returned nil", category: "ConversionEngine")
             return nil
         }
 
@@ -49,10 +42,8 @@ class ConversionEngine {
         let cacheKey = CacheKey(ingredientID: ingredient.id, fromUnit: from, toUnit: to)
         if let cachedRatio = conversionCache[cacheKey] {
             let result = amount * cachedRatio
-            DebugLogger.log("   💾 Using cached ratio: \(cachedRatio), result: \(result)", category: "ConversionEngine")
             return result
         }
-        DebugLogger.log("   🔍 No cache entry, searching for conversion path", category: "ConversionEngine")
 
         // Try direct conversion
         if let result = directConversion(amount: amount, from: from, to: to, for: ingredient) {
