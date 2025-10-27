@@ -34,39 +34,10 @@ struct ContentView: View {
         appearance.largeTitleTextAttributes = [.foregroundColor: UIColor(themeManager.currentScheme.primary)]
         appearance.titleTextAttributes = [.foregroundColor: UIColor(themeManager.currentScheme.primary)]
 
-        // Update the global appearance proxy (for future navigation bars)
+        // Update the global appearance proxy - this handles all navigation bars
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
         UINavigationBar.appearance().compactAppearance = appearance
-
-        // Update existing navigation bars with a more targeted approach
-        updateExistingNavigationBars(with: appearance)
-    }
-
-    /// Update existing navigation bars without disrupting the entire view hierarchy
-    private func updateExistingNavigationBars(with appearance: UINavigationBarAppearance) {
-        for scene in UIApplication.shared.connectedScenes {
-            guard let windowScene = scene as? UIWindowScene else { continue }
-
-            for window in windowScene.windows {
-                // Find and update navigation bars directly instead of recreating entire view hierarchy
-                updateNavigationBarsInView(window, with: appearance)
-            }
-        }
-    }
-
-    /// Recursively find and update navigation bars in view hierarchy
-    private func updateNavigationBarsInView(_ view: UIView, with appearance: UINavigationBarAppearance) {
-        for subview in view.subviews {
-            if let navigationBar = subview as? UINavigationBar {
-                navigationBar.standardAppearance = appearance
-                navigationBar.scrollEdgeAppearance = appearance
-                navigationBar.compactAppearance = appearance
-                navigationBar.setNeedsLayout()
-            }
-            // Continue recursively to find nested navigation bars
-            updateNavigationBarsInView(subview, with: appearance)
-        }
     }
 }
 

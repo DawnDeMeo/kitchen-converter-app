@@ -357,7 +357,7 @@ struct ConversionView: View {
     private func computeAvailableUnits(for ingredient: Ingredient) -> [MeasurementUnit] {
         var units = Set<MeasurementUnit>()
 
-        // Add all units from conversions
+        // Collect all direct units from conversions
         for conversion in ingredient.conversions ?? [] {
             // Skip conversions with missing units
             guard let fromUnit = conversion.fromUnit,
@@ -367,13 +367,14 @@ struct ConversionView: View {
 
             units.insert(fromUnit)
             units.insert(toUnit)
+        }
 
-            // Add all units of the same type
-            let fromSameType = UnitConversionHelper.allUnitsOfSameType(as: fromUnit)
-            units.formUnion(fromSameType)
-
-            let toSameType = UnitConversionHelper.allUnitsOfSameType(as: toUnit)
-            units.formUnion(toSameType)
+        // Now add all units of the same type for each unique unit we found
+        // This way we only call allUnitsOfSameType() once per unique unit instead of per conversion
+        let baseUnits = units
+        for unit in baseUnits {
+            let sameTypeUnits = UnitConversionHelper.allUnitsOfSameType(as: unit)
+            units.formUnion(sameTypeUnits)
         }
 
         return Array(units).sorted { $0.sortOrder < $1.sortOrder }

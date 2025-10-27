@@ -27,18 +27,8 @@ struct IngredientEditorView: View {
     @State private var showingError = false
     @State private var errorMessage = ""
 
-    // Dynamically get available categories from database
-    private var availableCategories: [String] {
-        let categories = Set(allIngredients.compactMap { $0.category })
-        var sortedCategories = Array(categories).sorted()
-
-        // Always include "Other" as a fallback option
-        if !sortedCategories.contains("Other") {
-            sortedCategories.append("Other")
-        }
-
-        return sortedCategories
-    }
+    // Cached available categories from database
+    @State private var availableCategories: [String] = ["Other"]
     
     var isEditing: Bool {
         ingredientToEdit != nil
@@ -129,6 +119,7 @@ struct IngredientEditorView: View {
                 Text(errorMessage)
             }
             .onAppear {
+                loadCategories()
                 loadIngredient()
             }
     }
@@ -136,7 +127,19 @@ struct IngredientEditorView: View {
     private var isValid: Bool {
         !name.trimmingCharacters(in: .whitespaces).isEmpty && !conversions.isEmpty
     }
-    
+
+    private func loadCategories() {
+        let categories = Set(allIngredients.compactMap { $0.category })
+        var sortedCategories = Array(categories).sorted()
+
+        // Always include "Other" as a fallback option
+        if !sortedCategories.contains("Other") {
+            sortedCategories.append("Other")
+        }
+
+        availableCategories = sortedCategories
+    }
+
     private func loadIngredient() {
         guard let ingredient = ingredientToEdit else { return }
 

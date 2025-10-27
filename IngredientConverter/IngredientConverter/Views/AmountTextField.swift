@@ -104,18 +104,14 @@ struct NoKeyboardTextField: UIViewRepresentable {
         }
 
         func textFieldDidBeginEditing(_ textField: UITextField) {
-            print("UITextField did begin editing")
             DispatchQueue.main.async {
                 self.parent.isFocused = true
-                print("Set parent.isFocused to true")
             }
         }
 
         func textFieldDidEndEditing(_ textField: UITextField) {
-            print("UITextField did end editing")
             DispatchQueue.main.async {
                 self.parent.isFocused = false
-                print("Set parent.isFocused to false")
             }
         }
     }
@@ -124,6 +120,7 @@ struct NoKeyboardTextField: UIViewRepresentable {
 // Simple blinking cursor
 struct BlinkingCursor: View {
     @State private var isVisible = true
+    @State private var timer: Timer?
 
     var body: some View {
         Rectangle()
@@ -131,9 +128,13 @@ struct BlinkingCursor: View {
             .frame(width: 2, height: 20)
             .opacity(isVisible ? 1 : 0)
             .onAppear {
-                Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
+                timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
                     isVisible.toggle()
                 }
+            }
+            .onDisappear {
+                timer?.invalidate()
+                timer = nil
             }
     }
 }

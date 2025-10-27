@@ -43,7 +43,6 @@ struct SettingsView: View {
     @AppStorage("defaultToUnit") private var defaultToUnitKey: String = "gram"
 
     @State private var showingResetConfirmation = false
-    @State private var showingDeleteAllConfirmation = false
     @State private var showingShareSheet = false
     @State private var showingDocumentPicker = false
     @State private var exportURL: URL?
@@ -194,17 +193,6 @@ struct SettingsView: View {
                     .listRowBackground(colorScheme.cardBackground)
 
                     Button(role: .destructive) {
-                        showingDeleteAllConfirmation = true
-                    } label: {
-                        HStack {
-                            Label("Delete All Ingredients (Debug)", systemImage: "trash")
-                                .foregroundColor(colorScheme.error)
-                            Spacer()
-                        }
-                    }
-                    .listRowBackground(colorScheme.error.opacity(0.05))
-
-                    Button(role: .destructive) {
                         showingResetConfirmation = true
                     } label: {
                         HStack {
@@ -333,17 +321,6 @@ struct SettingsView: View {
                 Button("Cancel", role: .cancel) { }
             } message: {
                 Text("This will permanently delete all custom ingredients. Default ingredients will remain. This action cannot be undone.")
-            }
-            .alert(
-                "Delete All Ingredients?",
-                isPresented: $showingDeleteAllConfirmation
-            ) {
-                Button("Delete All", role: .destructive) {
-                    deleteAllIngredients()
-                }
-                Button("Cancel", role: .cancel) { }
-            } message: {
-                Text("⚠️ DEBUG TOOL: This will delete ALL ingredients (including defaults) from this device AND iCloud. Use this to clear duplicate data. The app will reload defaults on next launch. Cannot be undone!")
             }
             .sheet(isPresented: $showingShareSheet) {
                 if let url = exportURL {
@@ -615,29 +592,6 @@ struct SettingsView: View {
             print("✓ Deleted \(customIngredients.count) custom ingredients")
         } catch {
             print("❌ Error resetting database: \(error)")
-        }
-    }
-
-    private func deleteAllIngredients() {
-        let fetchDescriptor = FetchDescriptor<Ingredient>()
-
-        do {
-            let allIngredients = try modelContext.fetch(fetchDescriptor)
-            print("🗑️ Deleting \(allIngredients.count) ingredients from local database and iCloud...")
-
-            for ingredient in allIngredients {
-                modelContext.delete(ingredient)
-            }
-
-            try modelContext.save()
-            print("✅ Successfully deleted all ingredients. CloudKit will propagate deletions.")
-
-            // Reset the flags so defaults reload on next launch
-            UserDefaults.standard.set(0, forKey: "defaultIngredientsDatabaseVersion")
-            UserDefaults.standard.set(false, forKey: "hasLoadedDefaultIngredientsOnce")
-            print("🔄 Reset database flags. Defaults will reload on next launch.")
-        } catch {
-            print("❌ Error deleting all ingredients: \(error)")
         }
     }
 }

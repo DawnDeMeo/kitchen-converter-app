@@ -9,7 +9,14 @@
 import Foundation
 
 struct FractionParser {
-    
+
+    /// Cached NumberFormatter for converting numbers to words
+    private static let spellOutFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .spellOut
+        return formatter
+    }()
+
     /// Parse a string that may contain fractions, mixed numbers, or decimals
     /// Examples: "3/4", "1 1/2", "5 3/8", "2.5", "3"
     static func parse(_ input: String) -> Double? {
@@ -192,9 +199,7 @@ struct FractionParser {
     /// Convert a number to its word representation
     /// Example: 5 → "five"
     private static func numberToWord(_ num: Int) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .spellOut
-        return formatter.string(from: NSNumber(value: num)) ?? "\(num)"
+        return spellOutFormatter.string(from: NSNumber(value: num)) ?? "\(num)"
     }
 
     /// Convert a denominator to its ordinal word form
