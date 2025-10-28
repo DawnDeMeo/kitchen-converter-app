@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "ingredients": [
     {
       "name": "Active dry yeast",
@@ -1356,7 +1356,7 @@
       "category": "Other"
     },
     {
-      "name": "Brown sugar",
+      "name": "Brown sugar, packed",
       "conversions": [
         {
           "fromAmount": 1.0,
@@ -1609,6 +1609,32 @@
       ],
       "id": "0f49a639-b188-46c1-9b93-75b6715d2717",
       "category": "Vegetables"
+    },
+    {
+      "name": "Semolina",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 167.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "ae2f976d-b43e-4c3e-8f49-4682a99548ec",
+      "category": "Flour"
+    },
+    {
+      "name": "Nonfat dried milk",
+      "conversions": [
+        {
+          "fromAmount": 1.0,
+          "fromUnit": "cup",
+          "toAmount": 112.0,
+          "toUnit": "gram"
+        }
+      ],
+      "id": "2923bebb-2e9e-46d1-8738-d6109def788a",
+      "category": "Dairy"
     }
   ]
 }
