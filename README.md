@@ -13,7 +13,7 @@ A native iOS app for converting cooking measurements and ingredient quantities, 
 - **Fraction Support**: Natural input of fractions (e.g., "1/2", "2 1/4") with intelligent parsing
 
 ### Ingredient Management
-- **95 Curated Ingredients**: Pre-loaded database with verified conversions for common baking and cooking ingredients
+- **130+ Curated Ingredients**: Pre-loaded database with verified conversions for common baking and cooking ingredients
 - **Custom Ingredients**: Create and save your own ingredients with custom conversions
 - **14 Categories**: Organized by type (Flour, Sugar, Dairy, Fat, Baking, Spices, etc.)
 - **Favorites**: Mark frequently used ingredients for quick access
@@ -245,17 +245,15 @@ This is a personal project, but suggestions and feedback are welcome! Please ope
 - [x] Custom numeric keyboard for fractions
 - [x] Enhanced VoiceOver accessibility
 - [x] Performance optimizations
+- [x] iCloud sync for custom ingredients (CloudKit integration)
+- [x] Import/export custom ingredients
 
 ### In Progress
-- [ ] iCloud sync for custom ingredients (CloudKit integration in development)
+- [ ] Testing
 
 ### Planned
-- [ ] Recipe scaling functionality
-- [ ] Import/export custom ingredients
-- [ ] Ingredient photos/images
-- [ ] Nutritional information integration
-- [ ] Apple Watch companion app
-- [ ] Widget support for recent conversions
+- [ ] Additional default ingredients
+- [ ] Additional/improved color schemes
 
 ## License
 
@@ -263,8 +261,9 @@ This project is private and not licensed for public use.
 
 ## Acknowledgments
 
-- Conversion data verified against [King Arthur Baking](https://www.kingarthurbaking.com/learn/ingredient-weight-chart)
-- USDA FoodData Central for ingredient reference data
+- Conversion data verified against:
+	- [USDA FoodData Central](http://fdc.nal.usda.gov)
+	- [King Arthur Baking](https://www.kingarthurbaking.com/learn/ingredient-weight-chart)
 - Built with assistance from [Claude Code](https://claude.com/claude-code)
 
 ---
