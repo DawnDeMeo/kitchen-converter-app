@@ -2,6 +2,8 @@
 
 A native iOS app for converting cooking measurements and ingredient quantities, built with SwiftUI and SwiftData.
 
+**Key Differentiators**: Ingredient-specific conversions with intelligent chained pathfinding, custom fraction keyboard, 5 beautiful themes with full accessibility support, and a curated database of 95+ verified conversions.
+
 ## Features
 
 ### Core Functionality
@@ -24,11 +26,21 @@ A native iOS app for converting cooking measurements and ingredient quantities, 
 - Real-time search with combined filtering
 
 ### User Experience
-- Natural language ingredient names (e.g., "All-purpose flour" instead of "Flour, all-purpose")
+- **Custom Numeric Keyboard**: Specialized keyboard with quick-insert fraction buttons (1/8, 1/4, 1/3, 1/2, 2/3, 3/4)
+- **Theming System**: 5 beautiful color schemes (Blue Crab, Cayenne, Lavender, Salt & Pepper, Sage)
+- **Light/Dark Mode**: Full adaptive color support with automatic or manual appearance switching
+- **Natural Language**: Ingredient names use natural phrasing (e.g., "All-purpose flour" instead of "Flour, all-purpose")
 - SwiftUI native interface with smooth animations
 - SwiftData persistence with optimized database queries
 - Conversion result caching for improved performance
 - Comprehensive unit tests and UI tests
+
+### Accessibility
+- **Enhanced VoiceOver**: Natural-sounding labels for all interactive elements
+- **Fraction Announcements**: Smooth reading of fractions (e.g., "one and one half cups equals one hundred eighty grams")
+- **Accessibility Hints**: Context-aware hints throughout the interface
+- Full keyboard navigation support
+- Dynamic type support for text scaling
 
 ## Tech Stack
 
@@ -41,35 +53,54 @@ A native iOS app for converting cooking measurements and ingredient quantities, 
 
 ## Project Structure
 
-> **Note**: This is a simplified view showing key files. See the actual project structure for the complete file list.
-
 ```
 kitchen-converter-app/
 ├── IngredientConverter/              # iOS app
 │   ├── IngredientConverter.xcodeproj
 │   ├── IngredientConverter/          # Source code
 │   │   ├── Models/
-│   │   │   ├── Ingredient.swift      # SwiftData model
-│   │   │   ├── UnitConversion.swift  # Conversion data model
-│   │   │   └── MeasurementUnit.swift # Unit type definitions
+│   │   │   ├── Ingredient.swift          # SwiftData ingredient model
+│   │   │   ├── UnitConversion.swift      # Conversion data model
+│   │   │   ├── MeasurementUnit.swift     # Unit type definitions
+│   │   │   └── IngredientJSONModels.swift # JSON parsing models
 │   │   ├── Views/
-│   │   │   ├── IngredientListView.swift
-│   │   │   ├── ConversionView.swift
-│   │   │   └── IngredientEditorView.swift
+│   │   │   ├── ContentView.swift         # Main tab navigation
+│   │   │   ├── IngredientListView.swift  # Searchable ingredient list
+│   │   │   ├── IngredientRowView.swift   # Reusable list row
+│   │   │   ├── ConversionView.swift      # Conversion interface
+│   │   │   ├── IngredientEditorView.swift # Add/edit ingredients
+│   │   │   ├── ConversionEditorSheet.swift # Conversion editor
+│   │   │   ├── CustomNumericKeyboard.swift # Fraction-friendly keyboard
+│   │   │   ├── UnitPickerSheet.swift     # Unit selection sheet
+│   │   │   ├── SettingsView.swift        # App settings & themes
+│   │   │   ├── HelpView.swift            # In-app help
+│   │   │   └── ColorSchemePreviewView.swift # Theme testing (dev only)
 │   │   ├── Services/
-│   │   │   ├── ConversionEngine.swift          # BFS conversion logic
-│   │   │   └── DefaultIngredientDatabase.swift # JSON loader
+│   │   │   ├── ConversionEngine.swift    # BFS conversion logic
+│   │   │   ├── DefaultIngredientDatabase.swift # JSON loader
+│   │   │   └── CloudKitHelper.swift      # CloudKit integration
 │   │   ├── Utilities/
-│   │   │   └── FractionParser.swift            # Fraction input parsing
-│   │   └── default_ingredients.json            # Pre-loaded data (95 ingredients)
+│   │   │   ├── FractionParser.swift      # Fraction parsing & VoiceOver
+│   │   │   ├── UnitConversionHelper.swift # Foundation Measurement wrapper
+│   │   │   ├── AppColorScheme.swift      # Theme color definitions
+│   │   │   ├── ThemeManager.swift        # Theme management
+│   │   │   ├── FractionInputHelper.swift # Fraction input utilities
+│   │   │   ├── DebugLogger.swift         # Debug logging
+│   │   │   └── UtilitiesFormValidation.swift # Form validation
+│   │   └── default_ingredients.json      # Pre-loaded data (95 ingredients)
 │   ├── IngredientConverterTests/
+│   │   ├── ConversionEngineTests.swift
+│   │   ├── DefaultIngredientDatabaseTests.swift
+│   │   ├── FractionParserTests.swift
+│   │   ├── MeasurementUnitTests.swift
+│   │   └── ConversionEdgeCaseTests.swift
 │   └── IngredientConverterUITests/
 ├── IngredientConverterHelpers/       # Python data pipeline
 │   ├── generate_ingredient_database.py  # Creates Excel template
 │   ├── convert_ingredients.py           # Excel → JSON converter
 │   ├── ingredient_database.xlsx         # Source data (editable)
 │   └── default_ingredients.json         # Generated output
-├── CLAUDE.md                         # Project documentation
+├── CLAUDE.md                         # Project documentation for AI
 ├── PERFORMANCE_OPTIMIZATION.md       # Optimization notes
 └── README.md
 
@@ -149,11 +180,13 @@ cp default_ingredients.json ../IngredientConverter/IngredientConverter/
 The app implements several performance optimizations:
 
 1. **Database-level filtering**: Uses SwiftData predicates instead of in-memory filtering
-2. **Unit caching**: Caches available units for selected ingredients
+2. **Unit caching**: Caches available units for selected ingredients to avoid recomputation on every render
 3. **Conversion caching**: Stores computed conversion ratios to avoid redundant calculations
 4. **Efficient queries**: Minimizes database fetches with optimized FetchDescriptors
+5. **Minimal logging**: Debug logging removed from production paths for faster execution
+6. **Smart view updates**: Optimized state management to prevent unnecessary re-renders
 
-See [PERFORMANCE_OPTIMIZATION.md](PERFORMANCE_OPTIMIZATION.md) for detailed analysis.
+See [PERFORMANCE_OPTIMIZATION.md](PERFORMANCE_OPTIMIZATION.md) for detailed analysis and benchmarks.
 
 ## Architecture Highlights
 
@@ -186,13 +219,23 @@ This is a personal project, but suggestions and feedback are welcome! Please ope
 
 ## Roadmap
 
-- [ ] Add metric/imperial unit preferences
+### Completed ✅
+- [x] Theming system with multiple color schemes
+- [x] Light/Dark mode support
+- [x] Custom numeric keyboard for fractions
+- [x] Enhanced VoiceOver accessibility
+- [x] Performance optimizations
+
+### In Progress
+- [ ] iCloud sync for custom ingredients (CloudKit integration in development)
+
+### Planned
 - [ ] Recipe scaling functionality
 - [ ] Import/export custom ingredients
-- [ ] iCloud sync for custom ingredients
 - [ ] Ingredient photos/images
 - [ ] Nutritional information integration
 - [ ] Apple Watch companion app
+- [ ] Widget support for recent conversions
 
 ## License
 
@@ -206,6 +249,7 @@ This project is private and not licensed for public use.
 
 ---
 
-**Version**: 1.0.0
+**Version**: 1.2.0
 **Target**: iOS 17.0+
 **Swift**: 5.9+
+**Last Updated**: October 2025
