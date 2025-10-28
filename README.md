@@ -160,7 +160,10 @@ pip install pandas openpyxl
 # Create Excel template with sample ingredients
 python generate_ingredient_database.py
 
-# Edit ingredient_database.xlsx manually to add/verify conversions
+# Edit ingredient_database.xlsx manually:
+# - Add UUID to the ID column for each unique ingredient
+# - Verify/adjust conversions
+# - Add notes and verification marks
 
 # Convert Excel to JSON
 python convert_ingredients.py ingredient_database.xlsx default_ingredients.json
@@ -169,11 +172,28 @@ python convert_ingredients.py ingredient_database.xlsx default_ingredients.json
 cp default_ingredients.json ../IngredientConverter/IngredientConverter/
 ```
 
+**Note**: The `generate_ingredient_database.py` script creates the basic structure without IDs. You'll need to add a UUID to the ID column for each unique ingredient before converting to JSON. Rows with the same ID will be grouped as one ingredient with multiple conversions.
+
+**Tip**: To see a properly formatted example with IDs, run:
+```bash
+python convert_ingredients.py --sample
+```
+This creates `sample_ingredients.xlsx` showing the correct format with UUIDs.
+
 ### Excel Format
 
-| Name | Category | Brand | From Amount | From Unit | ... | To Amount | To Unit | Verified | Notes |
-|------|----------|-------|-------------|-----------|-----|-----------|---------|----------|-------|
-| All-purpose flour | Flour | | 1 | cup | ... | 120 | gram | ✓ | King Arthur |
+The Excel file uses the following column structure:
+
+| ID | Name | Category | Brand | From Amount | From Unit | From Unit Singular | From Unit Plural | To Amount | To Unit | To Unit Singular | To Unit Plural | Verified | Notes |
+|----|------|----------|-------|-------------|-----------|-------------------|-----------------|-----------|---------|-----------------|----------------|----------|-------|
+| uuid-123... | All-purpose flour | Flour | | 1 | cup | | | 120 | gram | | | ✓ | King Arthur |
+| uuid-123... | All-purpose flour | Flour | | 1 | tablespoon | | | 7.5 | gram | | | ✓ | |
+| uuid-456... | Butter | Fat | | 1 | | stick | sticks | 113 | gram | | | ✓ | |
+
+**Notes:**
+- **ID**: UUID to track ingredients across name changes (rows with same ID are grouped)
+- **Singular/Plural columns**: Only used for count-based units (eggs, sticks, cloves, etc.)
+- **Verified/Notes**: Manual review columns (not imported to app)
 
 ## Performance Optimizations
 
