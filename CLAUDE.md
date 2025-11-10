@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-IngredientConverter is an iOS app (SwiftUI + SwiftData) that converts cooking ingredient measurements between volume, weight, and count units. The app includes a default database of ~100 common ingredients with verified conversions, plus support for user-added custom ingredients.
+Kitchen Unit Converter (internal name: IngredientConverter) is an iOS app (SwiftUI + SwiftData) that converts cooking ingredient measurements between volume, weight, and count units. The app includes a default database of ~100 common ingredients with verified conversions, plus support for user-added custom ingredients.
 
 ## Building & Testing
 

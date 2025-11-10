@@ -1,4 +1,4 @@
-# VoiceOver Usage Guide for Ingredient Converter
+# VoiceOver Usage Guide for Kitchen Unit Converter
 
 ## Enabling VoiceOver
 

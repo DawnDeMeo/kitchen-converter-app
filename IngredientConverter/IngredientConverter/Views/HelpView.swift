@@ -21,7 +21,7 @@ struct HelpView: View {
                         .fontWeight(.bold)
                         .foregroundColor(colorScheme.primaryText)
 
-                    Text("Everything you need to know about using Ingredient Converter")
+                    Text("Everything you need to know about using Kitchen Unit Converter")
                         .font(.subheadline)
                         .foregroundColor(colorScheme.secondaryText)
                 }
@@ -40,7 +40,7 @@ struct HelpView: View {
                     VStack(alignment: .leading, spacing: 12) {
                         HelpItem(
                             question: "What does this app do?",
-                            answer: "Ingredient Converter helps you convert cooking ingredient measurements between volume (cups, tablespoons), weight (grams, ounces), and count (eggs, crackers). Unlike standard converters, it accounts for the fact that different ingredients have different densities."
+                            answer: "Kitchen Unit Converter helps you convert cooking ingredient measurements between volume (cups, tablespoons), weight (grams, ounces), and count (eggs, crackers). Unlike standard converters, it accounts for the fact that different ingredients have different densities."
                         )
 
                         HelpItem(
@@ -287,7 +287,7 @@ struct HelpView: View {
                         .font(.subheadline)
                         .foregroundColor(colorScheme.secondaryText)
 
-                    Link(destination: URL(string: "mailto:dawndemeoapps@gmail.com?subject=Ingredient%20Converter%20Support")!) {
+                    Link(destination: URL(string: "mailto:dawndemeoapps@gmail.com?subject=Kitchen%20Unit%20Converter%20Support")!) {
                         HStack(spacing: 4) {
                             Image(systemName: "envelope.fill")
                                 .font(.caption)
