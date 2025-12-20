@@ -26,7 +26,8 @@ A native iOS app for converting cooking measurements and ingredient quantities, 
 - Real-time search with combined filtering
 
 ### User Experience
-- **Custom Numeric Keyboard**: Specialized keyboard with quick-insert fraction buttons (1/8, 1/4, 1/3, 1/2, 2/3, 3/4)
+- **Custom Numeric Keyboard**: Specialized keyboard with quick-insert fraction buttons (1/8, 1/4, 1/3, 1/2, 2/3, 3/4), space key for manual mixed numbers, and intuitive layout
+- **Visual Unit Picker**: Icon-based unit selection with SF Symbols, filtering by type (Volume, Weight, Count), and grid layout for easy browsing
 - **Theming System**: 5 beautiful color schemes (Blue Crab, Cayenne, Lavender, Salt & Pepper, Sage)
 - **Light/Dark Mode**: Full adaptive color support with automatic or manual appearance switching
 - **Natural Language**: Ingredient names use natural phrasing (e.g., "All-purpose flour" instead of "Flour, all-purpose")
@@ -268,7 +269,7 @@ This project is private and not licensed for public use.
 
 ---
 
-**Version**: 1.2.0
+**Version**: 1.1.0
 **Target**: iOS 17.0+
 **Swift**: 5.9+
-**Last Updated**: October 2025
+**Last Updated**: December 2025
