@@ -61,12 +61,12 @@ struct CustomNumericKeyboard: View {
                         keyButton("9")
                     }
 
-                    // Row 4: space . 0 / delete
+                    // Row 4: / . 0 space delete
                     HStack(spacing: 8) {
-                        spaceButton()
+                        keyButton("/")
                         keyButton(".")
                         keyButton("0")
-                        keyButton("/")
+                        spaceButton()
                         deleteButton()
                     }
                 }
