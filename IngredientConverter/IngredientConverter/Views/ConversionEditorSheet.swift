@@ -28,6 +28,8 @@ struct ConversionEditorSheet: View {
     @State private var errorMessage = ""
 
     @State private var focusedField: AmountField?
+    @State private var showingFromUnitPicker = false
+    @State private var showingToUnitPicker = false
 
     enum AmountField {
         case fromAmount
@@ -56,6 +58,28 @@ struct ConversionEditorSheet: View {
             return $toAmount
         case .none:
             return .constant("")
+        }
+    }
+
+    private var fromAvailableUnits: [MeasurementUnit] {
+        switch fromUnitType {
+        case .volume:
+            return volumeUnits
+        case .weight:
+            return weightUnits
+        case .count:
+            return []
+        }
+    }
+
+    private var toAvailableUnits: [MeasurementUnit] {
+        switch toUnitType {
+        case .volume:
+            return volumeUnits
+        case .weight:
+            return weightUnits
+        case .count:
+            return []
         }
     }
 
@@ -97,17 +121,20 @@ struct ConversionEditorSheet: View {
                         .listRowBackground(colorScheme.cardBackground)
 
                         switch fromUnitType {
-                        case .volume:
-                            Picker("Unit", selection: $fromUnit) {
-                                ForEach(volumeUnits, id: \.self) { unit in
-                                    Text(unit.displayName).tag(unit)
-                                }
-                            }
-                            .listRowBackground(colorScheme.cardBackground)
-                        case .weight:
-                            Picker("Unit", selection: $fromUnit) {
-                                ForEach(weightUnits, id: \.self) { unit in
-                                    Text(unit.displayName).tag(unit)
+                        case .volume, .weight:
+                            Button {
+                                focusedField = nil
+                                showingFromUnitPicker = true
+                            } label: {
+                                HStack {
+                                    Text("Unit")
+                                        .foregroundColor(colorScheme.secondaryText)
+                                    Spacer()
+                                    Text(fromUnit.displayName)
+                                        .foregroundColor(colorScheme.primaryText)
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption)
+                                        .foregroundColor(colorScheme.secondary)
                                 }
                             }
                             .listRowBackground(colorScheme.cardBackground)
@@ -158,17 +185,20 @@ struct ConversionEditorSheet: View {
                         .listRowBackground(colorScheme.cardBackground)
 
                         switch toUnitType {
-                        case .volume:
-                            Picker("Unit", selection: $toUnit) {
-                                ForEach(volumeUnits, id: \.self) { unit in
-                                    Text(unit.displayName).tag(unit)
-                                }
-                            }
-                            .listRowBackground(colorScheme.cardBackground)
-                        case .weight:
-                            Picker("Unit", selection: $toUnit) {
-                                ForEach(weightUnits, id: \.self) { unit in
-                                    Text(unit.displayName).tag(unit)
+                        case .volume, .weight:
+                            Button {
+                                focusedField = nil
+                                showingToUnitPicker = true
+                            } label: {
+                                HStack {
+                                    Text("Unit")
+                                        .foregroundColor(colorScheme.secondaryText)
+                                    Spacer()
+                                    Text(toUnit.displayName)
+                                        .foregroundColor(colorScheme.primaryText)
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption)
+                                        .foregroundColor(colorScheme.secondary)
                                 }
                             }
                             .listRowBackground(colorScheme.cardBackground)
@@ -231,6 +261,20 @@ struct ConversionEditorSheet: View {
                 Button("OK", role: .cancel) { }
             } message: {
                 Text(errorMessage)
+            }
+            .sheet(isPresented: $showingFromUnitPicker) {
+                UnitPickerSheet(
+                    availableUnits: fromAvailableUnits,
+                    selectedUnit: $fromUnit,
+                    title: "From Unit"
+                )
+            }
+            .sheet(isPresented: $showingToUnitPicker) {
+                UnitPickerSheet(
+                    availableUnits: toAvailableUnits,
+                    selectedUnit: $toUnit,
+                    title: "To Unit"
+                )
             }
 
             // Custom keyboard
