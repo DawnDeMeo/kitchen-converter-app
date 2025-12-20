@@ -61,8 +61,9 @@ struct CustomNumericKeyboard: View {
                         keyButton("9")
                     }
 
-                    // Row 4: . 0 / delete
+                    // Row 4: space . 0 / delete
                     HStack(spacing: 8) {
+                        spaceButton()
                         keyButton(".")
                         keyButton("0")
                         keyButton("/")
@@ -142,6 +143,27 @@ struct CustomNumericKeyboard: View {
         }
         .accessibilityLabel("Delete")
         .accessibilityHint("Removes the last character from the input")
+    }
+
+    private func spaceButton() -> some View {
+        Button {
+            text.append(" ")
+            onChange?()
+        } label: {
+            Image(systemName: "space")
+                .font(.title2)
+                .foregroundColor(colorScheme.primaryText)
+                .frame(maxWidth: .infinity)
+                .frame(height: 50)
+                .background(colorScheme.cardBackground)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(colorScheme.divider.opacity(0.3), lineWidth: 1)
+                )
+        }
+        .accessibilityLabel("Space")
+        .accessibilityHint("Adds a space to the input")
     }
 
     private func fractionButton(_ fraction: String) -> some View {
