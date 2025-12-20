@@ -11,7 +11,7 @@ struct ConversionEditorSheet: View {
     @Environment(\.appColorScheme) private var colorScheme
 
     let onSave: (ConversionEditor) -> Void
-    
+
     @State private var fromAmount: String = ""
     @State private var fromUnit: MeasurementUnit = .cup
     @State private var fromUnitType: UnitInputType = .volume
@@ -23,9 +23,16 @@ struct ConversionEditorSheet: View {
     @State private var toUnitType: UnitInputType = .weight
     @State private var toCountSingular: String = ""
     @State private var toCountPlural: String = ""
-    
+
     @State private var showingError = false
     @State private var errorMessage = ""
+
+    @State private var focusedField: AmountField?
+
+    enum AmountField {
+        case fromAmount
+        case toAmount
+    }
     
     enum UnitInputType: String, CaseIterable {
         case volume = "Volume"
@@ -40,9 +47,21 @@ struct ConversionEditorSheet: View {
     var weightUnits: [MeasurementUnit] {
         [.pound, .ounce, .gram, .milligram, .kilogram]
     }
-    
+
+    private var activeTextBinding: Binding<String> {
+        switch focusedField {
+        case .fromAmount:
+            return $fromAmount
+        case .toAmount:
+            return $toAmount
+        case .none:
+            return .constant("")
+        }
+    }
+
     var body: some View {
         VStack(spacing: 0) {
+            VStack(spacing: 0) {
                 Form {
                     Section {
                         Picker("Unit Type", selection: $fromUnitType) {
@@ -59,10 +78,23 @@ struct ConversionEditorSheet: View {
                         }
                         .listRowBackground(colorScheme.cardBackground)
 
-                        TextField("Enter from amount (e.g., 1 1/2)", text: $fromAmount)
-                            .keyboardType(.decimalPad)
-                            .foregroundColor(colorScheme.primaryText)
-                            .listRowBackground(colorScheme.cardBackground)
+                        ZStack(alignment: .leading) {
+                            if fromAmount.isEmpty {
+                                Text("Enter from amount (e.g., 1 1/2)")
+                                    .foregroundColor(colorScheme.secondary.opacity(0.6))
+                                    .padding(.horizontal, 4)
+                            }
+                            Text(fromAmount.isEmpty ? " " : fromAmount)
+                                .foregroundColor(colorScheme.primaryText)
+                                .padding(.horizontal, 4)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .frame(height: 44)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            focusedField = .fromAmount
+                        }
+                        .listRowBackground(colorScheme.cardBackground)
 
                         switch fromUnitType {
                         case .volume:
@@ -107,10 +139,23 @@ struct ConversionEditorSheet: View {
                         }
                         .listRowBackground(colorScheme.cardBackground)
 
-                        TextField("Enter to amount (e.g., 1 1/2)", text: $toAmount)
-                            .keyboardType(.decimalPad)
-                            .foregroundColor(colorScheme.primaryText)
-                            .listRowBackground(colorScheme.cardBackground)
+                        ZStack(alignment: .leading) {
+                            if toAmount.isEmpty {
+                                Text("Enter to amount (e.g., 1 1/2)")
+                                    .foregroundColor(colorScheme.secondary.opacity(0.6))
+                                    .padding(.horizontal, 4)
+                            }
+                            Text(toAmount.isEmpty ? " " : toAmount)
+                                .foregroundColor(colorScheme.primaryText)
+                                .padding(.horizontal, 4)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .frame(height: 44)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            focusedField = .toAmount
+                        }
+                        .listRowBackground(colorScheme.cardBackground)
 
                         switch toUnitType {
                         case .volume:
@@ -187,9 +232,25 @@ struct ConversionEditorSheet: View {
             } message: {
                 Text(errorMessage)
             }
+
+            // Custom keyboard
+            if focusedField != nil {
+                CustomNumericKeyboard(
+                    text: activeTextBinding,
+                    onDone: {
+                        focusedField = nil
+                    }
+                )
+                .transition(.move(edge: .bottom))
+            }
         }
+        .animation(.easeInOut(duration: 0.3), value: focusedField)
+    }
 
     private func handleFromUnitTypeChange(from oldType: UnitInputType, to newType: UnitInputType) {
+        // Dismiss keyboard when changing unit type
+        focusedField = nil
+
         // Update default unit when type changes
         switch newType {
         case .volume:
@@ -202,6 +263,9 @@ struct ConversionEditorSheet: View {
     }
 
     private func handleToUnitTypeChange(from oldType: UnitInputType, to newType: UnitInputType) {
+        // Dismiss keyboard when changing unit type
+        focusedField = nil
+
         // Update default unit when type changes
         switch newType {
         case .volume:
