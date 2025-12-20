@@ -13,13 +13,13 @@ struct ConversionEditorSheet: View {
     let onSave: (ConversionEditor) -> Void
 
     @State private var fromAmount: String = ""
-    @State private var fromUnit: MeasurementUnit = .cup
+    @State private var fromUnit: MeasurementUnit? = .cup
     @State private var fromUnitType: UnitInputType = .volume
     @State private var countSingular: String = ""
     @State private var countPlural: String = ""
 
     @State private var toAmount: String = ""
-    @State private var toUnit: MeasurementUnit = .gram
+    @State private var toUnit: MeasurementUnit? = .gram
     @State private var toUnitType: UnitInputType = .weight
     @State private var toCountSingular: String = ""
     @State private var toCountPlural: String = ""
@@ -130,8 +130,8 @@ struct ConversionEditorSheet: View {
                                     Text("Unit")
                                         .foregroundColor(colorScheme.secondaryText)
                                     Spacer()
-                                    Text(fromUnit.displayName)
-                                        .foregroundColor(colorScheme.primaryText)
+                                    Text(fromUnit?.displayName ?? "Select")
+                                        .foregroundColor(fromUnit != nil ? colorScheme.primaryText : colorScheme.secondary)
                                     Image(systemName: "chevron.right")
                                         .font(.caption)
                                         .foregroundColor(colorScheme.secondary)
@@ -194,8 +194,8 @@ struct ConversionEditorSheet: View {
                                     Text("Unit")
                                         .foregroundColor(colorScheme.secondaryText)
                                     Spacer()
-                                    Text(toUnit.displayName)
-                                        .foregroundColor(colorScheme.primaryText)
+                                    Text(toUnit?.displayName ?? "Select")
+                                        .foregroundColor(toUnit != nil ? colorScheme.primaryText : colorScheme.secondary)
                                     Image(systemName: "chevron.right")
                                         .font(.caption)
                                         .foregroundColor(colorScheme.secondary)
@@ -326,11 +326,12 @@ struct ConversionEditorSheet: View {
               let to = FractionParser.parse(toAmount) else {
             return nil
         }
-        
+
         let fromUnitText: String
         switch fromUnitType {
         case .volume, .weight:
-            fromUnitText = fromUnit.displayName(for: from)
+            guard let unit = fromUnit else { return nil }
+            fromUnitText = unit.displayName(for: from)
         case .count:
             if !countSingular.isEmpty && !countPlural.isEmpty {
                 fromUnitText = from == 1 ? countSingular : countPlural
@@ -338,11 +339,12 @@ struct ConversionEditorSheet: View {
                 return nil
             }
         }
-        
+
         let toUnitText: String
         switch toUnitType {
         case .volume, .weight:
-            toUnitText = toUnit.displayName(for: to)
+            guard let unit = toUnit else { return nil }
+            toUnitText = unit.displayName(for: to)
         case .count:
             if !toCountSingular.isEmpty && !toCountPlural.isEmpty {
                 toUnitText = to == 1 ? toCountSingular : toCountPlural
@@ -350,7 +352,7 @@ struct ConversionEditorSheet: View {
                 return nil
             }
         }
-        
+
         return "\(fromAmount) \(fromUnitText) = \(toAmount) \(toUnitText)"
     }
     
@@ -377,34 +379,44 @@ struct ConversionEditorSheet: View {
         let finalFromUnit: MeasurementUnit
         switch fromUnitType {
         case .volume, .weight:
-            finalFromUnit = fromUnit
+            guard let unit = fromUnit else {
+                errorMessage = "Please select a 'from' unit"
+                showingError = true
+                return
+            }
+            finalFromUnit = unit
         case .count:
             let singular = countSingular.trimmingCharacters(in: .whitespaces)
             let plural = countPlural.trimmingCharacters(in: .whitespaces)
-            
+
             guard !singular.isEmpty && !plural.isEmpty else {
                 errorMessage = "Please enter both singular and plural forms for count units"
                 showingError = true
                 return
             }
-            
+
             finalFromUnit = .count(singular: singular, plural: plural)
         }
-        
+
         let finalToUnit: MeasurementUnit
         switch toUnitType {
         case .volume, .weight:
-            finalToUnit = toUnit
+            guard let unit = toUnit else {
+                errorMessage = "Please select a 'to' unit"
+                showingError = true
+                return
+            }
+            finalToUnit = unit
         case .count:
             let singular = toCountSingular.trimmingCharacters(in: .whitespaces)
             let plural = toCountPlural.trimmingCharacters(in: .whitespaces)
-            
+
             guard !singular.isEmpty && !plural.isEmpty else {
                 errorMessage = "Please enter both singular and plural forms for count units"
                 showingError = true
                 return
             }
-            
+
             finalToUnit = .count(singular: singular, plural: plural)
         }
         
