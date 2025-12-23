@@ -45,7 +45,7 @@ struct HelpView: View {
 
                         HelpItem(
                             question: "How do I convert an ingredient?",
-                            answer: "1. Tap the Conversions tab\n2. Search for or select an ingredient\n3. Enter an amount using the keypad\n4. Tap a 'From' unit (e.g., cups)\n5. Tap a 'To' unit (e.g., grams)\n6. The result appears instantly!"
+                            answer: "1. Search for or select an ingredient\n2. Enter an amount using the keypad\n3. Tap a 'From' unit (e.g., cups)\n4. Tap a 'To' unit (e.g., grams)\n5. The result appears instantly!"
                         )
                     }
                 }
@@ -207,7 +207,7 @@ struct HelpView: View {
                     VStack(alignment: .leading, spacing: 12) {
                         HelpItem(
                             question: "Can I change default units?",
-                            answer: "Yes! Go to Settings → Default Conversion Units to set your preferred 'From' and 'To' units. These will be pre-selected when you open the Conversions tab."
+                            answer: "Yes! Go to Settings → Default Conversion Units to set your preferred 'From' and 'To' units. These will be pre-selected when you start a conversion."
                         )
 
                         HelpItem(

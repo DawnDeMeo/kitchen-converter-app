@@ -112,7 +112,7 @@ kitchen-converter-app/
 ### Prerequisites
 
 - Xcode 15.0 or later
-- iOS 17.0+ (for SwiftData)
+- iOS 26.0+ (for SwiftData)
 - Python 3.8+ (for data pipeline, optional)
 
 ### Installation
@@ -269,7 +269,7 @@ This project is private and not licensed for public use.
 
 ---
 
-**Version**: 1.1.0
-**Target**: iOS 17.0+
+**Version**: 1.1.1
+**Target**: iOS 26.0+
 **Swift**: 5.9+
 **Last Updated**: December 2025

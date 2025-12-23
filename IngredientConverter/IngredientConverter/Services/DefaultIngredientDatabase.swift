@@ -20,6 +20,25 @@ struct DefaultIngredientDatabase {
             return
         }
 
+        // Safety check: If database is completely empty, reload defaults regardless of UserDefaults state
+        // This handles the case where iCloud data was deleted but UserDefaults still says "loaded before"
+        let totalIngredientsFetch = FetchDescriptor<Ingredient>()
+        let totalCount = (try? context.fetchCount(totalIngredientsFetch)) ?? 0
+
+        if totalCount == 0 {
+            let hasLoadedBefore = UserDefaults.standard.bool(forKey: hasLoadedDefaultsKey)
+            if hasLoadedBefore {
+                DebugLogger.log("⚠️ Database is empty but UserDefaults says loaded before - likely iCloud data deletion. Reloading defaults...", category: "Database")
+            } else {
+                DebugLogger.log("📦 Database is empty and first launch - loading defaults...", category: "Database")
+            }
+
+            loadAllDefaults(from: ingredientsJSON, context: context)
+            UserDefaults.standard.set(ingredientsJSON.version, forKey: versionKey)
+            UserDefaults.standard.set(true, forKey: hasLoadedDefaultsKey)
+            return
+        }
+
         // Check if THIS DEVICE has ever loaded defaults before
         let hasLoadedBefore = UserDefaults.standard.bool(forKey: hasLoadedDefaultsKey)
         let currentVersion = UserDefaults.standard.integer(forKey: versionKey)
